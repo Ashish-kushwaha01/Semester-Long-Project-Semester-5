@@ -1,0 +1,10 @@
+.search-main {
+    max-width: var(--max-width);
+    margin: 24px auto;
+    padding: 0 16px
+}
+
+#resultsInfo {
+    color: var(--muted);
+    margin-bottom: 12px
+}

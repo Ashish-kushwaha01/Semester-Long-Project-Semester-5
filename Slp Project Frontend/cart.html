@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Cart — Amazon Clone</title>
+    <link rel="stylesheet" href="css/common.css" />
+    <link rel="stylesheet" href="css/cart.css" />
+</head>
+
+<body>
+    <header class="site-header">
+        <div class="brand"><a href="index.html">Shopify<span class="accent">X</span></a></div>
+        <div class="search-bar">
+            <form id="searchForm" action="search.html" method="get">
+                <input id="searchInput" name="q" type="search" placeholder="Search for products, brands and more" />
+                <button type="submit">Search</button>
+            </form>
+        </div>
+        <nav class="nav-actions">
+            <a href="cart.html" class="nav-item">Cart <span id="cartCount" class="cart-count">0</span></a>
+            <a href="#" class="nav-item">Sign in</a>
+        </nav>
+    </header>
+
+    <main class="cart-main">
+        <h1>Your Cart</h1>
+        <div id="cartContainer"></div>
+        <div id="cartSummary" class="cart-summary"></div>
+    </main>
+
+    <footer class="site-footer">
+        <div>© <span id="year"></span> ShopifyX — demo clone.</div>
+    </footer>
+
+    <script src="js/common.js"></script>
+    <script src="js/cart.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Amazon Clone — Home</title>
+    <link rel="stylesheet" href="css/common.css" />
+    <link rel="stylesheet" href="css/home.css" />
+</head>
+
+<body>
+    <!-- Header / Nav -->
+    <header class="site-header">
+        <div class="brand">
+            <a href="index.html">Shopify<span class="accent">X</span></a>
+        </div>
+        <div class="search-bar">
+            <form id="searchForm" action="search.html" method="get">
+                <input id="searchInput" name="q" type="search" placeholder="Search for products, brands and more" />
+                <button type="submit">Search</button>
+            </form>
+        </div>
+        <nav class="nav-actions">
+            <a href="cart.html" class="nav-item">Cart <span id="cartCount" class="cart-count">0</span></a>
+            <a href="login\signUp.html" class="nav-item">Sign in</a>
+        </nav>
+    </header>
+
+    <!-- Hero -->
+    <section class="hero">
+        <div class="hero-left">
+            <h1>Discover top deals — every day</h1>
+            <p>Hand-picked offers on electronics, fashion, home & more.</p>
+            <a href="#deals" class="btn btn-primary">Shop today's deals</a>
+        </div>
+        <div class="hero-right">
+            <img src="https://picsum.photos/seed/hero/800/520" alt="hero" />
+        </div>
+    </section>
+
+    <!-- Featured categories -->
+    <section id="deals" class="categories">
+        <h2>Featured Categories</h2>
+        <div class="category-grid" id="categoryGrid"></div>
+    </section>
+
+    <!-- Trending products -->
+    <section class="products">
+        <h2>Trending picks</h2>
+        <div id="productGrid" class="product-grid"></div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div>© <span id="year"></span> ShopifyX — demo clone. Replace content for your project.</div>
+        <div>Built with ❤️ for learning</div>
+    </footer>
+
+    <script src="js/common.js"></script>
+    <script src="js/home.js"></script>
+</body>
+
+</html>

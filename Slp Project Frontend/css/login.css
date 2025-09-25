@@ -1,0 +1,94 @@
+body {
+    font-family: Arial, sans-serif;
+    background: #f4f6f9;
+    display: block;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.login-container {
+    background: #fff;   
+    padding: 30px;
+    /* display: block; */
+    width: 350px;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+
+h2 {
+    margin-bottom: 5px;
+}
+
+.tab-buttons {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+}
+
+.tab-buttons button {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    cursor: pointer;
+    background: #eee;
+}
+
+.tab-buttons .active {
+    background: #3b5bdb;
+    color: #fff;
+}
+
+.form {
+    display: none;
+    text-align: left;
+}
+
+.form.active {
+    display: block;
+}
+
+label {
+    display: block;
+    margin: 10px 0 5px;
+}
+
+input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+.primary-btn {
+    background: #3b5bdb;
+    color: #fff;
+    padding: 10px;
+    width: 100%;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.google-btn {
+    background: #fff;
+    border: 1px solid #ddd;
+    padding: 10px;
+    width: 100%;
+    cursor: pointer;
+}
+
+.divider {
+    margin: 15px 0;
+    text-align: center;
+    font-size: 14px;
+    color: #999;
+}
+
+.back-home {
+    display: block;
+    margin-top: 20px;
+    color: #3b5bdb;
+    text-decoration: none;
+}

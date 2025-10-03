@@ -46,7 +46,7 @@ function renderProducts() {
             </a>
             <div class="card-actions">
                 <button class="btn btn-primary" onclick="addToCart('${p.id}',1)">Add to cart</button>
-                <a class="btn btn-secondary" href="product.html?id=${p.id}">View</a>
+                <a class="btn btn-secondary" href="product.html?id=${p.id}">Buy</a>
             </div>
         </div>
     `).join('');

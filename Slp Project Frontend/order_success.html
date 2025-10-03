@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Confirmed - ShopWaveX</title>
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/order_success.css">
+</head>
+
+<body>
+    <header class="site-header">
+        <div class="brand"><a href="index.html">ShopWave<span class="accent">X</span></a></div>
+        <nav class="nav-actions">
+            <a href="cart.html" class="nav-item">Cart <span id="cartCount" class="cart-count">0</span></a>
+            <a href="#" class="nav-item">Sign in</a>
+        </nav>
+    </header>
+
+    <div class="success-container">
+        <div class="success-card">
+            <div class="success-icon">🎉</div>
+            <h1>Order Confirmed!</h1>
+            <p class="success-message">Thank you for your purchase. Your order has been successfully placed.</p>
+            
+            <div class="order-details">
+                <div class="detail-row">
+                    <span>Order ID:</span>
+                    <span id="orderId">ORD123456</span>
+                </div>
+                <div class="detail-row">
+                    <span>Estimated Delivery:</span>
+                    <span id="deliveryDate">3-5 business days</span>
+                </div>
+                <div class="detail-row">
+                    <span>Payment Method:</span>
+                    <span id="paymentMethod">Credit Card</span>
+                </div>
+                <div class="detail-row total">
+                    <span>Total Amount:</span>
+                    <span id="orderTotal">₹0</span>
+                </div>
+            </div>
+            
+            <div class="success-actions">
+                <a href="index.html" class="btn btn-primary">Continue Shopping</a>
+                <a href="#" class="btn btn-secondary">Track Your Order</a>
+            </div>
+            
+            <div class="confetti">
+                <div class="confetti-piece"></div>
+                <div class="confetti-piece"></div>
+                <div class="confetti-piece"></div>
+                <div class="confetti-piece"></div>
+                <div class="confetti-piece"></div>
+                <div class="confetti-piece"></div>
+                <div class="confetti-piece"></div>
+                <div class="confetti-piece"></div>
+                <div class="confetti-piece"></div>
+                <div class="confetti-piece"></div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="site-footer">
+        <div>© <span id="year"></span> ShopWaveX — demo clone.</div>
+    </footer>
+
+    <script src="js/common.js"></script>
+    <script src="js/order-success.js"></script>
+</body>
+
+</html>
+
+
+
+
+
+
+
+

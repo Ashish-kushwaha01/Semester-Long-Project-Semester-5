@@ -1,58 +1,129 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - ShopWave</title>
-    <link rel="stylesheet" href="css/login.css">
+    <title>Sign Up - ShopWaveX</title>
+    <link rel="stylesheet" href="auth.css">
 </head>
-
 <body>
-    <div class="login-container">
-        <h2>Welcome to ShopWave</h2>
-        <p>Sign in or create an account to continue</p>
+    <div class="auth-container">
+        <div class="auth-card">
+            <div class="auth-header">
+                <a href="../index.html" class="back-home">
+                    ← Back to Home
+                </a>
+                <h1>Create Account</h1>
+                <p>Join ShopWaveX and start shopping today</p>
+            </div>
 
-        <div class="tab-buttons">
-            <button id="signInBtn" class="active">Sign In</button>
-            <button id="signUpBtn">Sign Up</button>
+            <form class="auth-form" id="signupForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="firstName">First Name</label>
+                        <input type="text" id="firstName" placeholder="John" required>
+                        <div class="error-message" id="firstNameError"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="lastName">Last Name</label>
+                        <input type="text" id="lastName" placeholder="Doe" required>
+                        <div class="error-message" id="lastNameError"></div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="signupEmail">Email Address</label>
+                    <input type="email" id="signupEmail" placeholder="john@example.com" required>
+                    <div class="error-message" id="signupEmailError"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="signupPassword">Password</label>
+                    <div class="password-input">
+                        <input type="password" id="signupPassword" placeholder="Create a strong password" required>
+                        <button type="button" class="toggle-password" onclick="togglePassword('signupPassword')">
+                            👁️
+                        </button>
+                    </div>
+                    <div class="password-strength">
+                        <div class="strength-bar">
+                            <div class="strength-fill" id="passwordStrength"></div>
+                        </div>
+                        <span class="strength-text" id="passwordStrengthText">Weak</span>
+                    </div>
+                    <div class="error-message" id="signupPasswordError"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="confirmPassword">Confirm Password</label>
+                    <div class="password-input">
+                        <input type="password" id="confirmPassword" placeholder="Confirm your password" required>
+                        <button type="button" class="toggle-password" onclick="togglePassword('confirmPassword')">
+                            👁️
+                        </button>
+                    </div>
+                    <div class="error-message" id="confirmPasswordError"></div>
+                </div>
+
+                <div class="form-options">
+                    <label class="terms-agree">
+                        <input type="checkbox" id="agreeTerms" required>
+                        <span class="checkmark"></span>
+                        I agree to the <a href="#terms" class="link">Terms of Service</a> and <a href="#privacy" class="link">Privacy Policy</a>
+                    </label>
+                </div>
+
+                <button type="submit" class="btn-auth" id="signupBtn">
+                    <span class="btn-text">Create Account</span>
+                    <div class="btn-loader" style="display: none;">
+                        <div class="spinner"></div>
+                    </div>
+                </button>
+            </form>
+
+            <div class="auth-divider">
+                <span>or sign up with</span>
+            </div>
+
+            <div class="social-auth">
+                <button type="button" class="btn-social btn-google">
+                    <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTgiIGhlaWdodD0iMTgiIHZpZXdCb3g9IjAgMCAxOCAxOCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTE2LjUxIDkuMjA0NTVDMTYuNTEgOC41NjYzNiAxNi40NDkgNy45NTQ1NSAxNi4zMTYgNy4zNjgxOEg5LjE4VjEwLjg0NTVIMTMuNDA0QzEzLjI4IDEyLjAwOTUgMTIuNjkgMTIuOTU5NSAxMS42OCAxMy41NTA1TDE0LjAxIDE1LjM2MzVDMTUuNTEgMTQuMDA5NSAxNi41MSAxMS44NDU1IDE2LjUxIDkuMjA0NTVaIiBmaWxsPSIjNDI4NUY0Ii8+CjxwYXRoIGQ9Ik05LjE4IDE2LjAwMDVDMTEuNDMgMTYuMDAwNSAxMy4yMSAxNS4xNzA1IDE0LjAxIDE0LjA2ODVMMTEuNjggMTIuMjU1NUMxMC45OCAxMi43MTA1IDkuOTk1IDEzLjAyMjUgOC45NSAxMy4wMjI1QzYuODQ1IDEzLjAyMjUgNS4wMzUgMTEuNTQwNSA0LjM3IDkuNjAwNUwxLjk1IDExLjUwOUMzLjE2IDEzLjc3MDUgNS44OCAxNi4wMDA1IDkuMTggMTYuMDAwNVoiIGZpbGw9IiMzNEE4NTMiLz4KPHBhdGggZD0iTTQuMzcgOS42MDA1QzQuMTcgOC45NzA1IDQuMDYgOC4zMDA1IDQuMDYgNy42MDA1QzQuMDYgNi45MDA1IDQuMTcgNi4yMzA1IDQuMzcgNS42MDA1TDEuOTUgMy42OTVDMS4zNCA0Ljg5MDUgMSA2LjIwMDUgMSA3LjYwMDVDMSA5LjAwMDUgMS4zNCAxMC4zMTA1IDEuOTUgMTEuNTA5TDQuMzcgOS42MDA1WiIgZmlsbD0iI0ZCQkMwNCIvPgo8cGF0aCBkPSJNOS4xOCAyLjE3ODVDMTAuNzcgMi4xNzg1IDEyLjEyIDIuODQ4NSAxMy4wNiAzLjc0ODVMMTQuMDcgMi43Mzg1QzEzLjIxIDEuOTIyNSAxMS40MyAxLjIwMDUgOS4xOCAxLjIwMDVDNS44OCAxLjIwMDUgMy4xNiAzLjQyODUgMS45NSA1LjY5TDUuMDMgNy41NDVDNS43IDUuNjEwNSA3LjUxIDQuMTc4NSA5LjE4IDQuMTc4NU05LjE4IDIuMTc4NVYyLjE3ODVaIiBmaWxsPSIjRUE0MzM1Ii8+Cjwvc3ZnPgo=" alt="Google">
+                    Continue with Google
+                </button>
+                
+                <button type="button" class="btn-social btn-facebook">
+                    <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTgiIGhlaWdodD0iMTgiIHZpZXdCb3g9IjAgMCAxOCAxOCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTE4IDlDMTggNC4wMjkgMTMuOTcxIDAgOSAwUzAgNC4wMjkgMCA5QzAgMTMuNDExIDMuMzg1IDE3LjA2NyA3Ljg3NSAxNy44NDRWMTEuNTYySDUuMjk2VjkuMDAwMDNINy44NzVWLjAwMzkwNkM3Ljg3NS4wMDAzOTA2IDguNzg1LS4wMDM5MDYgOS42OTUtLjAwMzkwNkMxMC42MDUtLjAwMzkwNiAxMS41MTUuMDAwMzkwNiAxMi40MjUuMDAzOTA2VjlDMTQuOTE1IDkgMTUuNTc1IDkuODk1IDE1LjU3NSAxMS41NjJIMTIuNDI1VjE3Ljg0NEMxNi45MTUgMTcuMDY3IDE4IDEzLjQxMSAxOCA5WiIgZmlsbD0iIzE4NzdGMiIvPgo8L3N2Zz4K=" alt="Facebook">
+                    Continue with Facebook
+                </button>
+            </div>
+
+            <div class="auth-footer">
+                <p>Already have an account? <a href="signIn.html" class="auth-link">Sign in</a></p>
+            </div>
         </div>
 
-        <!-- Sign In Form -->
-        <form id="signInForm" class="form active">
-            <div id="emailField">
-                <label>Email</label>
-                <input type="email" placeholder="you@example.com" required>
-
+        <div class="auth-hero">
+            <div class="hero-content">
+                <h2>Join Our Community</h2>
+                <p>Create an account to unlock exclusive features and personalized shopping experience.</p>
+                <div class="hero-features">
+                    <div class="feature">
+                        <span class="feature-icon">🎁</span>
+                        <span>Welcome Bonus</span>
+                    </div>
+                    <div class="feature">
+                        <span class="feature-icon">📱</span>
+                        <span>Mobile App Access</span>
+                    </div>
+                    <div class="feature">
+                        <span class="feature-icon">💎</span>
+                        <span>Premium Support</span>
+                    </div>
+                </div>
             </div>
-            <label>Password</label>
-            <input type="password" placeholder="********" required>
-
-            <a href="forgotPassword.html" class="forgot">Forgot password?</a>
-            <button type="submit" class="primary-btn">Sign In</button>
-
-            <div class="divider">OR</div>
-            <button type="button" class="google-btn">Sign in with Google</button>
-        </form>
-
-        <!-- Sign Up Form -->
-        <form id="signUpForm" class="form">
-            <label>Full Name</label>
-            <input type="text" placeholder="John Doe" required>
-
-            <label>Email</label>
-            <input type="email" placeholder="you@example.com" required>
-
-            <label>Password</label>
-            <input type="password" placeholder="********" required>
-
-            <button type="submit" class="primary-btn">Sign Up</button>
-        </form>
-
-        <a href="index.html" class="back-home">Go back to Homepage</a>
+        </div>
     </div>
 
-    <script src="js/login.js"></script>
+    <script src="auth.js"></script>
 </body>
-
 </html>

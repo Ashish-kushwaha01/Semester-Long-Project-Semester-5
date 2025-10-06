@@ -11,7 +11,7 @@ const SAMPLE_PRODUCTS = [
     { id: 'p7', title: 'LED Desk Lamp with USB', price: 350, rating: 4.1, img: 'assets/products/led_Desk_Lamp.jpg', category: 'Home', desc: 'Adjustable brightness and color temperature.' },
     { id: 'p8', title: 'Wireless Charger Pad', price: 1050, rating: 4.0, img: 'assets/products/wireless_charger_pad.jpg', category: 'Accessories', desc: 'Fast charge compatible with Qi devices.' },
     { id: 'p6', title: 'Classic Leather Wallet', price: 280, rating: 4.2, img: 'assets/products/leather wallet.jpg', category: 'Fashion', desc: 'Slim profile with RFID blocking.' },
-    { id: 'p7', title: 'LED Desk Lamp with USB', price: 350, rating: 4.1, img: 'assets/products/led_Desk_Lamp.jpg', category: 'Home', desc: 'Adjustable brightness and color temperature.' },
+    { id: 'p7', title: 'LED Desk Lamp with USB', price: 350, rating: 4.1, img: 'assets/products/led_Desk_Lamp.jpg', category: 'Sports', desc: 'Adjustable brightness and color temperature.' },
     { id: 'p8', title: 'Wireless Charger Pad', price: 1100, rating: 4.0, img: 'assets/products/wireless_charger_pad.jpg', category: 'Accessories', desc: 'Fast charge compatible with Qi devices.' }
 ];
 

@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Search — Amazon Clone</title>
+    <title>Search — ShopWaveX</title>
     <link rel="stylesheet" href="css/common.css" />
     <link rel="stylesheet" href="css/search.css" />
 </head>
@@ -20,18 +20,86 @@
         </div>
         <nav class="nav-actions">
             <a href="cart.html" class="nav-item">Cart <span id="cartCount" class="cart-count">0</span></a>
-            <a href="#" class="nav-item">Sign in</a>
+            <a href="login/signIn.html" class="nav-item">Sign in</a>
         </nav>
     </header>
 
     <main class="search-main">
-        <h1>Search results</h1>
-        <div id="resultsInfo"></div>
-        <div id="resultsGrid" class="product-grid"></div>
+        <div class="search-header">
+            <div class="search-info">
+                <h1>Search Results</h1>
+                <div id="resultsInfo" class="results-info"></div>
+            </div>
+            <div class="search-stats">
+                <span id="resultsCount" class="results-count">0 products found</span>
+            </div>
+        </div>
+
+        <div class="search-content">
+            <aside class="filters-sidebar">
+                <div class="filter-section">
+                    <h3>Categories</h3>
+                    <div class="filter-options" id="categoryFilters">
+                        <!-- Categories will be populated by JS -->
+                    </div>
+                </div>
+                
+                <div class="filter-section">
+                    <h3>Price Range</h3>
+                    <div class="price-filter">
+                        <div class="price-inputs">
+                            <input type="number" id="minPrice" placeholder="Min" min="0">
+                            <span>-</span>
+                            <input type="number" id="maxPrice" placeholder="Max" min="0">
+                        </div>
+                        <button id="applyPriceFilter" class="btn-filter">Apply</button>
+                    </div>
+                </div>
+
+                <div class="filter-section">
+                    <h3>Rating</h3>
+                    <div class="filter-options">
+                        <label class="filter-option">
+                            <input type="checkbox" value="4"> 4★ & above
+                        </label>
+                        <label class="filter-option">
+                            <input type="checkbox" value="3"> 3★ & above
+                        </label>
+                        <label class="filter-option">
+                            <input type="checkbox" value="2"> 2★ & above
+                        </label>
+                    </div>
+                </div>
+            </aside>
+
+            <div class="results-section">
+                <div class="results-controls">
+                    <div class="sort-options">
+                        <label for="sortSelect">Sort by:</label>
+                        <select id="sortSelect">
+                            <option value="relevance">Relevance</option>
+                            <option value="price-low">Price: Low to High</option>
+                            <option value="price-high">Price: High to Low</option>
+                            <option value="rating">Customer Rating</option>
+                            <option value="newest">Newest First</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div id="resultsGrid" class="product-grid"></div>
+
+                <div id="noResults" class="no-results" style="display: none;">
+                    <div class="no-results-icon">🔍</div>
+                    <h3>No products found</h3>
+                    <p>Try adjusting your search or filters to find what you're looking for.</p>
+                    <a href="index.html" class="btn btn-primary">Continue Shopping</a>
+                </div>
+            </div>
+        </div>
     </main>
 
     <footer class="site-footer">
-        <div>© <span id="year"></span> ShopifyX — demo clone.</div>
+        <div>© <span id="year"></span> ShopWaveX — E-Commerce. Built with ❤️ for learning</div>
     </footer>
 
     <script src="js/common.js"></script>

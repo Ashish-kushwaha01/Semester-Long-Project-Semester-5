@@ -1,4 +1,3 @@
-
 (function () {
     function renderCart() {
         const cart = getCart();

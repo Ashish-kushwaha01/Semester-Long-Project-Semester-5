@@ -1,17 +1,3 @@
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 <!doctype html>
 <html lang="en">
 
@@ -55,20 +41,34 @@
 
     <!-- Featured categories -->
     <section id="deals" class="categories">
-        <h2 class="section-title">Featured Categories</h2>
+        <div class="section-header">
+            <h2 class="section-title">Featured Categories</h2>
+            <p class="section-subtitle">Browse products by category</p>
+        </div>
         <div class="category-grid" id="categoryGrid"></div>
     </section>
 
     <!-- Trending products -->
     <section class="products">
-        <h2 class="section-title">Trending picks</h2>
+        <div class="section-header">
+            <h2 class="section-title" id="productsTitle">Trending picks</h2>
+            <p class="section-subtitle" id="productsSubtitle">Popular products everyone loves</p>
+            <div class="filter-controls" id="filterControls" style="display: none;">
+                <button id="clearFilter" class="btn-filter">
+                    <span>← Show All Products</span>
+                </button>
+                <span class="filter-info" id="filterInfo"></span>
+            </div>
+        </div>
         <div id="productGrid" class="product-grid"></div>
     </section>
 
     <!-- Footer -->
     <footer class="site-footer">
-        <div>© <span id="year"></span> ShopwaveX — demo clone. Replace content for your project.</div>
-        <div>Built with ❤️ for learning</div>
+        <div class="footer-content">
+            <div>© <span id="year"></span> ShopwaveX — Premium E-Commerce Platform</div>
+            <div class="footer-tagline">Built with ❤️ for modern shopping experience</div>
+        </div>
     </footer>
 
     <script src="js/common.js"></script>

@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vendor Onboarding - ShopWaveX</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="SignUp.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar - 20% width -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <div class="user-info">
+                    <div class="avatar">
+                        <i class="fas fa-store"></i>
+                    </div>
+                    <div class="user-details">
+                        <h2>Hello, Ashish!</h2>
+                        <p>Complete onboarding to start selling</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sidebar-menu">
+                <div class="menu-item active" data-target="mobile-email">
+                    <div class="menu-icon">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <div class="menu-text">
+                        <h3>Mobile & Email</h3>
+                        <p>Verification Status</p>
+                    </div>
+                    <div class="status-indicator pending" id="mobile-email-status">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                </div>
+
+                <div class="menu-item" data-target="id-signature">
+                    <div class="menu-icon">
+                        <i class="fas fa-id-card"></i>
+                    </div>
+                    <div class="menu-text">
+                        <h3>ID & Signature</h3>
+                        <p>Verification Required</p>
+                    </div>
+                    <div class="status-indicator pending" id="id-signature-status">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                </div>
+
+                <div class="menu-item" data-target="store-pickup">
+                    <div class="menu-icon">
+                        <i class="fas fa-store"></i>
+                    </div>
+                    <div class="menu-text">
+                        <h3>Store & Pickup</h3>
+                        <p>Details Setup</p>
+                    </div>
+                    <div class="status-indicator pending" id="store-pickup-status">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                </div>
+
+                <div class="menu-item" data-target="listing-stock">
+                    <div class="menu-icon">
+                        <i class="fas fa-boxes"></i>
+                    </div>
+                    <div class="menu-text">
+                        <h3>Listing & Stock</h3>
+                        <p>Availability Setup</p>
+                    </div>
+                    <div class="status-indicator pending" id="listing-stock-status">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sidebar-footer">
+                <div class="progress-section">
+                    <div class="progress-info">
+                        <span>Onboarding Progress</span>
+                        <span class="progress-percent">0%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 0%"></div>
+                    </div>
+                </div>
+                <div class="completion-hint">
+                    <i class="fas fa-info-circle"></i>
+                    Complete all steps to activate your seller account
+                </div>
+                <button class="btn-complete" id="complete-onboarding">
+                    <i class="fas fa-rocket"></i>
+                    Complete Onboarding
+                </button>
+            </div>
+        </div>
+
+        <!-- Main Content - 80% width -->
+        <div class="main-content">
+            <!-- Mobile & Email Verification Section -->
+            <div class="content-section active" id="mobile-email">
+                <div class="section-header">
+                    <div class="header-content">
+                        <h1>Mobile & Email Verification</h1>
+                        <p>Secure your account by verifying your contact information</p>
+                    </div>
+                    <div class="step-indicator">
+                        <span class="step-number">1</span>
+                        <span class="step-text">of 4 steps</span>
+                    </div>
+                </div>
+
+                <!-- Mobile Verification Card -->
+                <div class="verification-card">
+                    <div class="card-header">
+                        <div class="header-left">
+                            <div class="verification-icon">
+                                <i class="fas fa-mobile-alt"></i>
+                            </div>
+                            <div class="header-text">
+                                <h3>Mobile Number Verification</h3>
+                                <p>Verify your mobile for security and order notifications</p>
+                            </div>
+                        </div>
+                        <div class="verification-status pending" id="mobile-status">
+                            <i class="fas fa-clock"></i>
+                            <span>Pending</span>
+                        </div>
+                    </div>
+
+                    <div class="verification-process">
+                        <!-- Step 1: Enter Mobile Number -->
+                        <div class="verification-step active" id="mobile-step-1">
+                            <div class="step-content">
+                                <div class="form-group">
+                                    <label for="mobile-number">Enter Your Mobile Number</label>
+                                    <div class="input-with-flag">
+                                        <div class="country-code">
+                                            <i class="fas fa-flag"></i>
+                                            <span>+91</span>
+                                        </div>
+                                        <input type="tel" id="mobile-number" class="form-input" placeholder="Enter 10-digit mobile number" maxlength="10">
+                                    </div>
+                                    <p class="input-hint">We'll send a 6-digit verification code via SMS</p>
+                                </div>
+                                <button class="btn-primary" id="send-mobile-otp">
+                                    <i class="fas fa-paper-plane"></i>
+                                    Send Verification Code
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Step 2: Enter OTP -->
+                        <div class="verification-step" id="mobile-step-2">
+                            <div class="step-content">
+                                <div class="otp-header">
+                                    <h4>Enter Verification Code</h4>
+                                    <p>We've sent a 6-digit code to <span id="mobile-display">+91 *********</span></p>
+                                    <button class="resend-link" id="resend-mobile-otp" disabled>
+                                        <i class="fas fa-redo"></i>
+                                        Resend in <span id="mobile-timer">30</span>s
+                                    </button>
+                                </div>
+                                
+                                <div class="otp-container">
+                                    <div class="otp-inputs">
+                                        <input type="text" class="otp-digit" maxlength="1" data-index="0" autocomplete="off">
+                                        <input type="text" class="otp-digit" maxlength="1" data-index="1" autocomplete="off">
+                                        <input type="text" class="otp-digit" maxlength="1" data-index="2" autocomplete="off">
+                                        <input type="text" class="otp-digit" maxlength="1" data-index="3" autocomplete="off">
+                                        <input type="text" class="otp-digit" maxlength="1" data-index="4" autocomplete="off">
+                                        <input type="text" class="otp-digit" maxlength="1" data-index="5" autocomplete="off">
+                                    </div>
+                                </div>
+
+                                <div class="verification-actions">
+                                    <button class="btn-secondary" id="change-mobile-number">
+                                        <i class="fas fa-edit"></i>
+                                        Change Number
+                                    </button>
+                                    <button class="btn-primary" id="verify-mobile-otp" disabled>
+                                        <i class="fas fa-check-circle"></i>
+                                        Verify Code
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Step 3: Verified -->
+                        <div class="verification-step" id="mobile-step-3">
+                            <div class="step-content verified-content">
+                                <div class="success-animation">
+                                    <i class="fas fa-check-circle"></i>
+                                </div>
+                                <h4>Mobile Number Verified!</h4>
+                                <p>Your mobile number <strong id="verified-mobile">+91 **********</strong> has been successfully verified</p>
+                                <button class="btn-secondary" id="mobile-edit">
+                                    <i class="fas fa-edit"></i>
+                                    Edit Mobile Number
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Email Verification Card -->
+                <div class="verification-card">
+                    <div class="card-header">
+                        <div class="header-left">
+                            <div class="verification-icon">
+                                <i class="fas fa-envelope"></i>
+                            </div>
+                            <div class="header-text">
+                                <h3>Email Address Verification</h3>
+                                <p>Verify your email for important updates and account recovery</p>
+                            </div>
+                        </div>
+                        <div class="verification-status pending" id="email-status">
+                            <i class="fas fa-clock"></i>
+                            <span>Pending</span>
+                        </div>
+                    </div>
+
+                    <div class="verification-process">
+                        <!-- Step 1: Enter Email -->
+                        <div class="verification-step active" id="email-step-1">
+                            <div class="step-content">
+                                <div class="form-group">
+                                    <label for="email-address">Enter Your Email Address</label>
+                                    <input type="email" id="email-address" class="form-input" placeholder="Enter your email address">
+                                    <p class="input-hint">We'll send a 6-digit verification code to your email</p>
+                                </div>
+                                <button class="btn-primary" id="send-email-otp">
+                                    <i class="fas fa-paper-plane"></i>
+                                    Send Verification Code
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Step 2: Enter OTP -->
+                        <div class="verification-step" id="email-step-2">
+                            <div class="step-content">
+                                <div class="otp-header">
+                                    <h4>Enter Verification Code</h4>
+                                    <p>We've sent a 6-digit code to <span id="email-display">••••@gmail.com</span></p>
+                                    <button class="resend-link" id="resend-email-otp" disabled>
+                                        <i class="fas fa-redo"></i>
+                                        Resend in <span id="email-timer">30</span>s
+                                    </button>
+                                </div>
+                                
+                                <div class="otp-container">
+                                    <div class="otp-inputs">
+                                        <input type="text" class="otp-digit" maxlength="1" data-index="0" autocomplete="off">
+                                        <input type="text" class="otp-digit" maxlength="1" data-index="1" autocomplete="off">
+                                        <input type="text" class="otp-digit" maxlength="1" data-index="2" autocomplete="off">
+                                        <input type="text" class="otp-digit" maxlength="1" data-index="3" autocomplete="off">
+                                        <input type="text" class="otp-digit" maxlength="1" data-index="4" autocomplete="off">
+                                        <input type="text" class="otp-digit" maxlength="1" data-index="5" autocomplete="off">
+                                    </div>
+                                </div>
+
+                                <div class="verification-actions">
+                                    <button class="btn-secondary" id="change-email-address">
+                                        <i class="fas fa-edit"></i>
+                                        Change Email
+                                    </button>
+                                    <button class="btn-primary" id="verify-email-otp" disabled>
+                                        <i class="fas fa-check-circle"></i>
+                                        Verify Code
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Step 3: Verified -->
+                        <div class="verification-step" id="email-step-3">
+                            <div class="step-content verified-content">
+                                <div class="success-animation">
+                                    <i class="fas fa-check-circle"></i>
+                                </div>
+                                <h4>Email Address Verified!</h4>
+                                <p>Your email address <strong id="verified-email">••••@gmail.com</strong> has been successfully verified</p>
+                                <button class="btn-secondary" id="email-edit">
+                                    <i class="fas fa-edit"></i>
+                                    Edit Email Address
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ID & Signature Verification Section -->
+            <div class="content-section" id="id-signature">
+                <div class="section-header">
+                    <div class="header-content">
+                        <h1>ID & Signature Verification</h1>
+                        <p>Complete your identity verification to start selling</p>
+                    </div>
+                    <div class="step-indicator">
+                        <span class="step-number">2</span>
+                        <span class="step-text">of 4 steps</span>
+                    </div>
+                </div>
+
+                <div class="form-card">
+                    <div class="form-group">
+                        <h3>What are you looking to sell on ShopWaveX?</h3>
+                        <div class="category-options">
+                            <label class="option-card">
+                                <input type="radio" name="category" value="all" checked>
+                                <div class="option-content">
+                                    <i class="fas fa-th-large"></i>
+                                    <h4>All Categories</h4>
+                                    <p>Sell products across all available categories</p>
+                                </div>
+                            </label>
+
+                            <!-- <label class="option-card">
+                                <input type="radio" name="category" value="books">
+                                <div class="option-content">
+                                    <i class="fas fa-book"></i>
+                                    <h4>Only Books</h4>
+                                    <p>Sell only books and related materials</p>
+                                </div>
+                            </label> -->
+
+                            <label class="option-card">
+                                <input type="radio" name="category" value="specific">
+                                <div class="option-content">
+                                    <i class="fas fa-tags"></i>
+                                    <h4>Specific Categories</h4>
+                                    <p>Choose specific product categories</p>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="divider">
+                        <span></span>
+                    </div>
+
+                    <div class="form-group">
+                        <h3>GSTIN Verification <span class="required">*</span></h3>
+                        <p class="form-description">GSTIN is required to sell products on ShopWaveX</p>
+                        
+                        <div class="input-group">
+                            <input type="text" id="gstin" placeholder="e.g., 07AABCU9603R1ZM" class="form-input">
+                            <button class="btn-verify" id="verify-gstin">
+                                <i class="fas fa-check"></i>
+                                Verify
+                            </button>
+                        </div>
+                        <div class="verification-result" id="gstin-result"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <h3>Add Your Signature</h3>
+                        <div class="signature-options">
+                            <div class="signature-type">
+                                <h4>Upload Your Signature</h4>
+                                <div class="upload-area" id="signature-upload">
+                                    <i class="fas fa-cloud-upload-alt"></i>
+                                    <p>Click to upload or drag and drop</p>
+                                    <span>PNG, JPG, PDF (Max 5MB)</span>
+                                    <input type="file" accept=".png,.jpg,.jpeg,.pdf" hidden>
+                                </div>
+                                <div class="upload-status" id="upload-status"></div>
+                            </div>
+
+                            <div class="divider-vertical">
+                                <span>OR</span>
+                            </div>
+
+                            <div class="signature-type">
+                                <h4>Create Digital Signature</h4>
+                                <div class="signature-pad">
+                                    <canvas id="signatureCanvas"></canvas>
+                                    <div class="signature-actions">
+                                        <button class="btn-clear" id="clear-signature">
+                                            <i class="fas fa-undo"></i>
+                                            Clear
+                                        </button>
+                                        <button class="btn-save" id="save-signature">
+                                            <i class="fas fa-save"></i>
+                                            Save Signature
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="signature-status" id="signature-status"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button class="btn-primary" id="save-id-signature">
+                            <i class="fas fa-save"></i>
+                            Save & Mark Complete
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Store & Pickup Details Section -->
+            <div class="content-section" id="store-pickup">
+                <div class="section-header">
+                    <div class="header-content">
+                        <h1>Store & Pickup Details</h1>
+                        <p>Set up your store information and pickup location</p>
+                    </div>
+                    <div class="step-indicator">
+                        <span class="step-number">3</span>
+                        <span class="step-text">of 4 steps</span>
+                    </div>
+                </div>
+
+                <div class="form-card">
+                    <div class="form-group">
+                        <div class="input-row">
+                            <div class="input-column">
+                                <label for="full-name">Enter Your Full Name <span class="required">*</span></label>
+                                <input type="text" id="full-name" placeholder="Enter your full name" class="form-input">
+                            </div>
+                            <div class="input-column">
+                                <label for="display-name">Enter Display Name <span class="required">*</span></label>
+                                <input type="text" id="display-name" placeholder="Enter display name" class="form-input">
+                                <div class="success-message" id="display-name-status">
+                                    <i class="fas fa-check-circle"></i>
+                                    Your display name is available
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <h3>Pickup Address</h3>
+                        <div class="address-form">
+                            <div class="input-row">
+                                <div class="input-column">
+                                    <label for="address-line1">Address Line 1 <span class="required">*</span></label>
+                                    <input type="text" id="address-line1" placeholder="Street address" class="form-input">
+                                </div>
+                                <div class="input-column">
+                                    <label for="address-line2">Address Line 2</label>
+                                    <input type="text" id="address-line2" placeholder="Apartment, suite, unit" class="form-input">
+                                </div>
+                            </div>
+
+                            <div class="input-row">
+                                <div class="input-column">
+                                    <label for="city">City <span class="required">*</span></label>
+                                    <input type="text" id="city" placeholder="City" class="form-input">
+                                </div>
+                                <div class="input-column">
+                                    <label for="state">State <span class="required">*</span></label>
+                                    <select id="state" class="form-input">
+                                        <option value="">Select State</option>
+                                        <option value="delhi">Delhi</option>
+                                        <option value="mumbai">Mumbai</option>
+                                        <option value="bangalore">Bangalore</option>
+                                        <option value="kolkata">Kolkata</option>
+                                        <option value="chennai">Chennai</option>
+                                    </select>
+                                </div>
+                                <div class="input-column">
+                                    <label for="pincode">PIN Code <span class="required">*</span></label>
+                                    <input type="text" id="pincode" placeholder="PIN Code" class="form-input">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button class="btn-primary" id="save-store-pickup">
+                            <i class="fas fa-save"></i>
+                            Save & Mark Complete
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Listing & Stock Section -->
+            <div class="content-section" id="listing-stock">
+                <div class="section-header">
+                    <div class="header-content">
+                        <h1>Listing & Stock Availability</h1>
+                        <p>Set up your product listings and inventory management</p>
+                    </div>
+                    <div class="step-indicator">
+                        <span class="step-number">4</span>
+                        <span class="step-text">of 4 steps</span>
+                    </div>
+                </div>
+
+                <div class="status-cards">
+                    <div class="status-card pending">
+                        <div class="status-icon">
+                            <i class="fas fa-plus-circle"></i>
+                        </div>
+                        <div class="status-content">
+                            <h3>Listing Created</h3>
+                            <p>No listings created yet</p>
+                        </div>
+                        <button class="btn-outline" id="create-listing">
+                            Create Listing
+                        </button>
+                    </div>
+
+                    <div class="status-card pending">
+                        <div class="status-icon">
+                            <i class="fas fa-box"></i>
+                        </div>
+                        <div class="status-content">
+                            <h3>Stock Added</h3>
+                            <p>No inventory added yet</p>
+                        </div>
+                        <button class="btn-outline" id="add-stock">
+                            Add Stock
+                        </button>
+                    </div>
+                </div>
+
+                <div class="info-card">
+                    <h3>Ready to start selling?</h3>
+                    <p>Complete the setup to unlock product listing features. You'll be able to:</p>
+                    <ul>
+                        <li>Create product listings with images and descriptions</li>
+                        <li>Manage your inventory and stock levels</li>
+                        <li>Set pricing and offers for your products</li>
+                        <li>Track orders and customer interactions</li>
+                    </ul>
+                </div>
+
+                <div class="form-actions">
+                    <button class="btn-primary" id="complete-listing-stock">
+                        <i class="fas fa-check-circle"></i>
+                        Mark as Complete
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Notification -->
+    <div class="notification" id="success-notification">
+        <div class="notification-content">
+            <i class="fas fa-check-circle"></i>
+            <span class="notification-text">Verification successful!</span>
+        </div>
+    </div>
+
+    <!-- Error Notification -->
+    <div class="notification error" id="error-notification">
+        <div class="notification-content">
+            <i class="fas fa-exclamation-circle"></i>
+            <span class="notification-text" id="error-message">Something went wrong!</span>
+        </div>
+    </div>
+
+    <!-- Completion Modal -->
+    <div class="modal" id="completion-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>🎉 Onboarding Complete!</h2>
+                <button class="modal-close" id="close-completion-modal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="completion-animation">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <h3>Welcome to Figkart Seller Community!</h3>
+                <p>Your vendor account has been successfully verified and activated. You can now start selling on our platform.</p>
+                <div class="completion-features">
+                    <div class="feature">
+                        <i class="fas fa-store"></i>
+                        <span>Your store is live</span>
+                    </div>
+                    <div class="feature">
+                        <i class="fas fa-box"></i>
+                        <span>Start adding products</span>
+                    </div>
+                    <div class="feature">
+                        <i class="fas fa-chart-line"></i>
+                        <span>Track your sales</span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-primary" id="go-to-dashboard">
+                    <i class="fas fa-rocket"></i>
+                    Go to Seller Dashboard
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Incomplete Modal -->
+    <div class="modal" id="incomplete-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>⚠️ Complete Required Steps</h2>
+                <button class="modal-close" id="close-incomplete-modal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="incomplete-icon">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+                <h3>Complete All Verifications</h3>
+                <p>Please complete the following steps before proceeding:</p>
+                <div class="incomplete-steps" id="incomplete-steps-list">
+                    <!-- Dynamically populated -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-primary" id="continue-verification">
+                    <i class="fas fa-edit"></i>
+                    Continue Verification
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="SignUp.js"></script>
+</body>
+</html>

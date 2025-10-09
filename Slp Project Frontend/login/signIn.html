@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign In - ShopWaveX</title>
     <link rel="stylesheet" href="auth.css">
 </head>
+
 <body>
     <div class="auth-container">
         <div class="auth-card">
@@ -43,13 +45,24 @@
                     </label>
                     <a href="#forgot-password" class="forgot-password">Forgot password?</a>
                 </div>
-
+                <!-- 
                 <button type="submit" class="btn-auth" id="loginBtn">
+                    <span class="btn-text">Sign In</span>
+                    <div class="btn-loader" style="display: none;">
+                        <div class="spinner"></div>
+                        <a href="../index.html" class="back-home"></a>
+                    </div>
+                </button> -->
+
+
+                <button type="button" class="btn-auth" id="loginBtn">
                     <span class="btn-text">Sign In</span>
                     <div class="btn-loader" style="display: none;">
                         <div class="spinner"></div>
                     </div>
                 </button>
+
+
             </form>
 
             <div class="auth-divider">
@@ -62,7 +75,7 @@
                     Continue with Google
 
                 </button>
-                
+
                 <button type="button" class="btn-social btn-facebook">
                     <img src="assets/facebook_icon.svg" alt="Facebook">
                     Continue with Facebook
@@ -72,6 +85,15 @@
             <div class="auth-footer">
                 <p>Don't have an account? <a href="signup.html" class="auth-link">Sign up</a></p>
             </div>
+
+        
+
+            <a href="../Vendor/Authentication/SignIn/SignIn.html" 
+    class="btn-auth" 
+    style="display:inline-block; padding:10px 20px; color:#fff; background-color:#736cd8; border-radius:5px; text-decoration:none; position:relative; top:10px; text-align:center; margin-top:10px;">
+    Sign In as seller
+</a>
+
         </div>
 
         <div class="auth-hero">
@@ -114,4 +136,5 @@
 
     <script src="auth.js"></script>
 </body>
+
 </html>

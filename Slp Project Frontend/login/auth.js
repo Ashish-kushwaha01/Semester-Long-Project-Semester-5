@@ -64,6 +64,18 @@ function initializeSignupForm() {
     const passwordInput = document.getElementById('signupPassword');
     const confirmPasswordInput = document.getElementById('confirmPassword');
 
+
+
+    // const user_data = {
+//     "email": emailInput,
+//     "f_name": firstNameInput,
+//     "l_name": lastNameInput,
+//     "password": passwordInput,
+//     "confirm_password": confirmPasswordInput
+// };
+
+
+
     if (firstNameInput) {
         firstNameInput.addEventListener('input', function() {
             validateName(this.value, 'firstNameError', 'First name');

@@ -51,81 +51,183 @@ class SellerSignIn {
         });
     }
 
+    // async handleSignIn() {
+    //     const loginId = document.getElementById('login-id').value.trim();
+    //     const password = document.getElementById('password').value;
+    //     const signinBtn = document.getElementById('signin-btn');
+
+    //     if (!loginId || !password) {
+    //         this.showNotification('Please enter both login ID and password', 'error');
+    //         return;
+    //     }
+
+    //     this.setButtonLoading(signinBtn, true, 'Signing in...');
+
+    //     try {
+    //         // Simulate API call for authentication
+    //         await this.simulateAPICall(1500);
+            
+    //         // Mock user data based on login ID
+    //         this.userData = this.getMockUserData(loginId);
+            
+    //         if (this.userData) {
+    //             // Send OTP to email and mobile
+    //             await this.sendOTPVerification();
+    //             this.showStep('otp');
+    //         } else {
+    //             throw new Error('Invalid credentials');
+    //         }
+    //     } catch (error) {
+    //         this.showNotification('Invalid login credentials. Please try again.', 'error');
+    //     } finally {
+    //         this.setButtonLoading(signinBtn, false, '<i class="fas fa-sign-in-alt"></i> Sign In');
+    //     }
+    // }
+
+
     async handleSignIn() {
-        const loginId = document.getElementById('login-id').value.trim();
-        const password = document.getElementById('password').value;
-        const signinBtn = document.getElementById('signin-btn');
+    const loginId = document.getElementById('login-id').value.trim();
+    const password = document.getElementById('password').value;
+    const signinBtn = document.getElementById('signin-btn');
 
-        if (!loginId || !password) {
-            this.showNotification('Please enter both login ID and password', 'error');
-            return;
-        }
-
-        this.setButtonLoading(signinBtn, true, 'Signing in...');
-
-        try {
-            // Simulate API call for authentication
-            await this.simulateAPICall(1500);
-            
-            // Mock user data based on login ID
-            this.userData = this.getMockUserData(loginId);
-            
-            if (this.userData) {
-                // Send OTP to email and mobile
-                await this.sendOTPVerification();
-                this.showStep('otp');
-            } else {
-                throw new Error('Invalid credentials');
-            }
-        } catch (error) {
-            this.showNotification('Invalid login credentials. Please try again.', 'error');
-        } finally {
-            this.setButtonLoading(signinBtn, false, '<i class="fas fa-sign-in-alt"></i> Sign In');
-        }
+    if (!loginId || !password) {
+        this.showNotification('Please enter both login ID and password', 'error');
+        return;
     }
 
-    getMockUserData(loginId) {
-        // Mock user data for demonstration
-        const users = {
-            'seller@figkart.com': {
-                name: 'Ashish Kumar',
-                email: 'seller@figkart.com',
-                mobile: '+918726112768',
-                business: 'Ashish Electronics'
-            },
-            '9876543210': {
-                name: 'Ashish Kumar',
-                email: 'seller@figkart.com',
-                mobile: '+919876543210',
-                business: 'Ashish Electronics'
-            },
-            'ashish_seller': {
-                name: 'Ashish Kumar',
-                email: 'seller@figkart.com',
-                mobile: '+918726112768',
-                business: 'Ashish Electronics'
-            }
+    this.setButtonLoading(signinBtn, true, 'Signing in...');
+
+    try {
+        // API call for authentication - USING YOUR FORMAT
+        const data = {
+            email: loginId, // or use loginId directly if it can be email/mobile/username
+            password: password
         };
 
-        return users[loginId] || null;
+        const response = await fetch("http://127.0.0.1:8000/api/vendors/login/", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(data)
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+            this.userData = {
+                name: result.first_name || result.name,
+                email: result.email,
+                mobile: result.mobile, // make sure your API returns mobile
+                business: result.seller_name || result.business,
+                userId: result.id || result.user_id,
+                token: result.token // if your API returns token
+            };
+            
+            // Send OTP to email and mobile
+            await this.sendOTPVerification();
+            this.showStep('otp');
+        } else {
+            throw new Error(result.detail || result.error || JSON.stringify(result));
+        }
+    } catch (error) {
+        this.showNotification('Login failed: ' + error.message, 'error');
+    } finally {
+        this.setButtonLoading(signinBtn, false, '<i class="fas fa-sign-in-alt"></i> Sign In');
     }
+}
+
+    // getMockUserData(loginId) {
+    //     // Mock user data for demonstration
+    //     const users = {
+    //         'seller@figkart.com': {
+    //             name: 'Ashish Kumar',
+    //             email: 'seller@figkart.com',
+    //             mobile: '+918726112768',
+    //             business: 'Ashish Electronics'
+    //         },
+    //         '9876543210': {
+    //             name: 'Ashish Kumar',
+    //             email: 'seller@figkart.com',
+    //             mobile: '+919876543210',
+    //             business: 'Ashish Electronics'
+    //         },
+    //         'ashish_seller': {
+    //             name: 'Ashish Kumar',
+    //             email: 'seller@figkart.com',
+    //             mobile: '+918726112768',
+    //             business: 'Ashish Electronics'
+    //         }
+    //     };
+
+    //     return users[loginId] || null;
+    // }
+
+
+    
+
+    // async sendOTPVerification() {
+    //     if (!this.userData) return;
+
+    //     // Show loading
+    //     this.showLoading(true);
+
+    //     try {
+    //         // Simulate OTP sending
+    //         await this.simulateAPICall(1000);
+            
+    //         // Generate OTPs
+    //         this.emailOTP = this.generateOTP();
+    //         this.mobileOTP = this.generateOTP();
+            
+    //         console.log(`Email OTP for ${this.userData.email}: ${this.emailOTP}`);
+    //         console.log(`Mobile OTP for ${this.userData.mobile}: ${this.mobileOTP}`);
+            
+    //         // Update OTP targets
+    //         document.getElementById('email-otp-target').textContent = this.maskEmail(this.userData.email);
+    //         document.getElementById('mobile-otp-target').textContent = this.maskMobile(this.userData.mobile);
+            
+    //         // Start timers
+    //         this.startTimer('email');
+    //         this.startTimer('mobile');
+            
+    //         this.showNotification('Verification codes sent to your email and mobile', 'success');
+    //     } catch (error) {
+    //         this.showNotification('Failed to send verification codes. Please try again.', 'error');
+    //     } finally {
+    //         this.showLoading(false);
+    //     }
+    // }
+
+
+
 
     async sendOTPVerification() {
-        if (!this.userData) return;
+    if (!this.userData) return;
 
-        // Show loading
-        this.showLoading(true);
+    this.showLoading(true);
 
-        try {
-            // Simulate OTP sending
-            await this.simulateAPICall(1000);
-            
-            // Generate OTPs
-            this.emailOTP = this.generateOTP();
-            this.mobileOTP = this.generateOTP();
-            
-            console.log(`Email OTP for ${this.userData.email}: ${this.emailOTP}`);
-            console.log(`Mobile OTP for ${this.userData.mobile}: ${this.mobileOTP}`);
+    try {
+        // API call to send OTP - USING YOUR FORMAT
+        const data = {
+            email: this.userData.email,
+            mobile: this.userData.mobile,
+            user_id: this.userData.userId
+        };
+
+        const response = await fetch("http://127.0.0.1:8000/api/vendors/send-otp/", {
+            method: "POST",
+            headers: { 
+                "Content-Type": "application/json",
+                // Add authorization if needed: "Authorization": `Bearer ${this.userData.token}`
+            },
+            body: JSON.stringify(data)
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+            // If your API returns OTPs for verification (optional)
+            this.emailOTP = result.email_otp; 
+            this.mobileOTP = result.mobile_otp;
             
             // Update OTP targets
             document.getElementById('email-otp-target').textContent = this.maskEmail(this.userData.email);
@@ -136,59 +238,176 @@ class SellerSignIn {
             this.startTimer('mobile');
             
             this.showNotification('Verification codes sent to your email and mobile', 'success');
-        } catch (error) {
-            this.showNotification('Failed to send verification codes. Please try again.', 'error');
-        } finally {
-            this.showLoading(false);
+        } else {
+            throw new Error(result.detail || result.error || JSON.stringify(result));
         }
+    } catch (error) {
+        this.showNotification('Failed to send OTP: ' + error.message, 'error');
+    } finally {
+        this.showLoading(false);
     }
+}
+
+    // async verifyOTP() {
+    //     const emailOTP = this.getEnteredOTP('email');
+    //     const mobileOTP = this.getEnteredOTP('mobile');
+    //     const verifyBtn = document.getElementById('verify-otp');
+
+    //     if (emailOTP.length !== 6 || mobileOTP.length !== 6) {
+    //         this.showNotification('Please enter complete verification codes', 'error');
+    //         return;
+    //     }
+
+    //     this.setButtonLoading(verifyBtn, true, 'Verifying...');
+
+    //     try {
+    //         await this.simulateAPICall(1500);
+            
+    //         if (emailOTP === this.emailOTP && mobileOTP === this.mobileOTP) {
+    //             // Update success details
+    //             document.getElementById('success-user').textContent = this.userData.name;
+    //             document.getElementById('success-time').textContent = new Date().toLocaleString();
+                
+    //             this.showStep('success');
+    //             this.showNotification('Sign in successful!', 'success');
+    //         } else {
+    //             throw new Error('Invalid OTP');
+    //         }
+    //     } catch (error) {
+    //         this.showNotification('Invalid verification codes. Please try again.', 'error');
+    //     } finally {
+    //         this.setButtonLoading(verifyBtn, false, '<i class="fas fa-check-circle"></i> Verify & Continue');
+    //     }
+    // }
+
+
+
 
     async verifyOTP() {
-        const emailOTP = this.getEnteredOTP('email');
-        const mobileOTP = this.getEnteredOTP('mobile');
-        const verifyBtn = document.getElementById('verify-otp');
+    const emailOTP = this.getEnteredOTP('email');
+    const mobileOTP = this.getEnteredOTP('mobile');
+    const verifyBtn = document.getElementById('verify-otp');
 
-        if (emailOTP.length !== 6 || mobileOTP.length !== 6) {
-            this.showNotification('Please enter complete verification codes', 'error');
-            return;
-        }
+    if (emailOTP.length !== 6 || mobileOTP.length !== 6) {
+        this.showNotification('Please enter complete verification codes', 'error');
+        return;
+    }
 
-        this.setButtonLoading(verifyBtn, true, 'Verifying...');
+    this.setButtonLoading(verifyBtn, true, 'Verifying...');
 
-        try {
-            await this.simulateAPICall(1500);
+    try {
+        // API call to verify OTP - USING YOUR FORMAT
+        const data = {
+            email_otp: emailOTP,
+            mobile_otp: mobileOTP,
+            user_id: this.userData.userId,
+            email: this.userData.email
+        };
+
+        const response = await fetch("http://127.0.0.1:8000/api/vendors/verify-otp/", {
+            method: "POST",
+            headers: { 
+                "Content-Type": "application/json",
+                // "Authorization": `Bearer ${this.userData.token}` // if needed
+            },
+            body: JSON.stringify(data)
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+            // Update success details
+            document.getElementById('success-user').textContent = this.userData.name;
+            document.getElementById('success-time').textContent = new Date().toLocaleString();
             
-            if (emailOTP === this.emailOTP && mobileOTP === this.mobileOTP) {
-                // Update success details
-                document.getElementById('success-user').textContent = this.userData.name;
-                document.getElementById('success-time').textContent = new Date().toLocaleString();
-                
-                this.showStep('success');
-                this.showNotification('Sign in successful!', 'success');
-            } else {
-                throw new Error('Invalid OTP');
+            // Store token if API returns it
+            if (result.token) {
+                localStorage.setItem('sellerToken', result.token);
             }
-        } catch (error) {
-            this.showNotification('Invalid verification codes. Please try again.', 'error');
-        } finally {
-            this.setButtonLoading(verifyBtn, false, '<i class="fas fa-check-circle"></i> Verify & Continue');
+            
+            this.showStep('success');
+            this.showNotification('Sign in successful!', 'success');
+        } else {
+            throw new Error(result.detail || result.error || JSON.stringify(result));
         }
+    } catch (error) {
+        this.showNotification('OTP verification failed: ' + error.message, 'error');
+    } finally {
+        this.setButtonLoading(verifyBtn, false, '<i class="fas fa-check-circle"></i> Verify & Continue');
     }
+}
 
-    resendEmailOTP() {
-        this.emailOTP = this.generateOTP();
-        console.log(`New Email OTP: ${this.emailOTP}`);
-        this.startTimer('email');
-        this.showNotification('New verification code sent to your email', 'success');
+    // resendEmailOTP() {
+    //     this.emailOTP = this.generateOTP();
+    //     console.log(`New Email OTP: ${this.emailOTP}`);
+    //     this.startTimer('email');
+    //     this.showNotification('New verification code sent to your email', 'success');
+    // }
+
+    // resendMobileOTP() {
+    //     this.mobileOTP = this.generateOTP();
+    //     console.log(`New Mobile OTP: ${this.mobileOTP}`);
+    //     this.startTimer('mobile');
+    //     this.showNotification('New verification code sent to your mobile', 'success');
+    // }
+
+
+
+    async resendEmailOTP() {
+    try {
+        // API call to resend email OTP - USING YOUR FORMAT
+        const data = {
+            email: this.userData.email,
+            type: 'email'
+        };
+
+        const response = await fetch("http://127.0.0.1:8000/api/vendors/resend-otp/", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(data)
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+            this.emailOTP = result.otp; // if API returns the new OTP
+            this.startTimer('email');
+            this.showNotification('New verification code sent to your email', 'success');
+        } else {
+            throw new Error(result.detail || result.error || JSON.stringify(result));
+        }
+    } catch (error) {
+        this.showNotification('Failed to resend OTP: ' + error.message, 'error');
     }
+}
 
-    resendMobileOTP() {
-        this.mobileOTP = this.generateOTP();
-        console.log(`New Mobile OTP: ${this.mobileOTP}`);
-        this.startTimer('mobile');
-        this.showNotification('New verification code sent to your mobile', 'success');
+async resendMobileOTP() {
+    try {
+        // API call to resend mobile OTP - USING YOUR FORMAT
+        const data = {
+            mobile: this.userData.mobile,
+            type: 'mobile'
+        };
+
+        const response = await fetch("http://127.0.0.1:8000/api/vendors/resend-otp/", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(data)
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+            this.mobileOTP = result.otp; // if API returns the new OTP
+            this.startTimer('mobile');
+            this.showNotification('New verification code sent to your mobile', 'success');
+        } else {
+            throw new Error(result.detail || result.error || JSON.stringify(result));
+        }
+    } catch (error) {
+        this.showNotification('Failed to resend OTP: ' + error.message, 'error');
     }
-
+}
     setupOTPInputs() {
         const inputs = document.querySelectorAll('.otp-digit');
         

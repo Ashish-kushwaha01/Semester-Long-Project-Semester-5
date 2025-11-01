@@ -30,23 +30,23 @@ class AuthManager {
     }
 
     updateUIBasedOnAuth() {
-        const authLinks = document.getElementById('authLinks');
+        const navActions = document.querySelector('.nav-actions');
         
-        if (!authLinks) return;
+        if (!navActions) return;
 
         if (this.isAuthenticated()) {
             const user = this.getCurrentUser();
-            authLinks.innerHTML = this.getLoggedInUI(user);
+            navActions.innerHTML = this.getLoggedInUI(user);
             this.initDropdown();
         } else {
-            authLinks.innerHTML = this.getLoggedOutUI();
+            navActions.innerHTML = this.getLoggedOutUI();
         }
     }
 
     getLoggedOutUI() {
         return `
-            <a href="auth/signin.html" class="btn-signin">Sign In</a>
-            <a href="auth/signup.html" class="btn-signup">Sign Up</a>
+            <a href="cart.html" class="nav-item">Cart <span id="cartCount" class="cart-count">0</span></a>
+            <a href="login/signIn.html" class="nav-item">Sign in</a>
         `;
     }
 
@@ -54,9 +54,10 @@ class AuthManager {
         const userInitial = user.first_name ? user.first_name.charAt(0).toUpperCase() : 'U';
         
         return `
+            <a href="cart.html" class="nav-item">Cart <span id="cartCount" class="cart-count">0</span></a>
             <div class="user-dropdown" id="userDropdown">
                 <div class="user-avatar">${userInitial}</div>
-                <span>Hi, ${user.first_name}</span>
+                <span class="user-name">Hi, ${user.first_name}</span>
                 <div class="dropdown-menu" id="dropdownMenu">
                     <a href="profile.html" class="dropdown-item">My Profile</a>
                     <a href="#" class="dropdown-item">My Orders</a>
@@ -100,28 +101,26 @@ class AuthManager {
         this.currentUser = userData;
         this.updateUIBasedOnAuth();
         
-        // Show success message
         this.showSuccessMessage('Login successful!');
         
-        // Redirect to home page after delay
         setTimeout(() => {
-            window.location.href = 'index.html';
+            window.location.href = '../index.html';
         }, 1500);
     }
 
     showSuccessMessage(message) {
-        // Create temporary success message
         const successDiv = document.createElement('div');
         successDiv.style.cssText = `
             position: fixed;
             top: 20px;
             right: 20px;
-            background: #10b981;
+            background: #00b341;
             color: white;
             padding: 12px 20px;
             border-radius: 8px;
             z-index: 10000;
             font-weight: 500;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
         `;
         successDiv.textContent = message;
         document.body.appendChild(successDiv);
@@ -176,5 +175,4 @@ class AuthManager {
     }
 }
 
-// Create global instance
 const authManager = new AuthManager();

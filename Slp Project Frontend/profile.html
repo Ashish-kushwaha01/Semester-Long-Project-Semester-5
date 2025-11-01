@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>ShopwaveX — My Profile</title>
+    <link rel="stylesheet" href="css/common.css" />
+    <link rel="stylesheet" href="css/profile.css" />
+</head>
+
+<body>
+    <!-- Header / Nav  -->
+    <header class="site-header">
+        <div class="brand">
+            <a href="index.html">Shopwave<span class="accent">X</span></a>
+        </div>
+        <div class="search-bar">
+            <form id="searchForm" action="search.html" method="get">
+                <input id="searchInput" name="q" type="search" placeholder="Search for products, brands and more" />
+                <button type="submit">Search</button>
+            </form>
+        </div>
+        <nav class="nav-actions">
+            <!-- Dynamic content will be loaded by authManager -->
+            <a href="cart.html" class="nav-item">Cart <span id="cartCount" class="cart-count">0</span></a>
+            <a href="login/signIn.html" class="nav-item">Sign in</a>
+        </nav>
+    </header>
+
+    <main class="profile-container">
+        <div class="profile-header">
+            <h1 class="profile-title">My Profile</h1>
+            <p class="profile-subtitle">Manage your account information and preferences</p>
+        </div>
+
+        <div class="profile-card">
+            <div id="profileContent">
+                <div class="loading" style="text-align: center; padding: 60px;">
+                    <div class="loading-spinner"></div>
+                    <p style="margin-top: 16px; color: var(--muted);">Loading your profile...</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="footer-content">
+            <div>© <span id="year"></span> ShopwaveX — Premium E-Commerce Platform</div>
+            <div class="footer-tagline">Built for modern shopping experience</div>
+        </div>
+    </footer>
+
+    <script src="js/utils/authManager.js"></script>
+    <script src="js/profile.js"></script>
+</body>
+
+</html>

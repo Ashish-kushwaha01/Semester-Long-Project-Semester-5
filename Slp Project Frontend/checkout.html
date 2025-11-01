@@ -10,9 +10,19 @@
 </head>
 
 <body>
+    <!-- Header / Nav  -->
     <header class="site-header">
-        <div class="brand"><a href="index.html">ShopWave<span class="accent">X</span></a></div>
+        <div class="brand">
+            <a href="index.html">Shopwave<span class="accent">X</span></a>
+        </div>
+        <div class="search-bar">
+            <form id="searchForm" action="search.html" method="get">
+                <input id="searchInput" name="q" type="search" placeholder="Search for products, brands and more" />
+                <button type="submit">Search</button>
+            </form>
+        </div>
         <nav class="nav-actions">
+            <!-- Dynamic content will be loaded by authManager -->
             <a href="cart.html" class="nav-item">Cart <span id="cartCount" class="cart-count">0</span></a>
             <a href="login/signIn.html" class="nav-item">Sign in</a>
         </nav>
@@ -152,6 +162,13 @@
 
     <script src="js/common.js"></script>
     <script src="js/checkout.js"></script>
+    <script src="js/utils/authManager.js"></script>
+<script>
+    // Initialize auth state when page loads
+    document.addEventListener('DOMContentLoaded', function() {
+        authManager.updateUIBasedOnAuth();
+    });
+</script>
 </body>
 
 </html>

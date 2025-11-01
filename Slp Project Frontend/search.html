@@ -10,8 +10,11 @@
 </head>
 
 <body>
+    <!-- Header / Nav  -->
     <header class="site-header">
-        <div class="brand"><a href="index.html">ShopWave<span class="accent">X</span></a></div>
+        <div class="brand">
+            <a href="index.html">Shopwave<span class="accent">X</span></a>
+        </div>
         <div class="search-bar">
             <form id="searchForm" action="search.html" method="get">
                 <input id="searchInput" name="q" type="search" placeholder="Search for products, brands and more" />
@@ -19,10 +22,12 @@
             </form>
         </div>
         <nav class="nav-actions">
+            <!-- Dynamic content will be loaded by authManager -->
             <a href="cart.html" class="nav-item">Cart <span id="cartCount" class="cart-count">0</span></a>
             <a href="login/signIn.html" class="nav-item">Sign in</a>
         </nav>
     </header>
+
 
     <main class="search-main">
         <div class="search-header">
@@ -99,11 +104,18 @@
     </main>
 
     <footer class="site-footer">
-        <div>© <span id="year"></span> ShopWaveX — E-Commerce. Built with ❤️ for learning</div>
+        <div>© <span id="year"></span> ShopWaveX — E-Commerce. Built for learning</div>
     </footer>
 
     <script src="js/common.js"></script>
     <script src="js/search.js"></script>
+    <script src="js/utils/authManager.js"></script>
+<script>
+    // Initialize auth state when page loads
+    document.addEventListener('DOMContentLoaded', function() {
+        authManager.updateUIBasedOnAuth();
+    });
+</script>
 </body>
 
 </html>

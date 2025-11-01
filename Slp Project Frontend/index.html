@@ -7,6 +7,7 @@
     <title>ShopwaveX — Home</title>
     <link rel="stylesheet" href="css/common.css" />
     <link rel="stylesheet" href="css/home.css" />
+    
 </head>
 
 <body>
@@ -22,6 +23,7 @@
             </form>
         </div>
         <nav class="nav-actions">
+            <!-- Dynamic content will be loaded by authManager -->
             <a href="cart.html" class="nav-item">Cart <span id="cartCount" class="cart-count">0</span></a>
             <a href="login/signIn.html" class="nav-item">Sign in</a>
         </nav>
@@ -71,10 +73,15 @@
         </div>
     </footer>
 
+    <script src="js/utils/authManager.js"></script>
     <script src="js/common.js"></script>
     <script src="js/home.js"></script>
+    <script>
+        // Initialize auth state when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            authManager.updateUIBasedOnAuth();
+        });
+    </script>
 </body>
 
 </html>
-
-<!-- here pk change -->

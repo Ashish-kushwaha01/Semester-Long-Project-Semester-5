@@ -65,7 +65,7 @@ async function verifyOtp() {
             // Success - redirect to success page or login
             alert('Email verified successfully! You can now login.');
             localStorage.removeItem('verifyEmail'); // Clean up
-            window.location.href = '../signIn.html'; // Change to your login page
+            window.location.href = '../login/signIn.html'; // Change to your login page
         } else {
             // Handle errors
             if (result.detail) {

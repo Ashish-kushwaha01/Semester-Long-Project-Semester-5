@@ -1,130 +1,130 @@
-<!DOCTYPE html>
-<html lang="en">
+    <!DOCTYPE html>
+    <html lang="en">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign In - ShopWaveX</title>
-    <link rel="stylesheet" href="auth.css">
-</head>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Sign In - ShopWaveX</title>
+        <link rel="stylesheet" href="auth.css">
+    </head>
 
-<body>
-    <div class="auth-container">
-        <div class="auth-card">
-            <div class="auth-header">
-                <a href="../index.html" class="back-home">
-                    ← Back to Home
-                </a>
-                <h1>Welcome Back</h1>
-                <p>Sign in to your ShopWaveX account</p>
-            </div>
-
-            <form class="auth-form" id="loginForm">
-                <div class="form-group">
-                    <label for="loginEmail">Email Address</label>
-                    <input type="email" id="loginEmail" placeholder="Enter your email" required>
-                    <div class="error-message" id="emailError"></div>
+    <body>
+        <div class="auth-container">
+            <div class="auth-card">
+                <div class="auth-header">
+                    <a href="../index.html" class="back-home">
+                        ← Back to Home
+                    </a>
+                    <h1>Welcome Back</h1>
+                    <p>Sign in to your ShopWaveX account</p>
                 </div>
 
-                <div class="form-group">
-                    <label for="loginPassword">Password</label>
-                    <div class="password-input">
-                        <input type="password" id="loginPassword" placeholder="Enter your password" required>
-                        <button type="button" class="toggle-password" onclick="togglePassword('loginPassword')">
-                            👁️
-                        </button>
+                <form class="auth-form" id="loginForm">
+                    <div class="form-group">
+                        <label for="loginEmail">Email Address</label>
+                        <input type="email" id="loginEmail" placeholder="Enter your email" required>
+                        <div class="error-message" id="emailError"></div>
                     </div>
-                    <div class="error-message" id="passwordError"></div>
-                </div>
 
-                <div class="form-options">
-                    <label class="remember-me">
-                        <input type="checkbox" id="rememberMe">
-                        <span class="checkmark"></span>
-                        Remember me
-                    </label>
-                    <a href="#forgot-password" class="forgot-password">Forgot password?</a>
-                </div>
-
-                <button type="submit" class="btn-auth" id="loginBtn">
-        <span class="btn-text">Sign In</span>
-        <div class="btn-loader" style="display: none;">
-            <div class="spinner"></div>
-        </div>
-    </button>
-
-
-            </form>
-
-            <div class="auth-divider">
-                <span>or continue with</span>
-            </div>
-
-            <div class="social-auth">
-                <button type="button" class="btn-social btn-google">
-                    <!-- <img src="assets/google_icon.svg" alt="Google"> -->
-                    Continue with Google
-
-                </button>
-
-                <button type="button" class="btn-social btn-facebook">
-                    <!-- <img src="assets/facebook_icon.svg" alt="Facebook"> -->
-                    Continue with Facebook
-                </button>
-            </div>
-
-            <div class="auth-footer">
-                <p>Don't have an account? <a href="../SignUp/signup.html" class="auth-link">Sign up</a></p>
-            </div>
-
-            <a href="../Vendor/Authentication/SignIn/SignIn.html" 
-    class="btn-auth" 
-    style="display:inline-block; padding:10px 20px; color:#fff; background-color:#736cd8; border-radius:5px; text-decoration:none; position:relative; top:10px; text-align:center; margin-top:10px;">
-    Sign In as seller
-</a>
-
-        </div>
-
-        <div class="auth-hero">
-            <div class="hero-content">
-                <h2>Start Shopping Smarter</h2>
-                <p>Access your personalized recommendations, order history, and exclusive deals.</p>
-                <div class="hero-features">
-                    <div class="feature">
-                        <span class="feature-icon">🚚</span>
-                        <span>Fast & Free Delivery</span>
+                    <div class="form-group">
+                        <label for="loginPassword">Password</label>
+                        <div class="password-input">
+                            <input type="password" id="loginPassword" placeholder="Enter your password" required>
+                            <button type="button" class="toggle-password" onclick="togglePassword('loginPassword')">
+                                👁️
+                            </button>
+                        </div>
+                        <div class="error-message" id="passwordError"></div>
                     </div>
-                    <div class="feature">
-                        <span class="feature-icon">🛡️</span>
-                        <span>Secure Payments</span>
+
+                    <div class="form-options">
+                        <label class="remember-me">
+                            <input type="checkbox" id="rememberMe">
+                            <span class="checkmark"></span>
+                            Remember me
+                        </label>
+                        <a href="#forgot-password" class="forgot-password">Forgot password?</a>
                     </div>
-                    <div class="feature">
-                        <span class="feature-icon">⭐</span>
-                        <span>Exclusive Deals</span>
+
+                    <button type="submit" class="btn-auth" id="loginBtn">
+            <span class="btn-text">Sign In</span>
+            <div class="btn-loader" style="display: none;">
+                <div class="spinner"></div>
+            </div>
+        </button>
+
+
+                </form>
+
+                <div class="auth-divider">
+                    <span>or continue with</span>
+                </div>
+
+                <div class="social-auth">
+                    <button type="button" class="btn-social btn-google">
+                        <!-- <img src="assets/google_icon.svg" alt="Google"> -->
+                        Continue with Google
+
+                    </button>
+
+                    <button type="button" class="btn-social btn-facebook">
+                        <!-- <img src="assets/facebook_icon.svg" alt="Facebook"> -->
+                        Continue with Facebook
+                    </button>
+                </div>
+
+                <div class="auth-footer">
+                    <p>Don't have an account? <a href="../SignUp/signup.html" class="auth-link">Sign up</a></p>
+                </div>
+
+                <a href="../Vendor/Authentication/SignIn/SignIn.html" 
+        class="btn-auth" 
+        style="display:inline-block; padding:10px 20px; color:#fff; background-color:#736cd8; border-radius:5px; text-decoration:none; position:relative; top:10px; text-align:center; margin-top:10px;">
+        Sign In as seller
+    </a>
+
+            </div>
+
+            <div class="auth-hero">
+                <div class="hero-content">
+                    <h2>Start Shopping Smarter</h2>
+                    <p>Access your personalized recommendations, order history, and exclusive deals.</p>
+                    <div class="hero-features">
+                        <div class="feature">
+                            <span class="feature-icon">🚚</span>
+                            <span>Fast & Free Delivery</span>
+                        </div>
+                        <div class="feature">
+                            <span class="feature-icon">🛡️</span>
+                            <span>Secure Payments</span>
+                        </div>
+                        <div class="feature">
+                            <span class="feature-icon">⭐</span>
+                            <span>Exclusive Deals</span>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <!-- Forgot Password Modal -->
-    <div id="forgotPasswordModal" class="modal">
-        <div class="modal-content">
-            <span class="close-modal">&times;</span>
-            <h3>Reset Your Password</h3>
-            <p>Enter your email address and we'll send you a link to reset your password.</p>
-            <form id="forgotPasswordForm">
-                <div class="form-group">
-                    <label for="resetEmail">Email Address</label>
-                    <input type="email" id="resetEmail" placeholder="Enter your email" required>
-                </div>
-                <button type="submit" class="btn-auth">Send Reset Link</button>
-            </form>
+        <!-- Forgot Password Modal -->
+        <div id="forgotPasswordModal" class="modal">
+            <div class="modal-content">
+                <span class="close-modal">&times;</span>
+                <h3>Reset Your Password</h3>
+                <p>Enter your email address and we'll send you a link to reset your password.</p>
+                <form id="forgotPasswordForm">
+                    <div class="form-group">
+                        <label for="resetEmail">Email Address</label>
+                        <input type="email" id="resetEmail" placeholder="Enter your email" required>
+                    </div>
+                    <button type="submit" class="btn-auth">Send Reset Link</button>
+                </form>
+            </div>
         </div>
-    </div>
 
-    <script src="SignIn.js"></script>
-    <script src="../js/utils/authManager.js"></script>
-</body>
+        <script src="SignIn.js"></script>
+        <script src="../js/utils/authManager.js"></script>
+    </body>
 
-</html>
+    </html>

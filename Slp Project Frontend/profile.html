@@ -1,30 +1,38 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ShopwaveX — My Profile</title>
-    <link rel="stylesheet" href="css/common.css" />
-    <link rel="stylesheet" href="css/profile.css" />
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/profile.css">
 </head>
-
 <body>
-    <!-- Header / Nav  -->
-    <header class="site-header">
+<!-- Header / Nav -->
+<header class="site-header">
         <div class="brand">
             <a href="index.html">Shopwave<span class="accent">X</span></a>
         </div>
         <div class="search-bar">
             <form id="searchForm" action="search.html" method="get">
-                <input id="searchInput" name="q" type="search" placeholder="Search for products, brands and more" />
+                <input id="searchInput" name="q" type="search" placeholder="Search for products, brands and more">
                 <button type="submit">Search</button>
             </form>
         </div>
         <nav class="nav-actions">
-            <!-- Dynamic content will be loaded by authManager -->
             <a href="cart.html" class="nav-item">Cart <span id="cartCount" class="cart-count">0</span></a>
-            <a href="login/signIn.html" class="nav-item">Sign in</a>
+            <div class="user-dropdown" id="userDropdown" style="display: none;">
+                <div class="user-avatar" id="userAvatar">U</div>
+                <span class="user-name" id="userName">User</span>
+                <div class="dropdown-menu" id="dropdownMenu">
+                    <a href="profile.html" class="dropdown-item">👤 My Profile</a>
+                    <a href="orders.html" class="dropdown-item">📦 My Orders</a>
+                    <a href="settings.html" class="dropdown-item">⚙️ Settings</a>
+                    <div class="dropdown-divider"></div>
+                    <button class="dropdown-item logout-btn" onclick="authManager.logout()">🚪 Logout</button>
+                </div>
+            </div>
+            <a href="login/signIn.html" class="nav-item" id="signInLink">Sign in</a>
         </nav>
     </header>
 
@@ -44,16 +52,16 @@
         </div>
     </main>
 
-    <!-- Footer -->
-    <footer class="site-footer">
+<!-- Footer -->
+<footer class="site-footer">
         <div class="footer-content">
             <div>© <span id="year"></span> ShopwaveX — Premium E-Commerce Platform</div>
             <div class="footer-tagline">Built for modern shopping experience</div>
         </div>
     </footer>
 
+    <script src="js/common.js"></script>
     <script src="js/utils/authManager.js"></script>
     <script src="js/profile.js"></script>
 </body>
-
 </html>

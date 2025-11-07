@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vendor Dashboard - ShopwaveX</title>
+    <link rel="stylesheet" href="../css/vendor-dashboard.css">
+</head>
+<body>
+    <!-- Vendor Header -->
+    <header class="vendor-header">
+        <nav class="vendor-nav">
+            <div class="vendor-brand">
+                <a href="index.html" class="brand-link">
+                    <span class="brand-icon">🏪</span>
+                    <span>ShopwaveX Vendor</span>
+                </a>
+            </div>
+            <div class="vendor-actions">
+                <div class="vendor-notifications">
+                    <button class="notification-btn">
+                        🔔
+                        <span class="notification-count">3</span>
+                    </button>
+                </div>
+                <div class="vendor-profile">
+                    <div class="profile-dropdown">
+                        <button class="profile-btn">
+                            <span class="profile-avatar">👤</span>
+                            <span class="profile-name" id="vendorName">Vendor Name</span>
+                            <span class="dropdown-arrow">▼</span>
+                        </button>
+                        <div class="dropdown-menu">
+                            <a href="vendor-profile.html" class="dropdown-item">Profile Settings</a>
+                            <a href="vendor-settings.html" class="dropdown-item">Account Settings</a>
+                            <div class="dropdown-divider"></div>
+                            <button class="dropdown-item logout-btn" onclick="vendorLogout()">Logout</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Vendor Container -->
+    <div class="vendor-container">
+        <!-- Sidebar -->
+        <aside class="vendor-sidebar">
+            <nav class="sidebar-nav">
+                <a href="javascript:void(0)" class="nav-item active" data-section="dashboard">
+                    <span class="nav-icon">📊</span>
+                    <span class="nav-text">Dashboard</span>
+                </a>
+                <a href="javascript:void(0)" class="nav-item" data-section="products">
+                    <span class="nav-icon">📦</span>
+                    <span class="nav-text">Products</span>
+                    <span class="nav-badge" id="productsCount">0</span>
+                </a>
+                <a href="javascript:void(0)" class="nav-item" data-section="orders">
+                    <span class="nav-icon">🛒</span>
+                    <span class="nav-text">Orders</span>
+                    <span class="nav-badge" id="ordersCount">0</span>
+                </a>
+                <a href="javascript:void(0)" class="nav-item" data-section="inventory">
+                    <span class="nav-icon">📋</span>
+                    <span class="nav-text">Inventory</span>
+                </a>
+                <a href="javascript:void(0)" class="nav-item" data-section="analytics">
+                    <span class="nav-icon">📈</span>
+                    <span class="nav-text">Analytics</span>
+                </a>
+                <a href="javascript:void(0)" class="nav-item" data-section="add-product">
+                    <span class="nav-icon">➕</span>
+                    <span class="nav-text">Add Product</span>
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="vendor-main">
+            <!-- Dashboard Section -->
+            <section id="dashboard" class="dashboard-section active">
+                <div class="section-header">
+                    <h1>Vendor Dashboard</h1>
+                    <p>Welcome back! Here's your business overview.</p>
+                </div>
+
+                <!-- Stats Grid -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon revenue">💰</div>
+                        <div class="stat-info">
+                            <div class="stat-value" id="totalRevenue">₹0</div>
+                            <div class="stat-label">Total Revenue</div>
+                            <div class="stat-trend positive">+12%</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon orders">🛒</div>
+                        <div class="stat-info">
+                            <div class="stat-value" id="totalOrders">0</div>
+                            <div class="stat-label">Total Orders</div>
+                            <div class="stat-trend positive">+8%</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon products">📦</div>
+                        <div class="stat-info">
+                            <div class="stat-value" id="totalProducts">0</div>
+                            <div class="stat-label">Products</div>
+                            <div class="stat-trend neutral">0%</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon rating">⭐</div>
+                        <div class="stat-info">
+                            <div class="stat-value" id="avgRating">0.0</div>
+                            <div class="stat-label">Avg Rating</div>
+                            <div class="stat-trend positive">+0.2</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Dashboard Grid -->
+                <div class="dashboard-grid">
+                    <div class="recent-orders">
+                        <h3>Recent Orders</h3>
+                        <div class="orders-list" id="recentOrdersList">
+                            <!-- Orders will be loaded here -->
+                        </div>
+                    </div>
+                    <div class="quick-actions">
+                        <h3>Quick Actions</h3>
+                        <div class="actions-grid">
+                            <button class="action-btn" onclick="showSection('add-product')">
+                                <span class="action-icon">➕</span>
+                                <span>Add New Product</span>
+                            </button>
+                            <button class="action-btn" onclick="showSection('inventory')">
+                                <span class="action-icon">📋</span>
+                                <span>Manage Inventory</span>
+                            </button>
+                            <button class="action-btn" onclick="showSection('analytics')">
+                                <span class="action-icon">📈</span>
+                                <span>View Analytics</span>
+                            </button>
+                            <button class="action-btn" onclick="loadProductsTable(1)">
+                                <span class="action-icon">📦</span>
+                                <span>View All Products</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Products Section -->
+            <section id="products" class="dashboard-section">
+                <div class="section-header">
+                    <h1>Product Management</h1>
+                    <p>Manage your product catalog and inventory</p>
+                    <div class="header-actions">
+                        <button class="btn btn-primary" onclick="showSection('add-product')">
+                            <span class="btn-text">Add New Product</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="products-controls">
+                    <div class="search-box">
+                        <span class="search-icon">🔍</span>
+                        <input type="text" id="productSearch" class="search-input" placeholder="Search products...">
+                    </div>
+                    <div class="filter-controls">
+                        <select id="categoryFilter" class="filter-select">
+                            <option value="">All Categories</option>
+                            <option value="Electronics">Electronics</option>
+                            <option value="Fashion">Fashion</option>
+                            <option value="Home">Home</option>
+                            <option value="Sports">Sports</option>
+                            <option value="Accessories">Accessories</option>
+                        </select>
+                        <select id="statusFilter" class="filter-select">
+                            <option value="">All Status</option>
+                            <option value="active">Active</option>
+                            <option value="inactive">Inactive</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="products-table-container">
+                    <table class="products-table">
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>Category</th>
+                                <th>Price</th>
+                                <th>Stock</th>
+                                <th>Status</th>
+                                <th>Rating</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="productsTableBody">
+                            <!-- Products will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="pagination" id="productsPagination">
+                    <!-- Pagination will be loaded here -->
+                </div>
+            </section>
+
+            <!-- Orders Section -->
+            <section id="orders" class="dashboard-section">
+                <div class="section-header">
+                    <h1>Order Management</h1>
+                    <p>View and manage customer orders</p>
+                </div>
+                <div class="no-data">
+                    <p>Order management system coming soon...</p>
+                    <button class="btn btn-primary" onclick="loadSampleOrders()">Load Sample Orders</button>
+                </div>
+            </section>
+
+            <!-- Inventory Section -->
+            <section id="inventory" class="dashboard-section">
+                <div class="section-header">
+                    <h1>Inventory Management</h1>
+                    <p>Monitor and manage your product inventory</p>
+                </div>
+
+                <div class="inventory-stats">
+                    <div class="inventory-stat">
+                        <span class="stat-number" id="lowStockCount">0</span>
+                        <span class="stat-label">Low Stock Items</span>
+                    </div>
+                    <div class="inventory-stat">
+                        <span class="stat-number" id="outOfStockCount">0</span>
+                        <span class="stat-label">Out of Stock</span>
+                    </div>
+                    <div class="inventory-stat">
+                        <span class="stat-number" id="totalInventoryValue">₹0</span>
+                        <span class="stat-label">Total Inventory Value</span>
+                    </div>
+                </div>
+
+                <div class="inventory-table-container">
+                    <table class="inventory-table">
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>SKU</th>
+                                <th>Current Stock</th>
+                                <th>Low Stock Alert</th>
+                                <th>Status</th>
+                                <th>Last Updated</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="inventoryTableBody">
+                            <!-- Inventory items will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Analytics Section -->
+            <section id="analytics" class="dashboard-section">
+                <div class="section-header">
+                    <h1>Business Analytics</h1>
+                    <p>Track your business performance and growth</p>
+                </div>
+                <div class="no-data">
+                    <p>Analytics dashboard coming soon...</p>
+                    <p>View your current stats on the main dashboard.</p>
+                </div>
+            </section>
+
+            <!-- Add Product Section -->
+            <section id="add-product" class="dashboard-section">
+                <div class="section-header">
+                    <h1>Add New Product</h1>
+                    <p>Add a new product to your catalog</p>
+                </div>
+
+                <form id="addProductForm" class="product-form">
+                    <div class="form-sections">
+                        <div class="form-section">
+                            <h3>Basic Information</h3>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label for="productTitle">Product Title *</label>
+                                    <input type="text" id="productTitle" required placeholder="Enter product title">
+                                </div>
+                                <div class="form-group">
+                                    <label for="productCategory">Category *</label>
+                                    <select id="productCategory" required>
+                                        <option value="">Select Category</option>
+                                        <option value="Electronics">Electronics</option>
+                                        <option value="Fashion">Fashion</option>
+                                        <option value="Home">Home</option>
+                                        <option value="Sports">Sports</option>
+                                        <option value="Accessories">Accessories</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="productPrice">Price (₹) *</label>
+                                    <input type="number" id="productPrice" required min="0" step="0.01" placeholder="0.00">
+                                </div>
+                                <div class="form-group">
+                                    <label for="productStock">Initial Stock *</label>
+                                    <input type="number" id="productStock" required min="0" placeholder="0">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <h3>Product Description</h3>
+                            <div class="form-group">
+                                <label for="productDescription">Description *</label>
+                                <textarea id="productDescription" required rows="4" placeholder="Enter product description"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <h3>Product Images</h3>
+                            <div class="image-upload-container">
+                                <div class="image-upload-box" onclick="document.getElementById('productImages').click()">
+                                    <div class="upload-placeholder">
+                                        <span class="upload-icon">📷</span>
+                                        <span>Click to upload product images</span>
+                                        <span class="upload-hint">Supports JPG, PNG, WEBP (Max 5MB)</span>
+                                    </div>
+                                </div>
+                                <input type="file" id="productImages" multiple accept="image/*" style="display: none;">
+                                <div class="image-preview" id="imagePreview"></div>
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <h3>Specifications (Optional)</h3>
+                            <div class="specifications-grid" id="specificationsContainer">
+                                <div class="spec-row">
+                                    <input type="text" class="spec-key" placeholder="Specification (e.g., Brand)">
+                                    <input type="text" class="spec-value" placeholder="Value (e.g., Sony)">
+                                    <button type="button" class="btn-remove-spec" onclick="removeSpecification(this)">×</button>
+                                </div>
+                            </div>
+                            <button type="button" class="btn-add-spec" onclick="addSpecification()">
+                                + Add Specification
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" onclick="showSection('products')">
+                            Cancel
+                        </button>
+                        <button type="submit" class="btn btn-primary" id="submitProductBtn">
+                            <span class="btn-text">Add Product</span>
+                            <div class="btn-loader spinner" style="display: none;"></div>
+                        </button>
+                    </div>
+                </form>
+            </section>
+        </main>
+    </div>
+
+    <!-- Edit Product Modal -->
+    <div id="editProductModal" class="modal">
+        <div class="modal-content large-modal">
+            <span class="close-modal">&times;</span>
+            <h2>Edit Product</h2>
+            <div id="editProductFormContainer">
+                <!-- Edit form will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Stock Update Modal -->
+    <div id="stockUpdateModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2>Update Stock</h2>
+            <form id="stockUpdateForm">
+                <input type="hidden" id="updateProductId">
+                <div class="form-group">
+                    <label for="updateStockQuantity">New Stock Quantity</label>
+                    <input type="number" id="updateStockQuantity" required min="0">
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" onclick="document.getElementById('stockUpdateModal').style.display='none'">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Update Stock</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="../js/vendor-common.js"></script>
+    <script src="../js/vendor-dashboard.js"></script>
+</body>
+</html>

@@ -136,7 +136,7 @@ function setupPlaceOrder() {
             localStorage.setItem('last_order', JSON.stringify(order));
             
             // Clear cart
-            localStorage.removeItem('amazon_clone_cart');
+            localStorage.removeItem('shopWave_X_cart');
             localStorage.removeItem('checkout_cart');
             
             // Redirect to success page

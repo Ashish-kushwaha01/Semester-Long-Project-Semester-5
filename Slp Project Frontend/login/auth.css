@@ -447,46 +447,91 @@ body {
     top: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    backdrop-filter: blur(4px);
+    background-color: rgba(0, 0, 0, 0.5);
 }
 
 .modal-content {
-    background: var(--card-bg);
+    background-color: white;
     margin: 10% auto;
-    padding: 32px;
-    border-radius: var(--radius);
-    max-width: 400px;
+    padding: 20px;
+    border-radius: 8px;
     width: 90%;
+    max-width: 400px;
     position: relative;
-    box-shadow: var(--shadow-hover);
 }
 
 .close-modal {
     position: absolute;
-    right: 20px;
-    top: 20px;
+    right: 15px;
+    top: 15px;
     font-size: 24px;
     cursor: pointer;
-    color: var(--text-secondary);
-    transition: color 0.2s;
 }
 
-.close-modal:hover {
-    color: var(--text-primary);
+.otp-container {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin: 20px 0;
 }
 
-.modal-content h3 {
-    font-size: 24px;
-    margin-bottom: 8px;
-    color: var(--text-primary);
+.otp-input {
+    width: 40px;
+    height: 40px;
+    text-align: center;
+    font-size: 18px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
 }
 
-.modal-content p {
-    color: var(--text-secondary);
-    margin-bottom: 24px;
+.otp-input:focus {
+    border-color: #007bff;
+    outline: none;
 }
 
+.error-message {
+    color: #dc3545;
+    font-size: 14px;
+    margin-top: 5px;
+    display: none;
+}
+
+.success-message {
+    background: #d1fae5;
+    color: #065f46;
+    padding: 16px;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin: 5px;
+}
+
+.btn-primary {
+    background-color: #007bff;
+    color: white;
+}
+
+.btn-secondary {
+    background-color: #6c757d;
+    color: white;
+}
+
+.btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.btn-loader {
+    display: none;
+    justify-content: center;
+    align-items: center;
+}
 /* Success States */
 .success-message {
     background: #d1fae5;
@@ -565,11 +610,6 @@ body {
 
 
 
-
-
-
-
-/* Add these to your existing auth.css */
 
 /* OTP Verification Styles */
 .otp-container {

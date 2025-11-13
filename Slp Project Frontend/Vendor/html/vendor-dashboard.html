@@ -3,402 +3,464 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vendor Dashboard - ShopwaveX</title>
+    <title>ShopwaveX - Vendor Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="../css/vendor-dashboard.css">
 </head>
 <body>
-    <!-- Vendor Header -->
+    <!-- Header -->
     <header class="vendor-header">
-        <nav class="vendor-nav">
-            <div class="vendor-brand">
-                <a href="index.html" class="brand-link">
-                    <span class="brand-icon">🏪</span>
-                    <span>ShopwaveX Vendor</span>
-                </a>
+        <div class="header-container">
+            <div class="logo-section">
+                <div class="logo">
+                    <!-- <i class="fas fa-wave-square"></i> -->
+                    <span class="logo-text">ShopwaveX</span>
+                    <span class="vendor-badge">Vendor</span>
+                </div>
             </div>
-            <div class="vendor-actions">
-                <div class="vendor-notifications">
-                    <button class="notification-btn">
-                        🔔
-                        <span class="notification-count">3</span>
+            
+            <div class="search-section">
+                <div class="search-box">
+                    <input type="text" id="global-search" placeholder="Search products, orders, customers...">
+                    <button class="search-btn">
+                        <i class="fas fa-search"></i>
                     </button>
                 </div>
-                <div class="vendor-profile">
-                    <div class="profile-dropdown">
-                        <button class="profile-btn">
-                            <span class="profile-avatar">👤</span>
-                            <span class="profile-name" id="vendorName">Vendor Name</span>
-                            <span class="dropdown-arrow">▼</span>
-                        </button>
-                        <div class="dropdown-menu">
-                            <a href="vendor-profile.html" class="dropdown-item">Profile Settings</a>
-                            <a href="vendor-settings.html" class="dropdown-item">Account Settings</a>
-                            <div class="dropdown-divider"></div>
-                            <button class="dropdown-item logout-btn" onclick="vendorLogout()">Logout</button>
-                        </div>
+            </div>
+            
+            <div class="user-section">
+                <div class="user-info">
+                    <div class="user-avatar">
+                        <i class="fas fa-user-tie"></i>
                     </div>
+                    <div class="user-details">
+                        <span class="user-name" id="vendor-name">Vendor Account</span>
+                        <span class="user-role">Seller</span>
+                    </div>
+                    <div class="dropdown-arrow">
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                </div>
+                <div class="notification-bell">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification-count">3</span>
                 </div>
             </div>
-        </nav>
+        </div>
     </header>
 
-    <!-- Vendor Container -->
-    <div class="vendor-container">
+    <!-- Main Layout -->
+    <div class="dashboard-layout">
         <!-- Sidebar -->
-        <aside class="vendor-sidebar">
-            <nav class="sidebar-nav">
-                <a href="javascript:void(0)" class="nav-item active" data-section="dashboard">
-                    <span class="nav-icon">📊</span>
-                    <span class="nav-text">Dashboard</span>
+        <nav class="sidebar">
+            <div class="sidebar-menu">
+                <a href="#" class="menu-item active" data-page="dashboard">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Dashboard</span>
                 </a>
-                <a href="javascript:void(0)" class="nav-item" data-section="products">
-                    <span class="nav-icon">📦</span>
-                    <span class="nav-text">Products</span>
-                    <span class="nav-badge" id="productsCount">0</span>
+                <a href="#" class="menu-item" data-page="products">
+                    <i class="fas fa-box"></i>
+                    <span>Products</span>
+                    <span class="menu-badge" id="products-count">0</span>
                 </a>
-                <a href="javascript:void(0)" class="nav-item" data-section="orders">
-                    <span class="nav-icon">🛒</span>
-                    <span class="nav-text">Orders</span>
-                    <span class="nav-badge" id="ordersCount">0</span>
+                <a href="#" class="menu-item" data-page="add-product">
+                    <i class="fas fa-plus-circle"></i>
+                    <span>Add Product</span>
                 </a>
-                <a href="javascript:void(0)" class="nav-item" data-section="inventory">
-                    <span class="nav-icon">📋</span>
-                    <span class="nav-text">Inventory</span>
+                <a href="#" class="menu-item" data-page="orders">
+                    <i class="fas fa-shopping-bag"></i>
+                    <span>Orders</span>
+                    <span class="menu-badge">12</span>
                 </a>
-                <a href="javascript:void(0)" class="nav-item" data-section="analytics">
-                    <span class="nav-icon">📈</span>
-                    <span class="nav-text">Analytics</span>
+                <a href="#" class="menu-item" data-page="analytics">
+                    <i class="fas fa-chart-bar"></i>
+                    <span>Analytics</span>
                 </a>
-                <a href="javascript:void(0)" class="nav-item" data-section="add-product">
-                    <span class="nav-icon">➕</span>
-                    <span class="nav-text">Add Product</span>
+                <a href="#" class="menu-item" data-page="settings">
+                    <i class="fas fa-cog"></i>
+                    <span>Settings</span>
                 </a>
-            </nav>
-        </aside>
+            </div>
+            
+            <div class="sidebar-footer">
+                <a href="#" class="menu-item" id="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Logout</span>
+                </a>
+            </div>
+        </nav>
 
         <!-- Main Content -->
-        <main class="vendor-main">
-            <!-- Dashboard Section -->
-            <section id="dashboard" class="dashboard-section active">
+        <main class="main-content">
+            <!-- Dashboard Overview -->
+            <section id="dashboard-section" class="content-section active">
                 <div class="section-header">
-                    <h1>Vendor Dashboard</h1>
-                    <p>Welcome back! Here's your business overview.</p>
+                    <h1>Dashboard Overview</h1>
+                    <div class="header-actions">
+                        <button class="btn btn-primary">
+                            <i class="fas fa-download"></i>
+                            Export Report
+                        </button>
+                    </div>
                 </div>
-
-                <!-- Stats Grid -->
+                
                 <div class="stats-grid">
                     <div class="stat-card">
-                        <div class="stat-icon revenue">💰</div>
+                        <div class="stat-icon primary">
+                            <i class="fas fa-box"></i>
+                        </div>
                         <div class="stat-info">
-                            <div class="stat-value" id="totalRevenue">₹0</div>
-                            <div class="stat-label">Total Revenue</div>
-                            <div class="stat-trend positive">+12%</div>
+                            <h3 id="total-products">0</h3>
+                            <p>Total Products</p>
+                        </div>
+                        <div class="stat-trend">
+                            <span class="trend-up">+12%</span>
                         </div>
                     </div>
+                    
                     <div class="stat-card">
-                        <div class="stat-icon orders">🛒</div>
+                        <div class="stat-icon success">
+                            <i class="fas fa-shopping-bag"></i>
+                        </div>
                         <div class="stat-info">
-                            <div class="stat-value" id="totalOrders">0</div>
-                            <div class="stat-label">Total Orders</div>
-                            <div class="stat-trend positive">+8%</div>
+                            <h3>24</h3>
+                            <p>Orders Today</p>
+                        </div>
+                        <div class="stat-trend">
+                            <span class="trend-up">+8%</span>
                         </div>
                     </div>
+                    
                     <div class="stat-card">
-                        <div class="stat-icon products">📦</div>
+                        <div class="stat-icon warning">
+                            <i class="fas fa-eye"></i>
+                        </div>
                         <div class="stat-info">
-                            <div class="stat-value" id="totalProducts">0</div>
-                            <div class="stat-label">Products</div>
-                            <div class="stat-trend neutral">0%</div>
+                            <h3>1,234</h3>
+                            <p>Product Views</p>
+                        </div>
+                        <div class="stat-trend">
+                            <span class="trend-up">+15%</span>
                         </div>
                     </div>
+                    
                     <div class="stat-card">
-                        <div class="stat-icon rating">⭐</div>
+                        <div class="stat-icon danger">
+                            <i class="fas fa-rupee-sign"></i>
+                        </div>
                         <div class="stat-info">
-                            <div class="stat-value" id="avgRating">0.0</div>
-                            <div class="stat-label">Avg Rating</div>
-                            <div class="stat-trend positive">+0.2</div>
+                            <h3>₹45,678</h3>
+                            <p>Total Revenue</p>
+                        </div>
+                        <div class="stat-trend">
+                            <span class="trend-up">+22%</span>
                         </div>
                     </div>
                 </div>
-
-                <!-- Dashboard Grid -->
-                <div class="dashboard-grid">
-                    <div class="recent-orders">
-                        <h3>Recent Orders</h3>
-                        <div class="orders-list" id="recentOrdersList">
-                            <!-- Orders will be loaded here -->
-                        </div>
+                
+                <div class="recent-activity">
+                    <div class="activity-header">
+                        <h2>Recent Products</h2>
+                        <a href="#" class="view-all" data-page="products">View All</a>
                     </div>
-                    <div class="quick-actions">
-                        <h3>Quick Actions</h3>
-                        <div class="actions-grid">
-                            <button class="action-btn" onclick="showSection('add-product')">
-                                <span class="action-icon">➕</span>
-                                <span>Add New Product</span>
-                            </button>
-                            <button class="action-btn" onclick="showSection('inventory')">
-                                <span class="action-icon">📋</span>
-                                <span>Manage Inventory</span>
-                            </button>
-                            <button class="action-btn" onclick="showSection('analytics')">
-                                <span class="action-icon">📈</span>
-                                <span>View Analytics</span>
-                            </button>
-                            <button class="action-btn" onclick="loadProductsTable(1)">
-                                <span class="action-icon">📦</span>
-                                <span>View All Products</span>
-                            </button>
-                        </div>
+                    <div class="activity-list" id="recent-products">
+                        <!-- Recent products will be loaded here -->
                     </div>
                 </div>
             </section>
 
-            <!-- Products Section -->
-            <section id="products" class="dashboard-section">
+            <!-- Products Management -->
+            <section id="products-section" class="content-section">
                 <div class="section-header">
                     <h1>Product Management</h1>
-                    <p>Manage your product catalog and inventory</p>
                     <div class="header-actions">
-                        <button class="btn btn-primary" onclick="showSection('add-product')">
-                            <span class="btn-text">Add New Product</span>
-                        </button>
-                    </div>
-                </div>
-
-                <div class="products-controls">
-                    <div class="search-box">
-                        <span class="search-icon">🔍</span>
-                        <input type="text" id="productSearch" class="search-input" placeholder="Search products...">
-                    </div>
-                    <div class="filter-controls">
-                        <select id="categoryFilter" class="filter-select">
-                            <option value="">All Categories</option>
-                            <option value="Electronics">Electronics</option>
-                            <option value="Fashion">Fashion</option>
-                            <option value="Home">Home</option>
-                            <option value="Sports">Sports</option>
-                            <option value="Accessories">Accessories</option>
-                        </select>
-                        <select id="statusFilter" class="filter-select">
-                            <option value="">All Status</option>
-                            <option value="active">Active</option>
-                            <option value="inactive">Inactive</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="products-table-container">
-                    <table class="products-table">
-                        <thead>
-                            <tr>
-                                <th>Product</th>
-                                <th>Category</th>
-                                <th>Price</th>
-                                <th>Stock</th>
-                                <th>Status</th>
-                                <th>Rating</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody id="productsTableBody">
-                            <!-- Products will be loaded here -->
-                        </tbody>
-                    </table>
-                </div>
-
-                <div class="pagination" id="productsPagination">
-                    <!-- Pagination will be loaded here -->
-                </div>
-            </section>
-
-            <!-- Orders Section -->
-            <section id="orders" class="dashboard-section">
-                <div class="section-header">
-                    <h1>Order Management</h1>
-                    <p>View and manage customer orders</p>
-                </div>
-                <div class="no-data">
-                    <p>Order management system coming soon...</p>
-                    <button class="btn btn-primary" onclick="loadSampleOrders()">Load Sample Orders</button>
-                </div>
-            </section>
-
-            <!-- Inventory Section -->
-            <section id="inventory" class="dashboard-section">
-                <div class="section-header">
-                    <h1>Inventory Management</h1>
-                    <p>Monitor and manage your product inventory</p>
-                </div>
-
-                <div class="inventory-stats">
-                    <div class="inventory-stat">
-                        <span class="stat-number" id="lowStockCount">0</span>
-                        <span class="stat-label">Low Stock Items</span>
-                    </div>
-                    <div class="inventory-stat">
-                        <span class="stat-number" id="outOfStockCount">0</span>
-                        <span class="stat-label">Out of Stock</span>
-                    </div>
-                    <div class="inventory-stat">
-                        <span class="stat-number" id="totalInventoryValue">₹0</span>
-                        <span class="stat-label">Total Inventory Value</span>
-                    </div>
-                </div>
-
-                <div class="inventory-table-container">
-                    <table class="inventory-table">
-                        <thead>
-                            <tr>
-                                <th>Product</th>
-                                <th>SKU</th>
-                                <th>Current Stock</th>
-                                <th>Low Stock Alert</th>
-                                <th>Status</th>
-                                <th>Last Updated</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody id="inventoryTableBody">
-                            <!-- Inventory items will be loaded here -->
-                        </tbody>
-                    </table>
-                </div>
-            </section>
-
-            <!-- Analytics Section -->
-            <section id="analytics" class="dashboard-section">
-                <div class="section-header">
-                    <h1>Business Analytics</h1>
-                    <p>Track your business performance and growth</p>
-                </div>
-                <div class="no-data">
-                    <p>Analytics dashboard coming soon...</p>
-                    <p>View your current stats on the main dashboard.</p>
-                </div>
-            </section>
-
-            <!-- Add Product Section -->
-            <section id="add-product" class="dashboard-section">
-                <div class="section-header">
-                    <h1>Add New Product</h1>
-                    <p>Add a new product to your catalog</p>
-                </div>
-
-                <form id="addProductForm" class="product-form">
-                    <div class="form-sections">
-                        <div class="form-section">
-                            <h3>Basic Information</h3>
-                            <div class="form-grid">
-                                <div class="form-group">
-                                    <label for="productTitle">Product Title *</label>
-                                    <input type="text" id="productTitle" required placeholder="Enter product title">
-                                </div>
-                                <div class="form-group">
-                                    <label for="productCategory">Category *</label>
-                                    <select id="productCategory" required>
-                                        <option value="">Select Category</option>
-                                        <option value="Electronics">Electronics</option>
-                                        <option value="Fashion">Fashion</option>
-                                        <option value="Home">Home</option>
-                                        <option value="Sports">Sports</option>
-                                        <option value="Accessories">Accessories</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label for="productPrice">Price (₹) *</label>
-                                    <input type="number" id="productPrice" required min="0" step="0.01" placeholder="0.00">
-                                </div>
-                                <div class="form-group">
-                                    <label for="productStock">Initial Stock *</label>
-                                    <input type="number" id="productStock" required min="0" placeholder="0">
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="form-section">
-                            <h3>Product Description</h3>
-                            <div class="form-group">
-                                <label for="productDescription">Description *</label>
-                                <textarea id="productDescription" required rows="4" placeholder="Enter product description"></textarea>
-                            </div>
-                        </div>
-
-                        <div class="form-section">
-                            <h3>Product Images</h3>
-                            <div class="image-upload-container">
-                                <div class="image-upload-box" onclick="document.getElementById('productImages').click()">
-                                    <div class="upload-placeholder">
-                                        <span class="upload-icon">📷</span>
-                                        <span>Click to upload product images</span>
-                                        <span class="upload-hint">Supports JPG, PNG, WEBP (Max 5MB)</span>
-                                    </div>
-                                </div>
-                                <input type="file" id="productImages" multiple accept="image/*" style="display: none;">
-                                <div class="image-preview" id="imagePreview"></div>
-                            </div>
-                        </div>
-
-                        <div class="form-section">
-                            <h3>Specifications (Optional)</h3>
-                            <div class="specifications-grid" id="specificationsContainer">
-                                <div class="spec-row">
-                                    <input type="text" class="spec-key" placeholder="Specification (e.g., Brand)">
-                                    <input type="text" class="spec-value" placeholder="Value (e.g., Sony)">
-                                    <button type="button" class="btn-remove-spec" onclick="removeSpecification(this)">×</button>
-                                </div>
-                            </div>
-                            <button type="button" class="btn-add-spec" onclick="addSpecification()">
-                                + Add Specification
+                        <div class="search-filter">
+                            <input type="text" id="search-products" placeholder="Search products...">
+                            <select id="status-filter">
+                                <option value="">All Status</option>
+                                <option value="active">Active</option>
+                                <option value="inactive">Inactive</option>
+                                <option value="pending">Pending</option>
+                            </select>
+                            <button class="btn btn-secondary" id="refresh-products">
+                                <i class="fas fa-sync-alt"></i>
                             </button>
                         </div>
-                    </div>
-
-                    <div class="form-actions">
-                        <button type="button" class="btn btn-secondary" onclick="showSection('products')">
-                            Cancel
-                        </button>
-                        <button type="submit" class="btn btn-primary" id="submitProductBtn">
-                            <span class="btn-text">Add Product</span>
-                            <div class="btn-loader spinner" style="display: none;"></div>
+                        <button class="btn btn-primary" data-page="add-product">
+                            <i class="fas fa-plus"></i>
+                            Add Product
                         </button>
                     </div>
-                </form>
+                </div>
+                
+                <div class="products-container" id="products-container">
+                    <!-- Products will be loaded here -->
+                </div>
             </section>
+
+            <!-- Add Product -->
+            <section id="add-product-section" class="content-section">
+                <div class="section-header">
+                    <h1>Add New Product</h1>
+                    <div class="header-actions">
+                        <button class="btn btn-secondary" data-page="products">
+                            <i class="fas fa-arrow-left"></i>
+                            Back to Products
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="form-container">
+                    <form id="add-product-form" class="modern-form">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="product-title" class="form-label">
+                                    Product Title *
+                                </label>
+                                <input type="text" id="product-title" name="title" class="form-input" required>
+                                <div class="form-hint">Enter a clear and descriptive product title</div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="product-category" class="form-label">
+                                    Category *
+                                </label>
+                                <select id="product-category" name="category_id" class="form-select" required>
+                                    <option value="">Select Category</option>
+                                </select>
+                                <div class="form-hint">Choose the most specific category for your product</div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="product-price" class="form-label">
+                                    Base Price (₹) *
+                                </label>
+                                <input type="number" id="product-price" name="base_price" class="form-input" step="0.01" min="0" required>
+                                <div class="form-hint">Set the base price for your product</div>
+                            </div>
+                            
+                            <div class="form-group full-width">
+                                <label for="product-description" class="form-label">
+                                    Description *
+                                </label>
+                                <textarea id="product-description" name="description" class="form-textarea" rows="4" required></textarea>
+                                <div class="form-hint">Provide detailed description about your product</div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary btn-large">
+                                <i class="fas fa-plus-circle"></i>
+                                Add Product
+                            </button>
+                            <button type="button" class="btn btn-secondary" data-page="products">
+                                Cancel
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </section>
+
+            <!-- Other sections can be added similarly -->
         </main>
     </div>
 
-    <!-- Edit Product Modal -->
-    <div id="editProductModal" class="modal">
-        <div class="modal-content large-modal">
-            <span class="close-modal">&times;</span>
-            <h2>Edit Product</h2>
-            <div id="editProductFormContainer">
-                <!-- Edit form will be loaded here -->
+    <!-- Variants Modal -->
+    <div id="variants-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Product Variants</h2>
+                <span class="close">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="variants-list" id="variants-container">
+                    <!-- Variants will be loaded here -->
+                </div>
+                <div class="modal-actions">
+                    <button id="add-variant-btn" class="btn btn-primary">
+                        <i class="fas fa-plus"></i>
+                        Add Variant
+                    </button>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- Stock Update Modal -->
-    <div id="stockUpdateModal" class="modal">
-        <div class="modal-content">
-            <span class="close-modal">&times;</span>
-            <h2>Update Stock</h2>
-            <form id="stockUpdateForm">
-                <input type="hidden" id="updateProductId">
-                <div class="form-group">
-                    <label for="updateStockQuantity">New Stock Quantity</label>
-                    <input type="number" id="updateStockQuantity" required min="0">
-                </div>
-                <div class="form-actions">
-                    <button type="button" class="btn btn-secondary" onclick="document.getElementById('stockUpdateModal').style.display='none'">Cancel</button>
-                    <button type="submit" class="btn btn-primary">Update Stock</button>
-                </div>
-            </form>
+    <!-- Add Variant Modal -->
+    <div id="add-variant-modal" class="modal">
+        <div class="modal-content large">
+            <div class="modal-header">
+                <h2>Add Variant</h2>
+                <span class="close">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="add-variant-form" class="modern-form">
+                    <div id="variant-attributes-container" class="attributes-grid">
+                        <!-- Dynamic attributes will be loaded here -->
+                    </div>
+                    
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="variant-price" class="form-label">Adjusted Price (₹)</label>
+                            <input type="number" id="variant-price" name="adjusted_price" class="form-input" step="0.01" min="0">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="variant-stock" class="form-label">Stock Quantity</label>
+                            <input type="number" id="variant-stock" name="stock" class="form-input" min="0" value="0">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="variant-images" class="form-label">Product Images</label>
+                        <div class="file-upload-area" id="file-upload-area">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                            <p>Drag & drop images or click to browse</p>
+                            <span>Supports: JPG, PNG, WEBP (Max 5MB each)</span>
+                            <input type="file" id="variant-images" name="images" multiple accept="image/*" hidden>
+                        </div>
+                        <div id="image-preview" class="image-preview-grid"></div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="checkbox-label modern-checkbox">
+                            <input type="checkbox" id="variant-active" name="is_active">
+                            <span class="checkmark"></span>
+                            <span class="checkbox-text">Make this variant active</span>
+                        </label>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary btn-large">
+                            <i class="fas fa-save"></i>
+                            Add Variant
+                        </button>
+                        <button type="button" class="btn btn-secondary close-variant-modal">
+                            Cancel
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 
-    <!-- Scripts -->
-    <script src="../js/vendor-common.js"></script>
-    <script src="../js/vendor-dashboard.js"></script>
+    <!-- Edit Variant Modal -->
+    <div id="edit-variant-modal" class="modal">
+        <div class="modal-content large">
+            <div class="modal-header">
+                <h2>Edit Variant</h2>
+                <span class="close">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="edit-variant-form" class="modern-form">
+                    <div id="edit-variant-attributes" class="attributes-view">
+                        <!-- Attributes will be displayed as view-only -->
+                    </div>
+                    
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="edit-variant-price" class="form-label">Adjusted Price (₹)</label>
+                            <input type="number" id="edit-variant-price" name="adjusted_price" class="form-input" step="0.01" min="0">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="edit-variant-stock" class="form-label">Stock Quantity</label>
+                            <input type="number" id="edit-variant-stock" name="stock" class="form-input" min="0">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Product Images</label>
+                        <div class="file-upload-area" id="edit-file-upload-area">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                            <p>Drag & drop additional images or click to browse</p>
+                            <span>Supports: JPG, PNG, WEBP (Max 5MB each)</span>
+                            <input type="file" id="edit-variant-images" name="images" multiple accept="image/*" hidden>
+                        </div>
+                        <div id="existing-images" class="existing-images-grid"></div>
+                        <div id="edit-image-preview" class="image-preview-grid"></div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="checkbox-label modern-checkbox">
+                            <input type="checkbox" id="edit-variant-active" name="is_active">
+                            <span class="checkmark"></span>
+                            <span class="checkbox-text">Variant is active</span>
+                        </label>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary btn-large">
+                            <i class="fas fa-save"></i>
+                            Update Variant
+                        </button>
+                        <button type="button" class="btn btn-secondary close-edit-variant-modal">
+                            Cancel
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Product Modal -->
+    <div id="edit-product-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Edit Product</h2>
+                <span class="close">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="edit-product-form" class="modern-form">
+                    <div class="form-group">
+                        <label for="edit-product-title" class="form-label">Product Title</label>
+                        <input type="text" id="edit-product-title" name="title" class="form-input" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="edit-product-price" class="form-label">Base Price (₹)</label>
+                        <input type="number" id="edit-product-price" name="base_price" class="form-input" step="0.01" min="0" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="edit-product-description" class="form-label">Description</label>
+                        <textarea id="edit-product-description" name="description" class="form-textarea" rows="4" required></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="edit-product-status" class="form-label">Status</label>
+                        <select id="edit-product-status" name="status" class="form-select">
+                            <option value="active">Active</option>
+                            <option value="inactive">Inactive</option>
+                            <option value="pending">Pending</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i>
+                            Update Product
+                        </button>
+                        <button type="button" class="btn btn-secondary close-edit-product-modal">
+                            Cancel
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="loading-overlay">
+        <div class="loading-spinner">
+            <div class="spinner"></div>
+            <p>Loading...</p>
+        </div>
+    </div>
+
+    <!-- Notification Container -->
+    <div id="notification-container" class="notification-container"></div>
+
+    <script src="../js/vendor-dashboard1.js"></script>
 </body>
 </html>

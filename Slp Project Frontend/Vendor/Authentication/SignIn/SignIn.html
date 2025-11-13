@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,6 +8,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="SignIn.css">
 </head>
+
 <body>
     <div class="auth-container">
         <!-- Left Side - Branding -->
@@ -50,7 +52,8 @@
                             <label for="login-id">Email, Phone or Username</label>
                             <div class="input-group">
                                 <i class="fas fa-user"></i>
-                                <input type="text" id="login-id" class="form-input" placeholder="Enter your email, phone number or username" required>
+                                <input type="text" id="login-id" class="form-input"
+                                    placeholder="Enter your email, phone number or username" required>
                             </div>
                         </div>
 
@@ -58,7 +61,8 @@
                             <label for="password">Password</label>
                             <div class="input-group">
                                 <i class="fas fa-lock"></i>
-                                <input type="password" id="password" class="form-input" placeholder="Enter your password" required>
+                                <input type="password" id="password" class="form-input"
+                                    placeholder="Enter your password" required>
                                 <button type="button" class="password-toggle" id="toggle-password">
                                     <i class="fas fa-eye"></i>
                                 </button>
@@ -74,10 +78,16 @@
                             <a href="#" class="forgot-link">Forgot password?</a>
                         </div>
 
-                        <button type="submit" class="btn-primary" id="signin-btn">
+                        <!-- <button type="submit" class="btn-primary" id="signin-btn">
                             <i class="fas fa-sign-in-alt"></i>
                             Sign In
-                        </button>
+                        </button> -->
+
+
+                        <a href="../../html/vendor-dashboard.html" class="btn-primary" id="signin-btn">
+                            <i class="fas fa-sign-in-alt"></i>
+                            Sign In
+                        </a>
                     </form>
 
                     <div class="auth-divider">
@@ -103,7 +113,7 @@
                     <div class="otp-section">
                         <h4>Email Verification</h4>
                         <p>Enter the code sent to <span id="email-otp-target">your email</span></p>
-                        
+
                         <div class="otp-container">
                             <div class="otp-inputs">
                                 <input type="text" class="otp-digit" maxlength="1" data-index="0" data-type="email">
@@ -128,7 +138,7 @@
                     <div class="otp-section">
                         <h4>Mobile Verification</h4>
                         <p>Enter the code sent to <span id="mobile-otp-target">your mobile</span></p>
-                        
+
                         <div class="otp-container">
                             <div class="otp-inputs">
                                 <input type="text" class="otp-digit" maxlength="1" data-index="0" data-type="mobile">
@@ -193,4 +203,5 @@
 
     <script src="SignIn.js"></script>
 </body>
+
 </html>

@@ -1,10 +1,85 @@
-<!doctype html>
+<!-- <!doctype html>
 <html lang="en">
 
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>Product — Amazon Clone</title>
+    <link rel="stylesheet" href="css/common.css" />
+    <link rel="stylesheet" href="css/product.css" />
+</head>
+
+<body>  -->
+    <!-- Header / Nav  -->
+    <!-- <header class="site-header">
+        <div class="brand">
+            <a href="index.html">Shopwave<span class="accent">X</span></a>
+        </div>
+        <div class="search-bar">
+            <form id="searchForm" action="search.html" method="get">
+                <input id="searchInput" name="q" type="search" placeholder="Search for products, brands and more" />
+                <button type="submit">Search</button>
+            </form>
+        </div>
+        <nav class="nav-actions"> -->
+            <!-- Dynamic content will be loaded by authManager -->
+            <!-- <a href="cart.html" class="nav-item">Cart <span id="cartCount" class="cart-count">0</span></a>
+            <a href="login/signIn.html" class="nav-item">Sign in</a>
+        </nav>
+    </header>
+
+    <main class="product-page">
+        <div class="product-detail" id="productDetail">  -->
+            <!-- JS will populate -->
+        <!-- </div>
+
+        <aside class="buy-box" id="buyBox"> -->
+            <!-- JS will populate -->
+        <!-- </aside>
+    </main>
+
+    <footer class="site-footer">
+        <div>© <span id="year"></span> ShopWaveX — E-Commerce.</div>
+    </footer>
+
+    <script src="js/common.js"></script>
+    <script src="js/product.js"></script>
+    <script src="js/utils/authManager.js"></script>
+<script>
+    // Initialize auth state when page loads
+    document.addEventListener('DOMContentLoaded', function() {
+        authManager.updateUIBasedOnAuth();
+    });
+</script>
+</body>
+
+</html> -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Product — ShopwaveX</title>
     <link rel="stylesheet" href="css/common.css" />
     <link rel="stylesheet" href="css/product.css" />
 </head>
@@ -29,28 +104,196 @@
     </header>
 
     <main class="product-page">
-        <div class="product-detail" id="productDetail">
-            <!-- JS will populate -->
+        <!-- Breadcrumb Navigation -->
+        <nav class="breadcrumb">
+            <a href="index.html">Home</a>
+            <span class="breadcrumb-separator">›</span>
+            <span id="categoryBreadcrumb">Category</span>
+            <span class="breadcrumb-separator">›</span>
+            <span id="productBreadcrumb">Product</span>
+        </nav>
+
+        <div class="product-main-section">
+            <div class="product-gallery-section">
+                <div class="gallery-main">
+                    <img id="mainImage" src="assets/default-product.jpg" alt="Product Image" />
+                </div>
+                <div class="gallery-thumbs" id="galleryThumbs">
+                    <!-- Thumbnails will be populated by JS -->
+                </div>
+            </div>
+
+            <div class="product-info-section">
+                <div class="product-header">
+                    <h1 class="product-title" id="productTitle">Loading Product...</h1>
+                    <div class="product-rating">
+                        <span class="rating-stars">★★★★★</span>
+                        <span class="rating-value">4.5</span>
+                        <span class="rating-count">(1,234 ratings)</span>
+                    </div>
+                    <div class="product-category" id="productCategory">Category</div>
+                </div>
+
+                <div class="price-section">
+                    <div class="current-price">
+                        <span class="price" id="productPrice">₹0</span>
+                        <span class="discount-badge" id="discountBadge">0% off</span>
+                    </div>
+                    <div class="original-price" id="originalPrice">₹0</div>
+                    <div class="delivery-info">
+                        <span class="free-delivery">FREE delivery</span>
+                        <span class="delivery-date">Get it by Tomorrow</span>
+                    </div>
+                </div>
+
+                <div class="variant-selection" id="variantSelection" style="display: none;">
+                    <!-- Variants will be populated by JS -->
+                </div>
+
+                <div class="product-description">
+                    <h3>Description</h3>
+                    <p id="productDescription">Loading product description...</p>
+                </div>
+
+                <div class="product-highlights">
+                    <h3>Key Features</h3>
+                    <ul class="highlights-list">
+                        <li>Premium quality materials</li>
+                        <li>1-year manufacturer warranty</li>
+                        <li>Easy returns within 30 days</li>
+                        <li>24/7 customer support</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="buy-box-section">
+                <div class="buy-box">
+                    <div class="price-box">
+                        <span class="price" id="buyBoxPrice">₹0</span>
+                    </div>
+                    
+                    <div class="stock-info" id="stockInfo">
+                        <span class="stock-badge in-stock">In Stock</span>
+                    </div>
+
+                    <div class="delivery-box">
+                        <div class="delivery-item">
+                            <span class="icon">🚚</span>
+                            <span class="text">FREE delivery</span>
+                        </div>
+                        <div class="delivery-item">
+                            <span class="icon">📅</span>
+                            <span class="text">Get it by Tomorrow</span>
+                        </div>
+                    </div>
+
+                    <div class="quantity-selector">
+                        <label>Quantity:</label>
+                        <div class="qty-controls">
+                            <button class="qty-btn" id="decreaseQty">-</button>
+                            <input type="number" id="qtyInput" class="qty-input" min="1" max="10" value="1">
+                            <button class="qty-btn" id="increaseQty">+</button>
+                        </div>
+                    </div>
+
+                    <div class="action-buttons">
+                        <button id="addCartBtn" class="btn btn-add-to-cart">
+                            Add to Cart
+                        </button>
+                        <button id="buyNowBtn" class="btn btn-buy-now">
+                            Buy Now
+                        </button>
+                    </div>
+
+                    <div class="security-info">
+                        <div class="security-item">
+                            <span class="icon">🔒</span>
+                            <span>Secure transaction</span>
+                        </div>
+                        <div class="security-item">
+                            <span class="icon">✅</span>
+                            <span>30-day return policy</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <aside class="buy-box" id="buyBox">
-            <!-- JS will populate -->
-        </aside>
+        <!-- Product Specifications -->
+        <section class="specifications-section">
+            <div class="section-header">
+                <h2 class="section-title">Specifications</h2>
+            </div>
+            <div class="specs-container" id="specsContainer">
+                <div class="loading-specs">Loading specifications...</div>
+            </div>
+        </section>
+
+        <!-- Customer Reviews -->
+        <section class="reviews-section">
+            <div class="section-header">
+                <h2 class="section-title">Customer Reviews</h2>
+            </div>
+            <div class="reviews-container">
+                <div class="reviews-summary">
+                    <div class="overall-rating">
+                        <div class="average-rating" id="averageRating">4.5</div>
+                        <div class="rating-stars">★★★★★</div>
+                        <div class="total-reviews">1,234 reviews</div>
+                    </div>
+                    <button class="btn btn-primary" id="writeReviewBtn">Write a Review</button>
+                </div>
+                <div class="reviews-content">
+                    <div class="reviews-list" id="reviewsList">
+                        <div class="review-card">
+                            <div class="review-header">
+                                <div class="reviewer-info">
+                                    <h4>John Doe</h4>
+                                    <div class="review-date">January 15, 2024</div>
+                                </div>
+                                <div class="review-rating">★★★★★</div>
+                            </div>
+                            <div class="review-title">Excellent product!</div>
+                            <div class="review-text">This product exceeded my expectations. The quality is outstanding.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Similar Products -->
+        <section class="similar-products">
+            <div class="section-header">
+                <h2 class="section-title">Similar Products</h2>
+                <p class="section-subtitle">You might also like</p>
+            </div>
+            <div class="product-grid" id="similarProductsGrid">
+                <div class="loading-products">Loading similar products...</div>
+            </div>
+        </section>
     </main>
 
     <footer class="site-footer">
-        <div>© <span id="year"></span> ShopWaveX — E-Commerce.</div>
+        <div class="footer-content">
+            <div>© <span id="year"></span> ShopwaveX — Premium E-Commerce Platform</div>
+            <div class="footer-tagline">Built with ❤️ for modern shopping experience</div>
+        </div>
     </footer>
 
     <script src="js/common.js"></script>
-    <script src="js/product.js"></script>
     <script src="js/utils/authManager.js"></script>
-<script>
-    // Initialize auth state when page loads
-    document.addEventListener('DOMContentLoaded', function() {
-        authManager.updateUIBasedOnAuth();
-    });
-</script>
+    <script src="js/product.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            authManager.updateUIBasedOnAuth();
+            // Initialize product page after auth
+            setTimeout(() => {
+                if (typeof initializeProductPage === 'function') {
+                    initializeProductPage();
+                }
+            }, 100);
+        });
+    </script>
 </body>
 
 </html>

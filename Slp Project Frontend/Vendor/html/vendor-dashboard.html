@@ -287,121 +287,147 @@
     </div>
 
     <!-- Add Variant Modal -->
-    <div id="add-variant-modal" class="modal">
-        <div class="modal-content large">
-            <div class="modal-header">
-                <h2>Add Variant</h2>
-                <span class="close">&times;</span>
-            </div>
-            <div class="modal-body">
-                <form id="add-variant-form" class="modern-form">
-                    <div id="variant-attributes-container" class="attributes-grid">
-                        <!-- Dynamic attributes will be loaded here -->
-                    </div>
-                    
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label for="variant-price" class="form-label">Adjusted Price (₹)</label>
-                            <input type="number" id="variant-price" name="adjusted_price" class="form-input" step="0.01" min="0">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="variant-stock" class="form-label">Stock Quantity</label>
-                            <input type="number" id="variant-stock" name="stock" class="form-input" min="0" value="0">
-                        </div>
+<div id="add-variant-modal" class="modal">
+    <div class="modal-content large">
+        <div class="modal-header">
+            <h2>Add Variant</h2>
+            <span class="close">&times;</span>
+        </div>
+        <div class="modal-body">
+            <form id="add-variant-form" class="modern-form">
+                <div id="variant-attributes-container" class="attributes-grid">
+                    <!-- Dynamic attributes will be loaded here -->
+                </div>
+                
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="variant-price" class="form-label">Adjusted Price (₹)</label>
+                        <input type="number" id="variant-price" name="adjusted_price" class="form-input" step="0.01" min="0">
                     </div>
                     
                     <div class="form-group">
-                        <label for="variant-images" class="form-label">Product Images</label>
-                        <div class="file-upload-area" id="file-upload-area">
-                            <i class="fas fa-cloud-upload-alt"></i>
-                            <p>Drag & drop images or click to browse</p>
-                            <span>Supports: JPG, PNG, WEBP (Max 5MB each)</span>
-                            <input type="file" id="variant-images" name="images" multiple accept="image/*" hidden>
-                        </div>
-                        <div id="image-preview" class="image-preview-grid"></div>
+                        <label for="variant-stock" class="form-label">Stock Quantity</label>
+                        <input type="number" id="variant-stock" name="stock" class="form-input" min="0" value="0">
                     </div>
-                    
-                    <div class="form-group">
-                        <label class="checkbox-label modern-checkbox">
-                            <input type="checkbox" id="variant-active" name="is_active">
-                            <span class="checkmark"></span>
-                            <span class="checkbox-text">Make this variant active</span>
-                        </label>
+                </div>
+                
+                <!-- Primary Image Upload -->
+                <div class="form-group">
+                    <label for="primary-image" class="form-label">Primary Image *</label>
+                    <div class="file-upload-area" id="primary-image-upload-area">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <p>Drag & drop primary image or click to browse</p>
+                        <span>This will be the main product image (Required)</span>
+                        <input type="file" id="primary-image" name="primary_image" accept="image/*" hidden>
                     </div>
-                    
-                    <div class="form-actions">
-                        <button type="submit" class="btn btn-primary btn-large">
-                            <i class="fas fa-save"></i>
-                            Add Variant
-                        </button>
-                        <button type="button" class="btn btn-secondary close-variant-modal">
-                            Cancel
-                        </button>
+                    <div id="primary-image-preview" class="image-preview-grid"></div>
+                </div>
+                
+                <!-- Additional Images Upload -->
+                <div class="form-group">
+                    <label for="additional-images" class="form-label">Additional Images</label>
+                    <div class="file-upload-area" id="additional-images-upload-area">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <p>Drag & drop additional images or click to browse</p>
+                        <span>These will be shown on product detail page (Optional)</span>
+                        <input type="file" id="additional-images" name="additional_images" multiple accept="image/*" hidden>
                     </div>
-                </form>
-            </div>
+                    <div id="additional-images-preview" class="image-preview-grid"></div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="checkbox-label modern-checkbox">
+                        <input type="checkbox" id="variant-active" name="is_active">
+                        <span class="checkmark"></span>
+                        <span class="checkbox-text">Make this variant active</span>
+                    </label>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary btn-large">
+                        <i class="fas fa-save"></i>
+                        Add Variant
+                    </button>
+                    <button type="button" class="btn btn-secondary close-variant-modal">
+                        Cancel
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
+</div>
 
     <!-- Edit Variant Modal -->
-    <div id="edit-variant-modal" class="modal">
-        <div class="modal-content large">
-            <div class="modal-header">
-                <h2>Edit Variant</h2>
-                <span class="close">&times;</span>
-            </div>
-            <div class="modal-body">
-                <form id="edit-variant-form" class="modern-form">
-                    <div id="edit-variant-attributes" class="attributes-view">
-                        <!-- Attributes will be displayed as view-only -->
-                    </div>
-                    
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label for="edit-variant-price" class="form-label">Adjusted Price (₹)</label>
-                            <input type="number" id="edit-variant-price" name="adjusted_price" class="form-input" step="0.01" min="0">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="edit-variant-stock" class="form-label">Stock Quantity</label>
-                            <input type="number" id="edit-variant-stock" name="stock" class="form-input" min="0">
-                        </div>
+<div id="edit-variant-modal" class="modal">
+    <div class="modal-content large">
+        <div class="modal-header">
+            <h2>Edit Variant</h2>
+            <span class="close">&times;</span>
+        </div>
+        <div class="modal-body">
+            <form id="edit-variant-form" class="modern-form">
+                <div id="edit-variant-attributes" class="attributes-view">
+                    <!-- Attributes will be displayed as view-only -->
+                </div>
+                
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="edit-variant-price" class="form-label">Adjusted Price (₹)</label>
+                        <input type="number" id="edit-variant-price" name="adjusted_price" class="form-input" step="0.01" min="0">
                     </div>
                     
                     <div class="form-group">
-                        <label class="form-label">Product Images</label>
-                        <div class="file-upload-area" id="edit-file-upload-area">
-                            <i class="fas fa-cloud-upload-alt"></i>
-                            <p>Drag & drop additional images or click to browse</p>
-                            <span>Supports: JPG, PNG, WEBP (Max 5MB each)</span>
-                            <input type="file" id="edit-variant-images" name="images" multiple accept="image/*" hidden>
-                        </div>
-                        <div id="existing-images" class="existing-images-grid"></div>
-                        <div id="edit-image-preview" class="image-preview-grid"></div>
+                        <label for="edit-variant-stock" class="form-label">Stock Quantity</label>
+                        <input type="number" id="edit-variant-stock" name="stock" class="form-input" min="0">
                     </div>
-                    
-                    <div class="form-group">
-                        <label class="checkbox-label modern-checkbox">
-                            <input type="checkbox" id="edit-variant-active" name="is_active">
-                            <span class="checkmark"></span>
-                            <span class="checkbox-text">Variant is active</span>
-                        </label>
+                </div>
+                
+                <!-- Primary Image Upload for Edit -->
+                <div class="form-group">
+                    <label for="edit-primary-image" class="form-label">New Primary Image</label>
+                    <div class="file-upload-area" id="edit-primary-image-upload-area">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <p>Drag & drop new primary image or click to browse</p>
+                        <span>Replace the current primary image (Optional)</span>
+                        <input type="file" id="edit-primary-image" name="edit_primary_image" accept="image/*" hidden>
                     </div>
-                    
-                    <div class="form-actions">
-                        <button type="submit" class="btn btn-primary btn-large">
-                            <i class="fas fa-save"></i>
-                            Update Variant
-                        </button>
-                        <button type="button" class="btn btn-secondary close-edit-variant-modal">
-                            Cancel
-                        </button>
+                    <div id="edit-primary-image-preview" class="image-preview-grid"></div>
+                </div>
+                
+                <!-- Additional Images Upload for Edit -->
+                <div class="form-group">
+                    <label for="edit-additional-images" class="form-label">Additional Images</label>
+                    <div class="file-upload-area" id="edit-additional-images-upload-area">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <p>Drag & drop additional images or click to browse</p>
+                        <span>Add more images to the variant (Optional)</span>
+                        <input type="file" id="edit-additional-images" name="edit_additional_images" multiple accept="image/*" hidden>
                     </div>
-                </form>
-            </div>
+                    <div id="existing-images" class="existing-images-grid"></div>
+                    <div id="edit-additional-images-preview" class="image-preview-grid"></div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="checkbox-label modern-checkbox">
+                        <input type="checkbox" id="edit-variant-active" name="is_active">
+                        <span class="checkmark"></span>
+                        <span class="checkbox-text">Variant is active</span>
+                    </label>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary btn-large">
+                        <i class="fas fa-save"></i>
+                        Update Variant
+                    </button>
+                    <button type="button" class="btn btn-secondary close-edit-variant-modal">
+                        Cancel
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
+</div>
 
     <!-- Edit Product Modal -->
     <div id="edit-product-modal" class="modal">

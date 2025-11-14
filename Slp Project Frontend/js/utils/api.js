@@ -66,6 +66,41 @@ function transformProductData(backendProducts) {
     });
 }
 
+
+// Fetch single product details from backend
+async function fetchProductDetails(productId) {
+    try {
+        const response = await fetch(`${API_BASE_URL}/get/product/${productId}/`);
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const productData = await response.json();
+        console.log('📦 Product details loaded:', productData);
+        
+        // Handle both array and single object responses
+        const product = Array.isArray(productData) ? productData[0] : productData;
+        return product;
+    } catch (error) {
+        console.error('❌ Error fetching product details:', error);
+        return null;
+    }
+}
+
+// Fetch products by category
+async function fetchProductsByCategory(categoryId) {
+    try {
+        const allProducts = await fetchActiveProducts();
+        return allProducts.filter(product => 
+            product.category?.some(cat => cat.id === categoryId)
+        );
+    } catch (error) {
+        console.error('❌ Error fetching products by category:', error);
+        return [];
+    }
+}
+
 // Export functions for global access
 window.fetchActiveProducts = fetchActiveProducts;
 window.fetchProductDetails = fetchProductDetails;

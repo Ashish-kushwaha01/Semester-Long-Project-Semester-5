@@ -37,6 +37,19 @@
                     </div>
                 </div>
 
+                <div class="menu-item" data-target="password-setup">
+                    <div class="menu-icon">
+                        <i class="fas fa-lock"></i>
+                    </div>
+                    <div class="menu-text">
+                        <h3>Password Setup</h3>
+                        <p>Create Login Password</p>
+                    </div>
+                    <div class="status-indicator pending" id="password-setup-status">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                </div>
+
                 <div class="menu-item" data-target="id-signature">
                     <div class="menu-icon">
                         <i class="fas fa-id-card"></i>
@@ -63,13 +76,26 @@
                     </div>
                 </div>
 
+                <!-- <div class="menu-item" data-target="password-setup">
+                    <div class="menu-icon">
+                        <i class="fas fa-lock"></i>
+                    </div>
+                    <div class="menu-text">
+                        <h3>Password Setup</h3>
+                        <p>Create Login Password</p>
+                    </div>
+                    <div class="status-indicator pending" id="password-setup-status">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                </div> -->
+
                 <div class="menu-item" data-target="listing-stock">
                     <div class="menu-icon">
                         <i class="fas fa-boxes"></i>
                     </div>
                     <div class="menu-text">
                         <h3>Listing & Stock</h3>
-                        <p>Availability Setup</p>
+                        <p>Add Products (1-5)</p>
                     </div>
                     <div class="status-indicator pending" id="listing-stock-status">
                         <i class="fas fa-clock"></i>
@@ -109,7 +135,7 @@
                     </div>
                     <div class="step-indicator">
                         <span class="step-number">1</span>
-                        <span class="step-text">of 4 steps</span>
+                        <span class="step-text">of 5 steps</span>
                     </div>
                 </div>
 
@@ -302,8 +328,8 @@
                         <p>Complete your identity verification to start selling</p>
                     </div>
                     <div class="step-indicator">
-                        <span class="step-number">2</span>
-                        <span class="step-text">of 4 steps</span>
+                        <span class="step-number">3</span>
+                        <span class="step-text">of 5 steps</span>
                     </div>
                 </div>
 
@@ -319,15 +345,6 @@
                                     <p>Sell products across all available categories</p>
                                 </div>
                             </label>
-
-                            <!-- <label class="option-card">
-                                <input type="radio" name="category" value="books">
-                                <div class="option-content">
-                                    <i class="fas fa-book"></i>
-                                    <h4>Only Books</h4>
-                                    <p>Sell only books and related materials</p>
-                                </div>
-                            </label> -->
 
                             <label class="option-card">
                                 <input type="radio" name="category" value="specific">
@@ -413,8 +430,8 @@
                         <p>Set up your store information and pickup location</p>
                     </div>
                     <div class="step-indicator">
-                        <span class="step-number">3</span>
-                        <span class="step-text">of 4 steps</span>
+                        <span class="step-number">4</span>
+                        <span class="step-text">of 5 steps</span>
                     </div>
                 </div>
 
@@ -483,63 +500,275 @@
                 </div>
             </div>
 
+            <!-- Password Setup Section -->
+            <div class="content-section" id="password-setup">
+                <div class="section-header">
+                    <div class="header-content">
+                        <h1>Password Setup</h1>
+                        <p>Create a secure password for your vendor account</p>
+                    </div>
+                    <div class="step-indicator">
+                        <span class="step-number">2</span>
+                        <span class="step-text">of 5 steps</span>
+                    </div>
+                </div>
+
+                <div class="form-card">
+                    <div class="form-group">
+                        <label for="password">Create Password <span class="required">*</span></label>
+                        <div class="password-input-container">
+                            <input type="password" id="password" class="form-input" placeholder="Enter your password">
+                            <button type="button" class="toggle-password" id="toggle-password">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                        <div class="password-strength" id="password-strength">
+                            <div class="strength-bar">
+                                <div class="strength-fill" id="strength-fill"></div>
+                            </div>
+                            <span class="strength-text" id="strength-text">Weak</span>
+                        </div>
+                        <div class="password-requirements">
+                            <p>Password must contain:</p>
+                            <ul>
+                                <li id="req-length">At least 8 characters</li>
+                                <li id="req-uppercase">One uppercase letter</li>
+                                <li id="req-lowercase">One lowercase letter</li>
+                                <li id="req-number">One number</li>
+                                <li id="req-special">One special character</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="confirm-password">Confirm Password <span class="required">*</span></label>
+                        <div class="password-input-container">
+                            <input type="password" id="confirm-password" class="form-input" placeholder="Confirm your password">
+                            <button type="button" class="toggle-password" id="toggle-confirm-password">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                        <div class="password-match" id="password-match">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Passwords match</span>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button class="btn-primary" id="save-password">
+                            <i class="fas fa-save"></i>
+                            Save Password
+                        </button>
+                    </div>
+                </div>
+            </div>
+
             <!-- Listing & Stock Section -->
             <div class="content-section" id="listing-stock">
                 <div class="section-header">
                     <div class="header-content">
-                        <h1>Listing & Stock Availability</h1>
-                        <p>Set up your product listings and inventory management</p>
+                        <h1>Product Listing & Stock</h1>
+                        <p>Add your products (1-5 required) with variants</p>
                     </div>
                     <div class="step-indicator">
-                        <span class="step-number">4</span>
-                        <span class="step-text">of 4 steps</span>
+                        <span class="step-number">5</span>
+                        <span class="step-text">of 5 steps</span>
                     </div>
                 </div>
 
-                <div class="status-cards">
-                    <div class="status-card pending">
-                        <div class="status-icon">
-                            <i class="fas fa-plus-circle"></i>
+                <div class="products-management">
+                    <!-- Add Product Card -->
+                    <div class="add-product-card" id="add-product-section">
+                        <div class="card-header">
+                            <h3>Add New Product</h3>
+                            <p>Add between 1 to 5 products to complete onboarding</p>
                         </div>
-                        <div class="status-content">
-                            <h3>Listing Created</h3>
-                            <p>No listings created yet</p>
+                        
+                        <form id="add-product-form" class="product-form">
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label for="product-title" class="form-label">
+                                        Product Title *
+                                    </label>
+                                    <input type="text" id="product-title" name="title" class="form-input" required>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="product-category" class="form-label">
+                                        Category *
+                                    </label>
+                                    <select id="product-category" name="category" class="form-select" required>
+                                        <option value="">Select Category</option>
+                                        <option value="electronics">Electronics</option>
+                                        <option value="clothing">Clothing</option>
+                                        <option value="home">Home & Kitchen</option>
+                                        <option value="books">Books</option>
+                                        <option value="sports">Sports</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="product-price" class="form-label">
+                                        Base Price (₹) *
+                                    </label>
+                                    <input type="number" id="product-price" name="base_price" class="form-input" step="0.01" min="0" required>
+                                </div>
+                                
+                                <div class="form-group full-width">
+                                    <label for="product-description" class="form-label">
+                                        Description *
+                                    </label>
+                                    <textarea id="product-description" name="description" class="form-textarea" rows="4" required></textarea>
+                                </div>
+                            </div>
+                            
+                            <div class="form-actions">
+                                <button type="submit" class="btn-primary">
+                                    <i class="fas fa-plus-circle"></i>
+                                    Add Product
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Products Grid -->
+                    <div class="products-grid" id="products-container">
+                        <!-- Products will be dynamically added here -->
+                    </div>
+
+                    <!-- Completion Status -->
+                    <div class="completion-status" id="completion-status">
+                        <div class="status-info">
+                            <h4>Products Added: <span id="products-count">0</span>/5</h4>
+                            <p>Minimum 1 product required to complete onboarding</p>
                         </div>
-                        <button class="btn-outline" id="create-listing">
-                            Create Listing
+                        <button class="btn-primary" id="complete-listing" disabled>
+                            <i class="fas fa-check-circle"></i>
+                            Complete Product Setup
                         </button>
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-                    <div class="status-card pending">
-                        <div class="status-icon">
-                            <i class="fas fa-box"></i>
-                        </div>
-                        <div class="status-content">
-                            <h3>Stock Added</h3>
-                            <p>No inventory added yet</p>
-                        </div>
-                        <button class="btn-outline" id="add-stock">
-                            Add Stock
-                        </button>
+    <!-- Product Edit Modal -->
+<div id="edit-product-modal" class="modal">
+    <div class="modal-content large">
+        <div class="modal-header">
+            <h2>Edit Product</h2>
+            <span class="close">&times;</span>
+        </div>
+        <div class="modal-body">
+            <form id="edit-product-form" class="product-form">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="edit-product-title" class="form-label">
+                            Product Title *
+                        </label>
+                        <input type="text" id="edit-product-title" name="title" class="form-input" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="edit-product-category" class="form-label">
+                            Category *
+                        </label>
+                        <select id="edit-product-category" name="category" class="form-select" required>
+                            <option value="">Select Category</option>
+                            <option value="electronics">Electronics</option>
+                            <option value="clothing">Clothing</option>
+                            <option value="home">Home & Kitchen</option>
+                            <option value="books">Books</option>
+                            <option value="sports">Sports</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="edit-product-price" class="form-label">
+                            Base Price (₹) *
+                        </label>
+                        <input type="number" id="edit-product-price" name="base_price" class="form-input" step="0.01" min="0" required>
+                    </div>
+                    
+                    <div class="form-group full-width">
+                        <label for="edit-product-description" class="form-label">
+                            Description *
+                        </label>
+                        <textarea id="edit-product-description" name="description" class="form-textarea" rows="4" required></textarea>
                     </div>
                 </div>
-
-                <div class="info-card">
-                    <h3>Ready to start selling?</h3>
-                    <p>Complete the setup to unlock product listing features. You'll be able to:</p>
-                    <ul>
-                        <li>Create product listings with images and descriptions</li>
-                        <li>Manage your inventory and stock levels</li>
-                        <li>Set pricing and offers for your products</li>
-                        <li>Track orders and customer interactions</li>
-                    </ul>
-                </div>
-
+                
                 <div class="form-actions">
-                    <button class="btn-primary" id="complete-listing-stock">
-                        <i class="fas fa-check-circle"></i>
-                        Mark as Complete
+                    <button type="button" class="btn-secondary" id="cancel-edit-product">
+                        <i class="fas fa-times"></i>
+                        Cancel
                     </button>
+                    <button type="submit" class="btn-primary">
+                        <i class="fas fa-save"></i>
+                        Save Changes
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+    <!-- Variants Modal -->
+    <div id="variants-modal" class="modal">
+        <div class="modal-content large">
+            <div class="modal-header">
+                <h2>Add Variants for <span id="variant-product-title"></span></h2>
+                <span class="close">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="variants-container">
+                    <form id="add-variant-form" class="variant-form">
+                        <div class="variant-attributes">
+                            <h4>Variant Attributes</h4>
+                            <div class="attributes-grid" id="variant-attributes-container">
+                                <!-- Dynamic attributes will be loaded here -->
+                            </div>
+                        </div>
+                        
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="variant-price" class="form-label">Adjusted Price (₹)</label>
+                                <input type="number" id="variant-price" name="adjusted_price" class="form-input" step="0.01" min="0">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="variant-stock" class="form-label">Stock Quantity</label>
+                                <input type="number" id="variant-stock" name="stock" class="form-input" min="0" value="0">
+                            </div>
+                        </div>
+                        
+                        <!-- Image Upload -->
+                        <div class="form-group">
+                            <label for="variant-images" class="form-label">Product Images</label>
+                            <div class="file-upload-area" id="variant-images-upload-area">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                                <p>Drag & drop product images or click to browse</p>
+                                <span>First image will be used as primary (Required)</span>
+                                <input type="file" id="variant-images" name="variant_images" multiple accept="image/*" hidden>
+                            </div>
+                            <div id="variant-images-preview" class="image-preview-grid"></div>
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button type="submit" class="btn-primary">
+                                <i class="fas fa-plus"></i>
+                                Add Variant
+                            </button>
+                            <button type="button" class="btn-secondary" id="finish-variants">
+                                <i class="fas fa-check"></i>
+                                Finish Variants
+                            </button>
+                        </div>
+                    </form>
+                    
+                    <div class="variants-list" id="variants-list-container">
+                        <!-- Added variants will be shown here -->
+                    </div>
                 </div>
             </div>
         </div>
@@ -549,7 +778,7 @@
     <div class="notification" id="success-notification">
         <div class="notification-content">
             <i class="fas fa-check-circle"></i>
-            <span class="notification-text">Verification successful!</span>
+            <span class="notification-text">Operation successful!</span>
         </div>
     </div>
 
@@ -574,7 +803,7 @@
                 <div class="completion-animation">
                     <i class="fas fa-check-circle"></i>
                 </div>
-                <h3>Welcome to Figkart Seller Community!</h3>
+                <h3>Welcome to ShopWaveX Seller Community!</h3>
                 <p>Your vendor account has been successfully verified and activated. You can now start selling on our platform.</p>
                 <div class="completion-features">
                     <div class="feature">
@@ -583,11 +812,11 @@
                     </div>
                     <div class="feature">
                         <i class="fas fa-box"></i>
-                        <span>Start adding products</span>
+                        <span>Products are listed</span>
                     </div>
                     <div class="feature">
                         <i class="fas fa-chart-line"></i>
-                        <span>Track your sales</span>
+                        <span>Ready to sell</span>
                     </div>
                 </div>
             </div>
@@ -631,3 +860,5 @@
     <script src="SignUp.js"></script>
 </body>
 </html>
+
+

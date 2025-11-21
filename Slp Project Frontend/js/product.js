@@ -76,17 +76,17 @@
 //                         <span class="rating-count">(1,234 ratings)</span>
 //                     </div>
 //                     <div class="product-category muted">${product.category}</div>
-                    
+
 //                     <div class="price-section">
 //                         <h2 class="product-price">₹${product.price.toLocaleString('en-IN')}</h2>
 //                         <div class="delivery-info">Free delivery — Available</div>
 //                     </div>
-                    
+
 //                     <div class="product-description">
 //                         <h3>Description</h3>
 //                         <p>${product.desc}</p>
 //                     </div>
-                    
+
 //                     <div class="product-specifications">
 //                         <h3>Specifications</h3>
 //                         <div class="specs-grid">
@@ -108,7 +108,7 @@
 //                             </div>
 //                         </div>
 //                     </div>
-                    
+
 //                     <div class="customer-reviews">
 //                         <h3>Customer Reviews</h3>
 //                         <div class="reviews-summary">
@@ -150,7 +150,7 @@
 //             </div>
 //         </div>
 //     `;
-        
+
 //         // Thumbnail click functionality
 //         detail.querySelectorAll('.gallery-thumbs img').forEach(img => {
 //             img.addEventListener('click', (e) => {
@@ -174,26 +174,26 @@
 //                     <div class="delivery-date">Get it by Tomorrow</div>
 //                 </div>
 //             </div>
-            
+
 //             <div class="stock-info">In Stock</div>
-            
+
 //             <div class="qty">
 //                 <label>Quantity:</label>
 //                 <input id="qtyInput" type="number" min="1" max="10" value="1" />
 //             </div>
-            
+
 //             <div class="action-buttons">
 //                 <button id="addCartBtn" class="btn btn-secondary">Add to Cart</button>
 //                 <button id="buyNowBtn" class="btn btn-primary">Buy Now</button>
 //             </div>
-            
+
 //             <div class="security-info">
 //                 <div class="secure-payment">🔒 Secure transaction</div>
 //                 <div class="return-policy">✅ 30-day return policy</div>
 //             </div>
 //         </div>
 //     `;
-        
+
 //         // Add to Cart button functionality
 //         document.getElementById('addCartBtn').addEventListener('click', () => {
 //             const qty = Number(document.getElementById('qtyInput').value) || 1;
@@ -203,19 +203,19 @@
 //                 document.getElementById('addCartBtn').textContent = 'Add to Cart';
 //             }, 2000);
 //         });
-        
+
 //         // Buy Now button functionality - Direct checkout
 //         document.getElementById('buyNowBtn').addEventListener('click', () => {
 //             const qty = Number(document.getElementById('qtyInput').value) || 1;
-            
+
 //             // Create a cart with only this product for direct checkout
 //             const directCart = {};
 //             directCart[product.id] = qty;
-            
+
 //             // Save to localStorage for checkout page
 //             localStorage.setItem('checkout_cart', JSON.stringify(directCart));
 //             localStorage.setItem('direct_checkout', 'true'); // Flag for direct checkout
-            
+
 //             // Redirect directly to checkout
 //             window.location.href = 'checkout.html';
 //         });
@@ -226,12 +226,12 @@
 //         const fullStars = Math.floor(rating);
 //         const halfStar = rating % 1 >= 0.5;
 //         const emptyStars = 5 - fullStars - (halfStar ? 1 : 0);
-        
+
 //         let stars = '';
 //         for (let i = 0; i < fullStars; i++) stars += '★';
 //         if (halfStar) stars += '½';
 //         for (let i = 0; i < emptyStars; i++) stars += '☆';
-        
+
 //         return stars;
 //     }
 // })();
@@ -269,35 +269,57 @@
         const fullStars = Math.floor(rating);
         const halfStar = rating % 1 >= 0.5;
         const emptyStars = 5 - fullStars - (halfStar ? 1 : 0);
-        
+
         let stars = '';
         for (let i = 0; i < fullStars; i++) stars += '★';
         if (halfStar) stars += '½';
         for (let i = 0; i < emptyStars; i++) stars += '☆';
-        
+
         return stars;
     }
 
     async function fetchProductDetails(productId) {
         try {
             showLoadingState();
-            
+            console.log('🔄 Fetching product details for ID:', productId);
+
             const response = await fetch(`${API_BASE_URL}/get/product/${productId}/`);
-            
+
+            console.log('📡 Response status:', response.status);
+            console.log('📡 Response ok:', response.ok);
+
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
-            
+
             const productData = await response.json();
-            const product = Array.isArray(productData) ? productData[0] : productData;
-            
-            if (!product) {
-                throw new Error('Product not found');
+            console.log('📦 Raw API response:', productData);
+
+            // Check if we got any data
+            if (!productData) {
+                throw new Error('No product data received from server');
             }
-            
-            return product;
+
+            // Handle both array and single object responses
+            const product = Array.isArray(productData) ? productData[0] : productData;
+
+            if (!product) {
+                throw new Error('Product not found in response');
+            }
+
+            // Validate required fields
+            if (!product.id || !product.title) {
+                throw new Error('Invalid product data: missing required fields');
+            }
+
+            console.log('✅ Product data received:', product);
+            return productData; // Return the raw data, let transformProductData handle it
         } catch (error) {
             console.error('❌ Error fetching product details:', error);
+            console.error('Error details:', {
+                message: error.message,
+                stack: error.stack
+            });
             showErrorState('Failed to load product details. Please try again later.');
             return null;
         }
@@ -306,32 +328,46 @@
     function transformProductData(backendProduct) {
         if (!backendProduct) return null;
 
+        // Handle both array and single object responses
+        const product = Array.isArray(backendProduct) ? backendProduct[0] : backendProduct;
+
+        if (!product) return null;
+
         // Get the first variant for initial display
-        const firstVariant = backendProduct.variants && backendProduct.variants.length > 0 
-            ? backendProduct.variants[0] 
+        const firstVariant = product.variants && product.variants.length > 0
+            ? product.variants[0]
             : null;
 
-        // Get images
+        // Get images - FIXED VERSION
         let productImages = ['assets/default-product.jpg'];
+
         if (firstVariant && firstVariant.images && firstVariant.images.length > 0) {
+            // Extract image URLs from variant images
             productImages = firstVariant.images.map(img => img.image);
+
+            // Sort so primary image comes first
+            productImages.sort((a, b) => {
+                const aIsPrimary = firstVariant.images.find(img => img.image === a)?.is_primary;
+                const bIsPrimary = firstVariant.images.find(img => img.image === b)?.is_primary;
+                return (bIsPrimary ? 1 : 0) - (aIsPrimary ? 1 : 0);
+            });
         }
 
         // Get category name
-        const categoryName = backendProduct.category?.[0]?.name || 'Uncategorized';
+        const categoryName = product.category?.[0]?.name || 'Uncategorized';
 
         return {
-            id: backendProduct.id.toString(),
-            title: backendProduct.title,
-            description: backendProduct.description,
-            basePrice: parseFloat(backendProduct.base_price),
-            price: parseFloat(firstVariant?.adjusted_price || backendProduct.base_price),
-            rating: 4.5,
+            id: product.id.toString(),
+            title: product.title,
+            description: product.description,
+            basePrice: parseFloat(product.base_price),
+            price: parseFloat(firstVariant?.adjusted_price || product.base_price),
+            rating: 4.5, // Default rating
             images: productImages,
             category: categoryName,
-            category_id: backendProduct.category_id,
-            variants: backendProduct.variants || [],
-            specifications: generateSpecifications(backendProduct, firstVariant)
+            category_id: product.category_id,
+            variants: product.variants || [],
+            specifications: generateSpecifications(product, firstVariant)
         };
     }
 
@@ -361,40 +397,52 @@
     }
 
     async function initializeProductPage() {
-        const productId = getQueryParam('id');
+    const productId = getQueryParam('id');
+
+    if (!productId) {
+        showErrorState('Product ID not found in URL');
+        return;
+    }
+
+    try {
+        showLoadingState();
         
-        if (!productId) {
-            showErrorState('Product ID not found in URL');
+        const backendProduct = await fetchProductDetails(productId);
+
+        if (!backendProduct) {
+            showErrorState('Product not found');
             return;
         }
 
-        try {
-            const backendProduct = await fetchProductDetails(productId);
-            
-            if (!backendProduct) {
-                return;
-            }
+        currentProduct = transformProductData(backendProduct);
 
-            currentProduct = transformProductData(backendProduct);
-            
-            if (!currentProduct) {
-                showErrorState('Failed to process product data');
-                return;
-            }
-
-            // Set first variant as current
-            if (currentProduct.variants.length > 0) {
-                currentVariant = currentProduct.variants[0];
-            }
-
-            updateProductDisplay();
-            initializeEventListeners();
-            
-        } catch (error) {
-            console.error('❌ Error initializing product page:', error);
-            showErrorState('Failed to load product page');
+        if (!currentProduct) {
+            showErrorState('Failed to process product data');
+            return;
         }
+
+        console.log('🔄 Transformed product:', currentProduct);
+
+        // Set first variant as current
+        if (currentProduct.variants && currentProduct.variants.length > 0) {
+            currentVariant = currentProduct.variants[0];
+        } else {
+            console.warn('⚠️ No variants found for product');
+        }
+
+        // HIDE LOADING STATE BEFORE UPDATING DISPLAY
+        hideLoadingState();
+        
+        updateProductDisplay();
+        initializeEventListeners();
+
+    } catch (error) {
+        console.error('❌ Error initializing product page:', error);
+        // Also hide loading state on error
+        hideLoadingState();
+        showErrorState('Failed to load product page: ' + error.message);
     }
+}
 
     function updateProductDisplay() {
         updateBreadcrumb();
@@ -413,30 +461,65 @@
     }
 
     function updateGallery() {
+        console.log('🔄 updateGallery called');
+
         const mainImage = document.getElementById('mainImage');
         const thumbsContainer = document.getElementById('galleryThumbs');
 
-        if (currentProduct.images.length > 0) {
+        // Check if elements exist
+        if (!mainImage) {
+            console.error('❌ CRITICAL: mainImage element not found!');
+            console.error('Available elements on page:');
+            console.log(document.querySelectorAll('*[id]'));
+            throw new Error('mainImage element not found in DOM');
+        }
+
+        if (!thumbsContainer) {
+            console.error('❌ CRITICAL: galleryThumbs element not found!');
+            throw new Error('galleryThumbs element not found in DOM');
+        }
+
+        console.log('✅ DOM elements found, proceeding with gallery update');
+
+        if (currentProduct.images && currentProduct.images.length > 0) {
+            console.log('📸 Setting main image:', currentProduct.images[0]);
             mainImage.src = currentProduct.images[0];
             mainImage.alt = currentProduct.title;
 
+            // Add error handling for image loading
+            mainImage.onerror = function () {
+                console.error('❌ Failed to load main image, using fallback');
+                this.src = 'assets/default-product.jpg';
+            };
+
             thumbsContainer.innerHTML = currentProduct.images.map((img, index) => `
-                <div class="thumb-item ${index === 0 ? 'active' : ''}" data-index="${index}">
-                    <img src="${img}" alt="Thumbnail ${index + 1}" 
-                         onerror="this.src='assets/default-product.jpg'">
-                </div>
-            `).join('');
+            <div class="thumb-item ${index === 0 ? 'active' : ''}" data-index="${index}">
+                <img src="${img}" alt="Thumbnail ${index + 1}" 
+                     onerror="this.src='assets/default-product.jpg'">
+            </div>
+        `).join('');
 
             // Add thumbnail click listeners
             document.querySelectorAll('.thumb-item').forEach(thumb => {
-                thumb.addEventListener('click', function() {
+                thumb.addEventListener('click', function () {
                     const index = this.dataset.index;
                     document.querySelectorAll('.thumb-item').forEach(t => t.classList.remove('active'));
                     this.classList.add('active');
                     mainImage.src = currentProduct.images[index];
                 });
             });
+        } else {
+            console.warn('⚠️ No images available, using default');
+            mainImage.src = 'assets/default-product.jpg';
+            mainImage.alt = 'Default product image';
+            thumbsContainer.innerHTML = `
+            <div class="thumb-item active">
+                <img src="assets/default-product.jpg" alt="Default product image">
+            </div>
+        `;
         }
+
+        console.log('✅ Gallery update completed');
     }
 
     function updateProductInfo() {
@@ -446,7 +529,7 @@
 
         // Calculate discount (random for demo)
         const discount = Math.floor(Math.random() * 30) + 10;
-        const originalPrice = Math.round(currentProduct.price * (1 + discount/100));
+        const originalPrice = Math.round(currentProduct.price * (1 + discount / 100));
 
         document.getElementById('productPrice').textContent = `₹${currentProduct.price.toLocaleString('en-IN')}`;
         document.getElementById('discountBadge').textContent = `${discount}% off`;
@@ -459,7 +542,7 @@
 
     function updateVariants() {
         const container = document.getElementById('variantSelection');
-        
+
         if (currentProduct.variants.length <= 1) {
             container.style.display = 'none';
             return;
@@ -481,7 +564,7 @@
 
         // Add variant selection listeners
         document.querySelectorAll('.variant-option').forEach(option => {
-            option.addEventListener('click', function() {
+            option.addEventListener('click', function () {
                 const variantId = this.dataset.variantId;
                 selectVariant(variantId);
             });
@@ -562,7 +645,7 @@
         if (!container || !currentProduct.specifications) return;
 
         let specsHTML = '';
-        
+
         for (const [category, specifications] of Object.entries(currentProduct.specifications)) {
             specsHTML += `
                 <div class="specs-category">
@@ -608,7 +691,7 @@
         ];
 
         const stats = calculateRatingStats(currentReviews);
-        
+
         document.getElementById('averageRating').textContent = stats.average.toFixed(1);
         document.querySelector('.overall-rating .rating-stars').textContent = generateStarRating(stats.average);
         document.querySelector('.total-reviews').textContent = `${stats.total} reviews`;
@@ -642,112 +725,246 @@
     function calculateRatingStats(reviews) {
         const total = reviews.length;
         const average = total > 0 ? reviews.reduce((sum, review) => sum + review.rating, 0) / total : 0;
-        
-        const breakdown = {5: 0, 4: 0, 3: 0, 2: 0, 1: 0};
+
+        const breakdown = { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 };
         reviews.forEach(review => {
             breakdown[review.rating]++;
         });
-        
+
         return { average, total, breakdown };
     }
 
+    // async function loadSimilarProducts() {
+    //     const container = document.getElementById('similarProductsGrid');
+    //     if (!container) return;
 
-    // Enhanced fetchProductDetails with better error handling
-async function fetchProductDetails(productId) {
+    //     try {
+    //         const response = await fetch(`${API_BASE_URL}/get/products/`);
+
+    //         if (!response.ok) {
+    //             throw new Error(`HTTP error! status: ${response.status}`);
+    //         }
+
+    //         const productsData = await response.json();
+    //         const allProducts = Array.isArray(productsData) ? productsData : [productsData];
+
+    //         // Filter similar products
+    //         const similarProducts = allProducts
+    //             .filter(p => p.category_id === currentProduct.category_id && p.id != currentProduct.id)
+    //             .slice(0, 4);
+
+    //         if (similarProducts.length === 0) {
+    //             container.innerHTML = '<p class="empty-state">No similar products found.</p>';
+    //             return;
+    //         }
+
+    //         container.innerHTML = similarProducts.map(product => {
+    //             const firstVariant = product.variants && product.variants.length > 0 ? product.variants[0] : null;
+    //             const productImage = firstVariant && firstVariant.images && firstVariant.images.length > 0
+    //                 ? firstVariant.images[0].image
+    //                 : 'assets/default-product.jpg';
+
+    //             return `
+    //                 <div class="card">
+    //                     <a href="product.html?id=${product.id}" style="text-decoration:none;color:inherit">
+    //                         <img loading="lazy" src="${productImage}" alt="${product.title}" 
+    //                              onerror="this.src='assets/default-product.jpg'">
+    //                         <div class="card-content">
+    //                             <div class="card-title">${product.title}</div>
+    //                             <div class="card-category">${product.category}</div>
+    //                             <div class="card-footer">
+    //                                 <div class="price">₹${parseFloat(firstVariant?.adjusted_price || product.base_price).toLocaleString('en-IN')}</div>
+    //                                 <div class="rating">
+    //                                     <span>4.5</span>
+    //                                     <span>★</span>
+    //                                 </div>
+    //                             </div>
+    //                         </div>
+    //                     </a>
+    //                 </div>
+    //             `;
+    //         }).join('');
+
+    //     } catch (error) {
+    //         console.error('❌ Error loading similar products:', error);
+    //         container.innerHTML = '<p class="empty-state">Unable to load similar products.</p>';
+    //     }
+    // }
+
+
+
+
+
+async function loadSimilarProducts() {
+    const container = document.getElementById('similarProductsGrid');
+    if (!container) return;
+
     try {
-        showLoadingState();
-        console.log('🔄 Fetching product details for ID:', productId);
-        
-        const response = await fetch(`${API_BASE_URL}/get/product/${productId}/`);
-        
-        console.log('📡 Response status:', response.status);
-        console.log('📡 Response ok:', response.ok);
-        
+        // Show loading state
+        container.innerHTML = `
+            <div class="loading-state" style="grid-column: 1/-1; text-align: center; padding: 40px;">
+                <div class="loading-spinner"></div>
+                <p>Loading similar products...</p>
+            </div>
+        `;
+
+        const response = await fetch(`${API_BASE_URL}/get/products/`);
+
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
-        
-        const productData = await response.json();
-        console.log('📦 Raw API response:', productData);
+
+        const productsData = await response.json();
         
         // Handle both array and single object responses
-        const product = Array.isArray(productData) ? productData[0] : productData;
-        
-        if (!product) {
-            throw new Error('Product not found in response');
+        let allProducts = [];
+        if (Array.isArray(productsData)) {
+            allProducts = productsData;
+        } else if (productsData && typeof productsData === 'object') {
+            allProducts = [productsData];
+        } else {
+            allProducts = [];
         }
-        
-        console.log('✅ Product data received:', product);
-        return product;
+
+        console.log('📦 All products:', allProducts);
+
+        // Filter similar products - same category, exclude current product
+        const similarProducts = allProducts
+            .filter(p => {
+                // Handle missing data gracefully
+                if (!p || !p.id) return false;
+                
+                // Check if product has same category as current product
+                const sameCategory = currentProduct?.category_id ? 
+                    p.category_id === currentProduct.category_id : true;
+                
+                // Exclude current product
+                const notCurrent = p.id.toString() !== currentProduct?.id;
+                
+                return sameCategory && notCurrent;
+            })
+            .slice(0, 4); // Limit to 4 products
+
+        console.log('🔍 Similar products found:', similarProducts);
+
+        if (similarProducts.length === 0) {
+            container.innerHTML = `
+                <div class="empty-state" style="grid-column: 1/-1; text-align: center; padding: 40px; color: #565959;">
+                    <p>No similar products found.</p>
+                </div>
+            `;
+            return;
+        }
+
+        // Generate product cards
+        container.innerHTML = similarProducts.map(product => {
+            // Safely get product data with fallbacks
+            const productId = product.id || 'unknown';
+            const productTitle = product.title || 'Untitled Product';
+            const category = product.category?.[0]?.name || product.category_name || 'UNCATEGORIZED';
+            
+            // Get first variant or use product data
+            const firstVariant = product.variants && product.variants.length > 0 ? product.variants[0] : null;
+            const price = firstVariant ? parseFloat(firstVariant.adjusted_price) : parseFloat(product.base_price || 0);
+            
+            // Get product image
+            let productImage = 'assets/default-product.jpg';
+            if (firstVariant && firstVariant.images && firstVariant.images.length > 0) {
+                productImage = firstVariant.images[0].image;
+            } else if (product.images && product.images.length > 0) {
+                productImage = product.images[0];
+            }
+
+            // Default rating (you can get this from your backend if available)
+            const rating = product.rating || 4.5;
+            const ratingValue = rating.toFixed(1);
+
+            return `
+                <div class="card" data-product-id="${productId}">
+                    <a href="product.html?id=${productId}" style="text-decoration: none; color: inherit;">
+                        <div class="card-image">
+                            <img src="${productImage}" alt="${productTitle}" 
+                                 onerror="this.src='assets/default-product.jpg'">
+                        </div>
+                        <div class="card-content">
+                            <div class="card-title">${productTitle}</div>
+                            <div class="card-category">${category}</div>
+                            <div class="card-price">₹${price.toLocaleString('en-IN')}</div>
+                            <div class="card-rating">
+                                <span class="rating-stars">${generateStarRating(rating)}</span>
+                                <span class="rating-value">${ratingValue}</span>
+                            </div>
+                            <div class="card-actions">
+                                <button class="btn btn-outline" onclick="event.preventDefault(); addSimilarToCart('${productId}')">Add to Cart</button>
+                                <button class="btn btn-primary" onclick="event.preventDefault(); buySimilarNow('${productId}')">Buy Now</button>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            `;
+        }).join('');
+
     } catch (error) {
-        console.error('❌ Error fetching product details:', error);
-        console.error('Error details:', {
-            message: error.message,
-            stack: error.stack
-        });
-        showErrorState('Failed to load product details. Please try again later.');
-        return null;
+        console.error('❌ Error loading similar products:', error);
+        container.innerHTML = `
+            <div class="error-state" style="grid-column: 1/-1; text-align: center; padding: 40px;">
+                <div class="error-icon">⚠️</div>
+                <p>Unable to load similar products.</p>
+                <button class="btn btn-outline" onclick="loadSimilarProducts()">Try Again</button>
+            </div>
+        `;
     }
+}
+
+// Helper functions for similar product actions
+function addSimilarToCart(productId) {
+    addToCart(productId, 1);
+    
+    // Show feedback
+    const button = event.target;
+    const originalText = button.textContent;
+    button.textContent = '✓ Added';
+    button.style.background = '#10b981';
+    button.style.color = 'white';
+    button.style.borderColor = '#10b981';
+
+    setTimeout(() => {
+        button.textContent = originalText;
+        button.style.background = '';
+        button.style.color = '';
+        button.style.borderColor = '';
+    }, 2000);
+}
+
+function buySimilarNow(productId) {
+    const directCart = {};
+    directCart[productId] = 1;
+    
+    localStorage.setItem('checkout_cart', JSON.stringify(directCart));
+    localStorage.setItem('direct_checkout', 'true');
+    window.location.href = 'checkout.html';
+}
+
+// Update your generateStarRating function to handle similar products
+function generateStarRating(rating) {
+    const fullStars = Math.floor(rating);
+    const hasHalfStar = rating % 1 >= 0.5;
+    const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
+
+    let stars = '';
+    for (let i = 0; i < fullStars; i++) stars += '★';
+    if (hasHalfStar) stars += '½';
+    for (let i = 0; i < emptyStars; i++) stars += '☆';
+
+    return stars;
 }
 
 
 
-    async function loadSimilarProducts() {
-        const container = document.getElementById('similarProductsGrid');
-        if (!container) return;
 
-        try {
-            const response = await fetch(`${API_BASE_URL}/get/products/`);
-            
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            
-            const productsData = await response.json();
-            const allProducts = Array.isArray(productsData) ? productsData : [productsData];
-            
-            // Filter similar products
-            const similarProducts = allProducts
-                .filter(p => p.category_id === currentProduct.category_id && p.id != currentProduct.id)
-                .slice(0, 4);
 
-            if (similarProducts.length === 0) {
-                container.innerHTML = '<p class="empty-state">No similar products found.</p>';
-                return;
-            }
 
-            container.innerHTML = similarProducts.map(product => {
-                const firstVariant = product.variants && product.variants.length > 0 ? product.variants[0] : null;
-                const productImage = firstVariant && firstVariant.images && firstVariant.images.length > 0 
-                    ? firstVariant.images[0].image 
-                    : 'assets/default-product.jpg';
 
-                return `
-                    <div class="card">
-                        <a href="product.html?id=${product.id}" style="text-decoration:none;color:inherit">
-                            <img loading="lazy" src="${productImage}" alt="${product.title}" 
-                                 onerror="this.src='assets/default-product.jpg'">
-                            <div class="card-content">
-                                <div class="card-title">${product.title}</div>
-                                <div class="card-category">${product.category}</div>
-                                <div class="card-footer">
-                                    <div class="price">₹${parseFloat(firstVariant?.adjusted_price || product.base_price).toLocaleString('en-IN')}</div>
-                                    <div class="rating">
-                                        <span>4.5</span>
-                                        <span>★</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-                `;
-            }).join('');
-
-        } catch (error) {
-            console.error('❌ Error loading similar products:', error);
-            container.innerHTML = '<p class="empty-state">Unable to load similar products.</p>';
-        }
-    }
 
     function initializeEventListeners() {
         // Quantity controls
@@ -769,7 +986,7 @@ async function fetchProductDetails(productId) {
             }
         });
 
-        qtyInput.addEventListener('change', function() {
+        qtyInput.addEventListener('change', function () {
             let value = parseInt(this.value) || 1;
             if (value < 1) value = 1;
             if (value > 10) value = 10;
@@ -788,14 +1005,14 @@ async function fetchProductDetails(productId) {
 
         const qty = Number(document.getElementById('qtyInput').value) || 1;
         const productId = currentVariant.id || currentProduct.id;
-        
+
         addToCart(productId.toString(), qty);
-        
+
         const button = document.getElementById('addCartBtn');
         const originalText = button.textContent;
         button.textContent = '✓ Added to Cart';
         button.style.background = '#10b981';
-        
+
         setTimeout(() => {
             button.textContent = originalText;
             button.style.background = '';
@@ -807,47 +1024,92 @@ async function fetchProductDetails(productId) {
 
         const qty = Number(document.getElementById('qtyInput').value) || 1;
         const productId = currentVariant.id || currentProduct.id;
-        
+
         // Create a cart with only this product for direct checkout
         const directCart = {};
         directCart[productId.toString()] = qty;
-        
+
         // Save to localStorage for checkout page
         localStorage.setItem('checkout_cart', JSON.stringify(directCart));
         localStorage.setItem('direct_checkout', 'true');
-        
+
         // Redirect directly to checkout
         window.location.href = 'checkout.html';
     }
 
+
     function showLoadingState() {
-        const mainSection = document.querySelector('.product-main-section');
-        if (mainSection) {
-            mainSection.innerHTML = `
-                <div class="loading-state">
-                    <div class="loading-spinner"></div>
-                    <p>Loading product details...</p>
-                </div>
-            `;
+    console.log('🔄 Showing loading state...');
+    // Don't replace the entire container, just show a loading overlay
+    const mainSection = document.getElementById('productContainer');
+    if (mainSection) {
+        // Create loading overlay that doesn't remove existing elements
+        const loadingOverlay = document.createElement('div');
+        loadingOverlay.className = 'loading-overlay';
+        loadingOverlay.innerHTML = `
+            <div class="loading-state">
+                <div class="loading-spinner"></div>
+                <p>Loading product details...</p>
+            </div>
+        `;
+        loadingOverlay.style.cssText = `
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+        `;
+        
+        // Remove any existing loading overlay
+        const existingOverlay = mainSection.querySelector('.loading-overlay');
+        if (existingOverlay) {
+            existingOverlay.remove();
+        }
+        
+        mainSection.appendChild(loadingOverlay);
+    }
+}
+
+function hideLoadingState() {
+    console.log('🔄 Hiding loading state...');
+    const mainSection = document.getElementById('productContainer');
+    if (mainSection) {
+        const loadingOverlay = mainSection.querySelector('.loading-overlay');
+        if (loadingOverlay) {
+            loadingOverlay.remove();
+            console.log('✅ Loading state hidden');
         }
     }
+}
+
 
     function showErrorState(message) {
-        const mainSection = document.querySelector('.product-main-section');
-        if (mainSection) {
-            mainSection.innerHTML = `
-                <div class="error-state">
-                    <div class="error-icon">⚠️</div>
-                    <h3>Unable to Load Product</h3>
-                    <p>${message}</p>
-                    <button class="btn btn-primary" onclick="window.location.href='index.html'">Back to Home</button>
-                </div>
-            `;
+    console.log('❌ Showing error state:', message);
+    // Remove loading overlay first
+    const mainSection = document.getElementById('productContainer');
+    if (mainSection) {
+        const loadingOverlay = mainSection.querySelector('.loading-overlay');
+        if (loadingOverlay) {
+            loadingOverlay.remove();
         }
+        
+        // Replace content with error state
+        mainSection.innerHTML = `
+            <div class="error-state">
+                <div class="error-icon">⚠️</div>
+                <h3>Unable to Load Product</h3>
+                <p>${message}</p>
+                <button class="btn btn-primary" onclick="window.location.href='index.html'">Back to Home</button>
+            </div>
+        `;
     }
+}
 
     // Initialize the product page
     document.addEventListener('DOMContentLoaded', initializeProductPage);
 })();
-
-

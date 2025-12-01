@@ -368,6 +368,19 @@
         margin: 8px 0;
     }
 
+    /* Add to your checkout.css */
+.direct-purchase-badge {
+    background: #268adc;
+    color: white;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 600;
+    display: inline-block;
+    margin-top: 4px;
+}
+
+
 /* Responsive */
 @media (max-width: 768px) {
     .checkout-grid {

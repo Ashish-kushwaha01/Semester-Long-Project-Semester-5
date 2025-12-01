@@ -9,6 +9,22 @@
 </head>
 <body>
     <div class="dashboard-container">
+        <!-- Header with Sign In Link -->
+        <div class="top-header">
+            <div class="header-content">
+                <!-- <div class="logo">
+                    <i class="fas fa-store"></i>
+                    <span>ShopWaveX Seller</span>
+                </div> -->
+                <div class="header-actions">
+                    <a href="./SignIn/SignIn.html" class="signin-link">
+                        <i class="fas fa-sign-in-alt"></i>
+                        Already Registered? Sign In
+                    </a>
+                </div>
+            </div>
+        </div>
+
         <!-- Sidebar - 20% width -->
         <div class="sidebar">
             <div class="sidebar-header">
@@ -17,8 +33,8 @@
                         <i class="fas fa-store"></i>
                     </div>
                     <div class="user-details">
-                        <h2>Hello, Ashish!</h2>
-                        <p>Complete onboarding to start selling</p>
+                        <h2>Welcome, Vendor!</h2>
+                        <p>Complete onboarding to start selling ShopWaveX</p>
                     </div>
                 </div>
             </div>
@@ -26,11 +42,11 @@
             <div class="sidebar-menu">
                 <div class="menu-item active" data-target="mobile-email">
                     <div class="menu-icon">
-                        <i class="fas fa-mobile-alt"></i>
+                        <i class="fas fa-envelope"></i>
                     </div>
                     <div class="menu-text">
-                        <h3>Mobile & Email</h3>
-                        <p>Verification Status</p>
+                        <h3>Email & Mobile</h3>
+                        <p>Verification Required</p>
                     </div>
                     <div class="status-indicator pending" id="mobile-email-status">
                         <i class="fas fa-clock"></i>
@@ -76,19 +92,6 @@
                     </div>
                 </div>
 
-                <!-- <div class="menu-item" data-target="password-setup">
-                    <div class="menu-icon">
-                        <i class="fas fa-lock"></i>
-                    </div>
-                    <div class="menu-text">
-                        <h3>Password Setup</h3>
-                        <p>Create Login Password</p>
-                    </div>
-                    <div class="status-indicator pending" id="password-setup-status">
-                        <i class="fas fa-clock"></i>
-                    </div>
-                </div> -->
-
                 <div class="menu-item" data-target="listing-stock">
                     <div class="menu-icon">
                         <i class="fas fa-boxes"></i>
@@ -126,11 +129,11 @@
 
         <!-- Main Content - 80% width -->
         <div class="main-content">
-            <!-- Mobile & Email Verification Section -->
+            <!-- Email & Mobile Verification Section -->
             <div class="content-section active" id="mobile-email">
                 <div class="section-header">
                     <div class="header-content">
-                        <h1>Mobile & Email Verification</h1>
+                        <h1>Email & Mobile Verification</h1>
                         <p>Secure your account by verifying your contact information</p>
                     </div>
                     <div class="step-indicator">
@@ -139,8 +142,95 @@
                     </div>
                 </div>
 
-                <!-- Mobile Verification Card -->
+                <!-- Email Verification Card -->
                 <div class="verification-card">
+                    <div class="card-header">
+                        <div class="header-left">
+                            <div class="verification-icon">
+                                <i class="fas fa-envelope"></i>
+                            </div>
+                            <div class="header-text">
+                                <h3>Email Address Verification</h3>
+                                <p>Verify your email for important updates and account recovery</p>
+                            </div>
+                        </div>
+                        <div class="verification-status pending" id="email-status">
+                            <i class="fas fa-clock"></i>
+                            <span>Pending</span>
+                        </div>
+                    </div>
+
+                    <div class="verification-process">
+                        <!-- Step 1: Enter Email -->
+                        <div class="verification-step active" id="email-step-1">
+                            <div class="step-content">
+                                <div class="form-group">
+                                    <label for="email-address">Enter Your Business Email</label>
+                                    <input type="email" id="email-address" class="form-input" placeholder="Enter your business email">
+                                    <p class="input-hint">We'll send a 6-digit verification code to your email</p>
+                                </div>
+                                <button class="btn-primary" id="send-email-otp">
+                                    <i class="fas fa-paper-plane"></i>
+                                    Send Verification Code
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Step 2: Enter OTP -->
+                        <div class="verification-step" id="email-step-2">
+                            <div class="step-content">
+                                <div class="otp-header">
+                                    <h4>Enter Verification Code</h4>
+                                    <p>We've sent a 6-digit code to <span id="email-display">••••@gmail.com</span></p>
+                                    <button class="resend-link" id="resend-email-otp" disabled>
+                                        <i class="fas fa-redo"></i>
+                                        Resend in <span id="email-timer">30</span>s
+                                    </button>
+                                </div>
+                                
+                                <div class="otp-container">
+                                    <div class="otp-inputs">
+                                        <input type="text" class="otp-digit" maxlength="1" data-index="0" data-type="email" autocomplete="off">
+                                        <input type="text" class="otp-digit" maxlength="1" data-index="1" data-type="email" autocomplete="off">
+                                        <input type="text" class="otp-digit" maxlength="1" data-index="2" data-type="email" autocomplete="off">
+                                        <input type="text" class="otp-digit" maxlength="1" data-index="3" data-type="email" autocomplete="off">
+                                        <input type="text" class="otp-digit" maxlength="1" data-index="4" data-type="email" autocomplete="off">
+                                        <input type="text" class="otp-digit" maxlength="1" data-index="5" data-type="email" autocomplete="off">
+                                    </div>
+                                </div>
+
+                                <div class="verification-actions">
+                                    <button class="btn-secondary" id="change-email-address">
+                                        <i class="fas fa-edit"></i>
+                                        Change Email
+                                    </button>
+                                    <button class="btn-primary" id="verify-email-otp" disabled>
+                                        <i class="fas fa-check-circle"></i>
+                                        Verify Code
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Step 3: Verified -->
+                        <div class="verification-step" id="email-step-3">
+                            <div class="step-content verified-content">
+                                <div class="success-animation">
+                                    <i class="fas fa-check-circle"></i>
+                                </div>
+                                <h4>Email Address Verified!</h4>
+                                <p>Your email address <strong id="verified-email">••••@gmail.com</strong> has been successfully verified</p>
+                                <button class="btn-secondary" id="email-edit">
+                                    <i class="fas fa-edit"></i>
+                                    Edit Email Address
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Mobile Verification Card -->
+                <div class="verification-card" id="mobile-verification-card" style="display: none;">
                     <div class="card-header">
                         <div class="header-left">
                             <div class="verification-icon">
@@ -193,12 +283,12 @@
                                 
                                 <div class="otp-container">
                                     <div class="otp-inputs">
-                                        <input type="text" class="otp-digit" maxlength="1" data-index="0" autocomplete="off">
-                                        <input type="text" class="otp-digit" maxlength="1" data-index="1" autocomplete="off">
-                                        <input type="text" class="otp-digit" maxlength="1" data-index="2" autocomplete="off">
-                                        <input type="text" class="otp-digit" maxlength="1" data-index="3" autocomplete="off">
-                                        <input type="text" class="otp-digit" maxlength="1" data-index="4" autocomplete="off">
-                                        <input type="text" class="otp-digit" maxlength="1" data-index="5" autocomplete="off">
+                                        <input type="text" class="otp-digit" maxlength="1" data-index="0" data-type="mobile" autocomplete="off">
+                                        <input type="text" class="otp-digit" maxlength="1" data-index="1" data-type="mobile" autocomplete="off">
+                                        <input type="text" class="otp-digit" maxlength="1" data-index="2" data-type="mobile" autocomplete="off">
+                                        <input type="text" class="otp-digit" maxlength="1" data-index="3" data-type="mobile" autocomplete="off">
+                                        <input type="text" class="otp-digit" maxlength="1" data-index="4" data-type="mobile" autocomplete="off">
+                                        <input type="text" class="otp-digit" maxlength="1" data-index="5" data-type="mobile" autocomplete="off">
                                     </div>
                                 </div>
 
@@ -231,91 +321,67 @@
                         </div>
                     </div>
                 </div>
+            </div>
 
-                <!-- Email Verification Card -->
-                <div class="verification-card">
-                    <div class="card-header">
-                        <div class="header-left">
-                            <div class="verification-icon">
-                                <i class="fas fa-envelope"></i>
-                            </div>
-                            <div class="header-text">
-                                <h3>Email Address Verification</h3>
-                                <p>Verify your email for important updates and account recovery</p>
-                            </div>
+            <!-- Password Setup Section -->
+            <div class="content-section" id="password-setup">
+                <div class="section-header">
+                    <div class="header-content">
+                        <h1>Password Setup</h1>
+                        <p>Create a secure password for your vendor account</p>
+                    </div>
+                    <div class="step-indicator">
+                        <span class="step-number">2</span>
+                        <span class="step-text">of 5 steps</span>
+                    </div>
+                </div>
+
+                <div class="form-card">
+                    <div class="form-group">
+                        <label for="password">Create Password <span class="required">*</span></label>
+                        <div class="password-input-container">
+                            <input type="password" id="password" class="form-input" placeholder="Enter your password">
+                            <button type="button" class="toggle-password" id="toggle-password">
+                                <i class="fas fa-eye"></i>
+                            </button>
                         </div>
-                        <div class="verification-status pending" id="email-status">
-                            <i class="fas fa-clock"></i>
-                            <span>Pending</span>
+                        <div class="password-strength" id="password-strength">
+                            <div class="strength-bar">
+                                <div class="strength-fill" id="strength-fill"></div>
+                            </div>
+                            <span class="strength-text" id="strength-text">Weak</span>
+                        </div>
+                        <div class="password-requirements">
+                            <p>Password must contain:</p>
+                            <ul>
+                                <li id="req-length">At least 8 characters</li>
+                                <li id="req-uppercase">One uppercase letter</li>
+                                <li id="req-lowercase">One lowercase letter</li>
+                                <li id="req-number">One number</li>
+                                <li id="req-special">One special character</li>
+                            </ul>
                         </div>
                     </div>
 
-                    <div class="verification-process">
-                        <!-- Step 1: Enter Email -->
-                        <div class="verification-step active" id="email-step-1">
-                            <div class="step-content">
-                                <div class="form-group">
-                                    <label for="email-address">Enter Your Email Address</label>
-                                    <input type="email" id="email-address" class="form-input" placeholder="Enter your email address">
-                                    <p class="input-hint">We'll send a 6-digit verification code to your email</p>
-                                </div>
-                                <button class="btn-primary" id="send-email-otp">
-                                    <i class="fas fa-paper-plane"></i>
-                                    Send Verification Code
-                                </button>
-                            </div>
+                    <div class="form-group">
+                        <label for="confirm-password">Confirm Password <span class="required">*</span></label>
+                        <div class="password-input-container">
+                            <input type="password" id="confirm-password" class="form-input" placeholder="Confirm your password">
+                            <button type="button" class="toggle-password" id="toggle-confirm-password">
+                                <i class="fas fa-eye"></i>
+                            </button>
                         </div>
-
-                        <!-- Step 2: Enter OTP -->
-                        <div class="verification-step" id="email-step-2">
-                            <div class="step-content">
-                                <div class="otp-header">
-                                    <h4>Enter Verification Code</h4>
-                                    <p>We've sent a 6-digit code to <span id="email-display">••••@gmail.com</span></p>
-                                    <button class="resend-link" id="resend-email-otp" disabled>
-                                        <i class="fas fa-redo"></i>
-                                        Resend in <span id="email-timer">30</span>s
-                                    </button>
-                                </div>
-                                
-                                <div class="otp-container">
-                                    <div class="otp-inputs">
-                                        <input type="text" class="otp-digit" maxlength="1" data-index="0" autocomplete="off">
-                                        <input type="text" class="otp-digit" maxlength="1" data-index="1" autocomplete="off">
-                                        <input type="text" class="otp-digit" maxlength="1" data-index="2" autocomplete="off">
-                                        <input type="text" class="otp-digit" maxlength="1" data-index="3" autocomplete="off">
-                                        <input type="text" class="otp-digit" maxlength="1" data-index="4" autocomplete="off">
-                                        <input type="text" class="otp-digit" maxlength="1" data-index="5" autocomplete="off">
-                                    </div>
-                                </div>
-
-                                <div class="verification-actions">
-                                    <button class="btn-secondary" id="change-email-address">
-                                        <i class="fas fa-edit"></i>
-                                        Change Email
-                                    </button>
-                                    <button class="btn-primary" id="verify-email-otp" disabled>
-                                        <i class="fas fa-check-circle"></i>
-                                        Verify Code
-                                    </button>
-                                </div>
-                            </div>
+                        <div class="password-match" id="password-match">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Passwords match</span>
                         </div>
+                    </div>
 
-                        <!-- Step 3: Verified -->
-                        <div class="verification-step" id="email-step-3">
-                            <div class="step-content verified-content">
-                                <div class="success-animation">
-                                    <i class="fas fa-check-circle"></i>
-                                </div>
-                                <h4>Email Address Verified!</h4>
-                                <p>Your email address <strong id="verified-email">••••@gmail.com</strong> has been successfully verified</p>
-                                <button class="btn-secondary" id="email-edit">
-                                    <i class="fas fa-edit"></i>
-                                    Edit Email Address
-                                </button>
-                            </div>
-                        </div>
+                    <div class="form-actions">
+                        <button class="btn-primary" id="save-password">
+                            <i class="fas fa-save"></i>
+                            Save Password
+                        </button>
                     </div>
                 </div>
             </div>
@@ -334,7 +400,7 @@
                 </div>
 
                 <div class="form-card">
-                    <div class="form-group">
+                    <!-- <div class="form-group">
                         <h3>What are you looking to sell on ShopWaveX?</h3>
                         <div class="category-options">
                             <label class="option-card">
@@ -355,7 +421,24 @@
                                 </div>
                             </label>
                         </div>
-                    </div>
+                    </div> -->
+
+
+                    <div class="form-group">
+    <label>What are you looking to sell on ShopWaveX?</label>
+    <div class="radio-group">
+        <label class="radio-label">
+            <input type="radio" name="category-type" value="all" id="all-categories">
+            <span class="radio-custom"></span>
+            All Categories - Set position across all available categories
+        </label>
+        <label class="radio-label">
+            <input type="radio" name="category-type" value="specific" id="specific-categories">
+            <span class="radio-custom"></span>
+            Specific Categories - Choose specific product categories
+        </label>
+    </div>
+</div>
 
                     <div class="divider">
                         <span></span>
@@ -384,7 +467,7 @@
                                     <i class="fas fa-cloud-upload-alt"></i>
                                     <p>Click to upload or drag and drop</p>
                                     <span>PNG, JPG, PDF (Max 5MB)</span>
-                                    <input type="file" accept=".png,.jpg,.jpeg,.pdf" hidden>
+                                    <input type="file" id="signature-file" accept=".png,.jpg,.jpeg,.pdf" hidden>
                                 </div>
                                 <div class="upload-status" id="upload-status"></div>
                             </div>
@@ -413,10 +496,21 @@
                         </div>
                     </div>
 
+                    <div class="form-group">
+                        <h3>Upload GST Certificate <span class="required">*</span></h3>
+                        <div class="upload-area" id="gst-certificate-upload">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                            <p>Click to upload GST certificate</p>
+                            <span>PNG, JPG, PDF (Max 5MB)</span>
+                            <input type="file" id="gst-certificate-file" accept=".png,.jpg,.jpeg,.pdf" hidden>
+                        </div>
+                        <div class="upload-status" id="gst-certificate-status"></div>
+                    </div>
+
                     <div class="form-actions">
                         <button class="btn-primary" id="save-id-signature">
                             <i class="fas fa-save"></i>
-                            Save & Mark Complete
+                            Save & Continue
                         </button>
                     </div>
                 </div>
@@ -494,282 +588,223 @@
                     <div class="form-actions">
                         <button class="btn-primary" id="save-store-pickup">
                             <i class="fas fa-save"></i>
-                            Save & Mark Complete
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Password Setup Section -->
-            <div class="content-section" id="password-setup">
-                <div class="section-header">
-                    <div class="header-content">
-                        <h1>Password Setup</h1>
-                        <p>Create a secure password for your vendor account</p>
-                    </div>
-                    <div class="step-indicator">
-                        <span class="step-number">2</span>
-                        <span class="step-text">of 5 steps</span>
-                    </div>
-                </div>
-
-                <div class="form-card">
-                    <div class="form-group">
-                        <label for="password">Create Password <span class="required">*</span></label>
-                        <div class="password-input-container">
-                            <input type="password" id="password" class="form-input" placeholder="Enter your password">
-                            <button type="button" class="toggle-password" id="toggle-password">
-                                <i class="fas fa-eye"></i>
-                            </button>
-                        </div>
-                        <div class="password-strength" id="password-strength">
-                            <div class="strength-bar">
-                                <div class="strength-fill" id="strength-fill"></div>
-                            </div>
-                            <span class="strength-text" id="strength-text">Weak</span>
-                        </div>
-                        <div class="password-requirements">
-                            <p>Password must contain:</p>
-                            <ul>
-                                <li id="req-length">At least 8 characters</li>
-                                <li id="req-uppercase">One uppercase letter</li>
-                                <li id="req-lowercase">One lowercase letter</li>
-                                <li id="req-number">One number</li>
-                                <li id="req-special">One special character</li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="confirm-password">Confirm Password <span class="required">*</span></label>
-                        <div class="password-input-container">
-                            <input type="password" id="confirm-password" class="form-input" placeholder="Confirm your password">
-                            <button type="button" class="toggle-password" id="toggle-confirm-password">
-                                <i class="fas fa-eye"></i>
-                            </button>
-                        </div>
-                        <div class="password-match" id="password-match">
-                            <i class="fas fa-check-circle"></i>
-                            <span>Passwords match</span>
-                        </div>
-                    </div>
-
-                    <div class="form-actions">
-                        <button class="btn-primary" id="save-password">
-                            <i class="fas fa-save"></i>
-                            Save Password
+                            Save & Continue
                         </button>
                     </div>
                 </div>
             </div>
 
             <!-- Listing & Stock Section -->
-            <div class="content-section" id="listing-stock">
-                <div class="section-header">
-                    <div class="header-content">
-                        <h1>Product Listing & Stock</h1>
-                        <p>Add your products (1-5 required) with variants</p>
-                    </div>
-                    <div class="step-indicator">
-                        <span class="step-number">5</span>
-                        <span class="step-text">of 5 steps</span>
-                    </div>
-                </div>
-
-                <div class="products-management">
-                    <!-- Add Product Card -->
-                    <div class="add-product-card" id="add-product-section">
-                        <div class="card-header">
-                            <h3>Add New Product</h3>
-                            <p>Add between 1 to 5 products to complete onboarding</p>
-                        </div>
-                        
-                        <form id="add-product-form" class="product-form">
-                            <div class="form-grid">
-                                <div class="form-group">
-                                    <label for="product-title" class="form-label">
-                                        Product Title *
-                                    </label>
-                                    <input type="text" id="product-title" name="title" class="form-input" required>
-                                </div>
-                                
-                                <div class="form-group">
-                                    <label for="product-category" class="form-label">
-                                        Category *
-                                    </label>
-                                    <select id="product-category" name="category" class="form-select" required>
-                                        <option value="">Select Category</option>
-                                        <option value="electronics">Electronics</option>
-                                        <option value="clothing">Clothing</option>
-                                        <option value="home">Home & Kitchen</option>
-                                        <option value="books">Books</option>
-                                        <option value="sports">Sports</option>
-                                    </select>
-                                </div>
-                                
-                                <div class="form-group">
-                                    <label for="product-price" class="form-label">
-                                        Base Price (₹) *
-                                    </label>
-                                    <input type="number" id="product-price" name="base_price" class="form-input" step="0.01" min="0" required>
-                                </div>
-                                
-                                <div class="form-group full-width">
-                                    <label for="product-description" class="form-label">
-                                        Description *
-                                    </label>
-                                    <textarea id="product-description" name="description" class="form-textarea" rows="4" required></textarea>
-                                </div>
-                            </div>
-                            
-                            <div class="form-actions">
-                                <button type="submit" class="btn-primary">
-                                    <i class="fas fa-plus-circle"></i>
-                                    Add Product
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-
-                    <!-- Products Grid -->
-                    <div class="products-grid" id="products-container">
-                        <!-- Products will be dynamically added here -->
-                    </div>
-
-                    <!-- Completion Status -->
-                    <div class="completion-status" id="completion-status">
-                        <div class="status-info">
-                            <h4>Products Added: <span id="products-count">0</span>/5</h4>
-                            <p>Minimum 1 product required to complete onboarding</p>
-                        </div>
-                        <button class="btn-primary" id="complete-listing" disabled>
-                            <i class="fas fa-check-circle"></i>
-                            Complete Product Setup
-                        </button>
-                    </div>
-                </div>
-            </div>
+<div class="content-section" id="listing-stock">
+    <div class="section-header">
+        <div class="header-content">
+            <h1>Product Listing & Stock</h1>
+            <p>Add your products (1-5 required) with variants</p>
+        </div>
+        <div class="step-indicator">
+            <span class="step-number">5</span>
+            <span class="step-text">of 5 steps</span>
         </div>
     </div>
 
-    <!-- Product Edit Modal -->
-<div id="edit-product-modal" class="modal">
-    <div class="modal-content large">
-        <div class="modal-header">
-            <h2>Edit Product</h2>
-            <span class="close">&times;</span>
-        </div>
-        <div class="modal-body">
-            <form id="edit-product-form" class="product-form">
+    <div class="products-management">
+        <!-- Add Product Card -->
+        <div class="add-product-card" id="add-product-section">
+            <div class="card-header">
+                <h3>Add New Product</h3>
+                <p>Add between 1 to 5 products to complete onboarding</p>
+            </div>
+            
+            <form id="add-product-form" class="product-form">
                 <div class="form-grid">
                     <div class="form-group">
-                        <label for="edit-product-title" class="form-label">
+                        <label for="product-title" class="form-label">
                             Product Title *
                         </label>
-                        <input type="text" id="edit-product-title" name="title" class="form-input" required>
+                        <input type="text" id="product-title" name="title" class="form-input" required>
                     </div>
                     
                     <div class="form-group">
-                        <label for="edit-product-category" class="form-label">
+                        <label for="product-category" class="form-label">
                             Category *
                         </label>
-                        <select id="edit-product-category" name="category" class="form-select" required>
+                        <select id="product-category" name="category_id" class="form-select" required>
                             <option value="">Select Category</option>
-                            <option value="electronics">Electronics</option>
-                            <option value="clothing">Clothing</option>
-                            <option value="home">Home & Kitchen</option>
-                            <option value="books">Books</option>
-                            <option value="sports">Sports</option>
+                            <!-- Categories will be loaded dynamically -->
                         </select>
                     </div>
                     
                     <div class="form-group">
-                        <label for="edit-product-price" class="form-label">
+                        <label for="product-price" class="form-label">
                             Base Price (₹) *
                         </label>
-                        <input type="number" id="edit-product-price" name="base_price" class="form-input" step="0.01" min="0" required>
+                        <input type="number" id="product-price" name="base_price" class="form-input" step="0.01" min="0" required>
                     </div>
                     
                     <div class="form-group full-width">
-                        <label for="edit-product-description" class="form-label">
+                        <label for="product-description" class="form-label">
                             Description *
                         </label>
-                        <textarea id="edit-product-description" name="description" class="form-textarea" rows="4" required></textarea>
+                        <textarea id="product-description" name="description" class="form-textarea" rows="4" required></textarea>
                     </div>
                 </div>
                 
                 <div class="form-actions">
-                    <button type="button" class="btn-secondary" id="cancel-edit-product">
-                        <i class="fas fa-times"></i>
-                        Cancel
-                    </button>
                     <button type="submit" class="btn-primary">
-                        <i class="fas fa-save"></i>
-                        Save Changes
+                        <i class="fas fa-plus-circle"></i>
+                        Add Product & Variant
                     </button>
                 </div>
             </form>
         </div>
+
+        <!-- Products Grid -->
+        <div class="products-grid" id="products-container">
+            <!-- Products will be dynamically added here -->
+        </div>
+
+        <!-- Completion Status -->
+        <div class="completion-status" id="completion-status">
+            <div class="status-info">
+                <h4>Products Added: <span id="products-count">0</span>/5</h4>
+                <p>Minimum 1 product with at least 1 variant required</p>
+            </div>
+            <button class="btn-primary" id="complete-listing" disabled>
+                <i class="fas fa-check-circle"></i>
+                Complete Product Setup
+            </button>
+        </div>
     </div>
 </div>
 
-    <!-- Variants Modal -->
-    <div id="variants-modal" class="modal">
-        <div class="modal-content large">
-            <div class="modal-header">
-                <h2>Add Variants for <span id="variant-product-title"></span></h2>
-                <span class="close">&times;</span>
-            </div>
-            <div class="modal-body">
-                <div class="variants-container">
-                    <form id="add-variant-form" class="variant-form">
-                        <div class="variant-attributes">
-                            <h4>Variant Attributes</h4>
-                            <div class="attributes-grid" id="variant-attributes-container">
-                                <!-- Dynamic attributes will be loaded here -->
-                            </div>
-                        </div>
-                        
-                        <div class="form-grid">
-                            <div class="form-group">
-                                <label for="variant-price" class="form-label">Adjusted Price (₹)</label>
-                                <input type="number" id="variant-price" name="adjusted_price" class="form-input" step="0.01" min="0">
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="variant-stock" class="form-label">Stock Quantity</label>
-                                <input type="number" id="variant-stock" name="stock" class="form-input" min="0" value="0">
-                            </div>
-                        </div>
-                        
-                        <!-- Image Upload -->
-                        <div class="form-group">
-                            <label for="variant-images" class="form-label">Product Images</label>
-                            <div class="file-upload-area" id="variant-images-upload-area">
-                                <i class="fas fa-cloud-upload-alt"></i>
-                                <p>Drag & drop product images or click to browse</p>
-                                <span>First image will be used as primary (Required)</span>
-                                <input type="file" id="variant-images" name="variant_images" multiple accept="image/*" hidden>
-                            </div>
-                            <div id="variant-images-preview" class="image-preview-grid"></div>
-                        </div>
-                        
-                        <div class="form-actions">
-                            <button type="submit" class="btn-primary">
-                                <i class="fas fa-plus"></i>
-                                Add Variant
-                            </button>
-                            <button type="button" class="btn-secondary" id="finish-variants">
-                                <i class="fas fa-check"></i>
-                                Finish Variants
-                            </button>
-                        </div>
-                    </form>
+<!-- Add Variant Modal -->
+<div id="add-variant-modal" class="modal">
+    <div class="modal-content large">
+        <div class="modal-header">
+            <h2>Add Variant</h2>
+            <button class="modal-close" id="close-variant-modal">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="modal-body">
+            <form id="add-variant-form" class="modern-form">
+                <div id="variant-attributes-container" class="attributes-grid">
+                    <!-- Dynamic attributes will be loaded here -->
+                </div>
+                
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="variant-price" class="form-label">Adjusted Price (₹)</label>
+                        <input type="number" id="variant-price" name="adjusted_price" class="form-input" step="0.01" min="0">
+                    </div>
                     
-                    <div class="variants-list" id="variants-list-container">
-                        <!-- Added variants will be shown here -->
+                    <div class="form-group">
+                        <label for="variant-stock" class="form-label">Stock Quantity *</label>
+                        <input type="number" id="variant-stock" name="stock" class="form-input" min="0" value="0" required>
                     </div>
                 </div>
+                
+                <!-- Primary Image Upload -->
+                <div class="form-group">
+                    <label for="primary-image" class="form-label">Primary Image *</label>
+                    <div class="file-upload-area" id="primary-image-upload-area">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <p>Drag & drop primary image or click to browse</p>
+                        <span>This will be the main product image (Required)</span>
+                        <input type="file" id="primary-image" name="primary_image" accept="image/*" hidden required>
+                    </div>
+                    <div id="primary-image-preview" class="image-preview-grid"></div>
+                </div>
+                
+                <!-- Additional Images Upload -->
+                <div class="form-group">
+                    <label for="additional-images" class="form-label">Additional Images</label>
+                    <div class="file-upload-area" id="additional-images-upload-area">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <p>Drag & drop additional images or click to browse</p>
+                        <span>These will be shown on product detail page (Optional)</span>
+                        <input type="file" id="additional-images" name="additional_images" multiple accept="image/*" hidden>
+                    </div>
+                    <div id="additional-images-preview" class="image-preview-grid"></div>
+                </div>
+                
+                <!-- <div class="form-actions">
+                    <button type="button" class="btn-primary btn-large">
+                        <i class="fas fa-save"></i>
+                        Add Variant
+                    </button>
+                    <button type="button" class="btn-secondary close-variant-modal">
+                        Cancel
+                    </button>
+                </div> -->
+
+
+                <div class="form-actions">
+    <button type="button" id="add-variant-btn" class="btn-primary btn-large">
+        <i class="fas fa-save"></i>
+        Add Variant
+    </button>
+    <button type="button" id="close-variant-modal" class="btn-secondary">
+        Cancel
+    </button>
+</div>
+            </form>
+        </div>
+    </div>
+</div>
+        </div>
+    </div>
+
+    <!-- Continue Later Modal -->
+    <div class="modal" id="continue-later-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Continue Later</h2>
+                <button class="modal-close" id="close-continue-modal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="continue-icon">
+                    <i class="fas fa-pause-circle"></i>
+                </div>
+                <h3>Save Your Progress</h3>
+                <p>Your progress has been saved. You can continue your onboarding process anytime by signing in.</p>
+                <div class="current-progress">
+                    <h4>Current Progress:</h4>
+                    <div class="progress-steps">
+                        <div class="progress-step completed">
+                            <i class="fas fa-check"></i>
+                            <span>Email & Mobile Verification</span>
+                        </div>
+                        <div class="progress-step completed">
+                            <i class="fas fa-check"></i>
+                            <span>Password Setup</span>
+                        </div>
+                        <div class="progress-step" id="continue-step-3">
+                            <i class="fas fa-clock"></i>
+                            <span>ID & Signature</span>
+                        </div>
+                        <div class="progress-step" id="continue-step-4">
+                            <i class="fas fa-clock"></i>
+                            <span>Store & Pickup</span>
+                        </div>
+                        <div class="progress-step" id="continue-step-5">
+                            <i class="fas fa-clock"></i>
+                            <span>Product Listing</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" id="cancel-continue">
+                    <i class="fas fa-times"></i>
+                    Cancel
+                </button>
+                <button class="btn-primary" id="confirm-continue-later">
+                    <i class="fas fa-sign-in-alt"></i>
+                    Go to Sign In
+                </button>
             </div>
         </div>
     </div>
@@ -790,75 +825,6 @@
         </div>
     </div>
 
-    <!-- Completion Modal -->
-    <div class="modal" id="completion-modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>🎉 Onboarding Complete!</h2>
-                <button class="modal-close" id="close-completion-modal">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="completion-animation">
-                    <i class="fas fa-check-circle"></i>
-                </div>
-                <h3>Welcome to ShopWaveX Seller Community!</h3>
-                <p>Your vendor account has been successfully verified and activated. You can now start selling on our platform.</p>
-                <div class="completion-features">
-                    <div class="feature">
-                        <i class="fas fa-store"></i>
-                        <span>Your store is live</span>
-                    </div>
-                    <div class="feature">
-                        <i class="fas fa-box"></i>
-                        <span>Products are listed</span>
-                    </div>
-                    <div class="feature">
-                        <i class="fas fa-chart-line"></i>
-                        <span>Ready to sell</span>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button class="btn-primary" id="go-to-dashboard">
-                    <i class="fas fa-rocket"></i>
-                    Go to Seller Dashboard
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Incomplete Modal -->
-    <div class="modal" id="incomplete-modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>⚠️ Complete Required Steps</h2>
-                <button class="modal-close" id="close-incomplete-modal">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="incomplete-icon">
-                    <i class="fas fa-exclamation-triangle"></i>
-                </div>
-                <h3>Complete All Verifications</h3>
-                <p>Please complete the following steps before proceeding:</p>
-                <div class="incomplete-steps" id="incomplete-steps-list">
-                    <!-- Dynamically populated -->
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button class="btn-primary" id="continue-verification">
-                    <i class="fas fa-edit"></i>
-                    Continue Verification
-                </button>
-            </div>
-        </div>
-    </div>
-
     <script src="SignUp.js"></script>
 </body>
 </html>
-
-

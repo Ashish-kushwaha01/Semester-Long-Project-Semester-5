@@ -1,59 +1,59 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Seller Sign In - ShopWaveX</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>Vendor Sign In - Marketplace</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="SignIn.css">
 </head>
-
 <body>
     <div class="auth-container">
-        <!-- Left Side - Branding -->
+        <!-- Branding Section -->
         <div class="auth-branding">
             <div class="brand-content">
                 <div class="logo">
                     <i class="fas fa-store"></i>
-                    <span>ShopWaveX Seller</span>
+                    <span>ShopWaveX</span>
                 </div>
-                <h1>Welcome Back, Seller!</h1>
-                <p>Access your seller dashboard and manage your business</p>
+                <h1>Grow Your Business With Us</h1>
+                
                 <div class="features">
                     <div class="feature">
                         <i class="fas fa-chart-line"></i>
-                        <span>Track your sales</span>
+                        <span>Reach millions of customers</span>
                     </div>
                     <div class="feature">
-                        <i class="fas fa-box"></i>
-                        <span>Manage inventory</span>
+                        <i class="fas fa-tools"></i>
+                        <span>Powerful seller tools</span>
                     </div>
                     <div class="feature">
-                        <i class="fas fa-users"></i>
-                        <span>Connect with customers</span>
+                        <i class="fas fa-shield-alt"></i>
+                        <span>Secure payments & protection</span>
+                    </div>
+                    <div class="feature">
+                        <i class="fas fa-headset"></i>
+                        <span>24/7 seller support</span>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Right Side - Sign In Form -->
+        <!-- Form Section -->
         <div class="auth-form-container">
             <div class="auth-form">
                 <div class="form-header">
-                    <h2>Sign In to Your Account</h2>
-                    <p>Enter your credentials to access your seller dashboard</p>
+                    <h2>Welcome Back</h2>
+                    <p>Sign in to your vendor account</p>
                 </div>
 
-                <!-- Step 1: Credentials -->
-                <div class="form-step active" id="step-credentials">
-                    <form id="signin-form">
+                <form id="signin-form">
+                    <div class="form-step active" id="step-credentials">
                         <div class="form-group">
-                            <label for="login-id">Email, Phone or Username</label>
+                            <label for="business_email">Business Email</label>
                             <div class="input-group">
-                                <i class="fas fa-user"></i>
-                                <input type="text" id="login-id" class="form-input"
-                                    placeholder="Enter your email, phone number or username" required>
+                                <i class="fas fa-envelope"></i>
+                                <input type="email" id="business_email" class="form-input" placeholder="Enter your business email" required>
                             </div>
                         </div>
 
@@ -61,9 +61,8 @@
                             <label for="password">Password</label>
                             <div class="input-group">
                                 <i class="fas fa-lock"></i>
-                                <input type="password" id="password" class="form-input"
-                                    placeholder="Enter your password" required>
-                                <button type="button" class="password-toggle" id="toggle-password">
+                                <input type="password" id="password" class="form-input" placeholder="Enter your password" required>
+                                <button type="button" id="toggle-password" class="password-toggle">
                                     <i class="fas fa-eye"></i>
                                 </button>
                             </div>
@@ -75,133 +74,74 @@
                                 <span class="checkmark"></span>
                                 Remember me
                             </label>
-                            <a href="#" class="forgot-link">Forgot password?</a>
+                            <a href="#" class="forgot-link">Forgot Password?</a>
                         </div>
 
-                        <!-- <button type="submit" class="btn-primary" id="signin-btn">
-                            <i class="fas fa-sign-in-alt"></i>
-                            Sign In
-                        </button> -->
-
-
-                        <a href="../../html/vendor-dashboard.html" class="btn-primary" id="signin-btn">
-                            <i class="fas fa-sign-in-alt"></i>
-                            Sign In
-                        </a>
-                    </form>
-
-                    <div class="auth-divider">
-                        <span>New to ShopWaveX?</span>
-                    </div>
-
-                    <div class="auth-footer">
-                        <p>Don't have a seller account? <a href="../SignUp.html">Sign up here</a></p>
-                    </div>
-                </div>
-
-                <!-- Step 2: OTP Verification -->
-                <div class="form-step" id="step-otp">
-                    <div class="otp-header">
-                        <div class="back-button" id="back-to-credentials">
-                            <i class="fas fa-arrow-left"></i>
-                        </div>
-                        <h3>Two-Step Verification</h3>
-                        <p>We've sent verification codes to your registered email and mobile number</p>
-                    </div>
-
-                    <!-- Email OTP -->
-                    <div class="otp-section">
-                        <h4>Email Verification</h4>
-                        <p>Enter the code sent to <span id="email-otp-target">your email</span></p>
-
-                        <div class="otp-container">
-                            <div class="otp-inputs">
-                                <input type="text" class="otp-digit" maxlength="1" data-index="0" data-type="email">
-                                <input type="text" class="otp-digit" maxlength="1" data-index="1" data-type="email">
-                                <input type="text" class="otp-digit" maxlength="1" data-index="2" data-type="email">
-                                <input type="text" class="otp-digit" maxlength="1" data-index="3" data-type="email">
-                                <input type="text" class="otp-digit" maxlength="1" data-index="4" data-type="email">
-                                <input type="text" class="otp-digit" maxlength="1" data-index="5" data-type="email">
-                            </div>
-                        </div>
-
-                        <div class="otp-actions">
-                            <button class="resend-link" id="resend-email-otp" disabled>
-                                <i class="fas fa-redo"></i>
-                                Resend in <span id="email-timer">30</span>s
-                            </button>
-                            <span class="otp-status" id="email-otp-status"></span>
-                        </div>
-                    </div>
-
-                    <!-- Mobile OTP -->
-                    <div class="otp-section">
-                        <h4>Mobile Verification</h4>
-                        <p>Enter the code sent to <span id="mobile-otp-target">your mobile</span></p>
-
-                        <div class="otp-container">
-                            <div class="otp-inputs">
-                                <input type="text" class="otp-digit" maxlength="1" data-index="0" data-type="mobile">
-                                <input type="text" class="otp-digit" maxlength="1" data-index="1" data-type="mobile">
-                                <input type="text" class="otp-digit" maxlength="1" data-index="2" data-type="mobile">
-                                <input type="text" class="otp-digit" maxlength="1" data-index="3" data-type="mobile">
-                                <input type="text" class="otp-digit" maxlength="1" data-index="4" data-type="mobile">
-                                <input type="text" class="otp-digit" maxlength="1" data-index="5" data-type="mobile">
-                            </div>
-                        </div>
-
-                        <div class="otp-actions">
-                            <button class="resend-link" id="resend-mobile-otp" disabled>
-                                <i class="fas fa-redo"></i>
-                                Resend in <span id="mobile-timer">30</span>s
-                            </button>
-                            <span class="otp-status" id="mobile-otp-status"></span>
-                        </div>
-                    </div>
-
-                    <button class="btn-primary" id="verify-otp" disabled>
-                        <i class="fas fa-check-circle"></i>
-                        Verify & Continue
-                    </button>
-                </div>
-
-                <!-- Step 3: Success -->
-                <div class="form-step" id="step-success">
-                    <div class="success-content">
-                        <div class="success-animation">
-                            <i class="fas fa-check-circle"></i>
-                        </div>
-                        <h3>Sign In Successful!</h3>
-                        <p>Welcome back to your seller dashboard</p>
-                        <div class="success-details">
-                            <div class="detail-item">
-                                <i class="fas fa-user"></i>
-                                <span id="success-user">Seller</span>
-                            </div>
-                            <div class="detail-item">
-                                <i class="fas fa-clock"></i>
-                                <span id="success-time">Just now</span>
-                            </div>
-                        </div>
-                        <button class="btn-primary" id="go-to-dashboard">
-                            <i class="fas fa-rocket"></i>
-                            Go to Dashboard
+                        <button type="submit" id="signin-btn" class="btn-primary">
+                            <i class="fas fa-sign-in-alt"></i> Sign In
                         </button>
+
+                        <div class="auth-footer">
+                            <p>Don't have an account? <a href="../SignUp.html">Sign up here</a></p>
+                        </div>
                     </div>
-                </div>
+                </form>
             </div>
         </div>
     </div>
 
+    <!-- Onboarding Required Modal -->
+<div id="continue-onboarding-modal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Complete Your Onboarding</h3>
+            <button class="close-modal" id="close-continue-onboarding">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        
+        <div class="modal-body">
+            <div class="warning-banner">
+                <i class="fas fa-exclamation-triangle"></i>
+                <p>You need to complete your onboarding to access all features</p>
+            </div>
+            
+            <p style="margin-bottom: 15px; color: var(--text-secondary);">
+                Please complete the following steps to start selling:
+            </p>
+            
+            <div class="incomplete-steps-list" id="incomplete-steps-list">
+                <!-- Incomplete steps will be dynamically added here -->
+                <!-- This container is now scrollable if content overflows -->
+            </div>
+            
+            <div style="margin-top: 20px; padding: 15px; background: var(--background); border-radius: 8px;">
+                <p style="margin: 0; font-size: 14px; color: var(--text-secondary);">
+                    <i class="fas fa-info-circle" style="color: var(--primary);"></i>
+                    Complete all steps to unlock your vendor dashboard and start selling.
+                </p>
+            </div>
+        </div>
+        
+        <div class="modal-footer">
+            <!-- <button type="button" id="cancel-onboarding" class="btn-secondary">
+                <i class="fas fa-times"></i> Maybe Later
+            </button> -->
+            <button type="button" id="continue-onboarding" class="btn-primary">
+                <i class="fas fa-arrow-right"></i> Continue Onboarding
+            </button>
+        </div>
+    </div>
+</div>
+
     <!-- Loading Overlay -->
-    <div class="loading-overlay" id="loading-overlay">
+    <div id="loading-overlay" class="loading-overlay">
         <div class="loading-content">
             <div class="loading-spinner"></div>
-            <p>Signing you in...</p>
+            <p>Processing...</p>
         </div>
     </div>
 
     <script src="SignIn.js"></script>
 </body>
-
 </html>

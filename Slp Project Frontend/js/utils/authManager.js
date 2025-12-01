@@ -147,6 +147,18 @@ class AuthManager {
         }, 1000);
     }
 
+
+    isAuthenticated() {
+        const token = localStorage.getItem('accessToken');
+        const user = localStorage.getItem('currentUser');
+        
+        if (token && user) {
+            this.currentUser = JSON.parse(user);
+            return true;
+        }
+        return false;
+    }
+
     async callLogoutAPI() {
         try {
             const refreshToken = localStorage.getItem('refreshToken');

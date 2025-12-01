@@ -1,9 +1,10 @@
 (function () {
+    const API_BASE_URL = 'http://localhost:8000/api/product';
     let allProducts = [];
     let filteredProducts = [];
     
     // Initialize search page
-    function initSearch() {
+    async function initSearch() {
         updateCartCount();
         document.getElementById('year').textContent = new Date().getFullYear();
         
@@ -13,15 +14,181 @@
         // Set search input value
         document.getElementById('searchInput').value = query;
         
-        // Get all products and filter
-        allProducts = searchProducts(query);
-        filteredProducts = [...allProducts];
+        try {
+            // Show loading state
+            showLoadingState();
+            
+            // Get all products from API
+            await fetchAllProducts();
+            
+            // Filter products based on search query
+            if (query) {
+                filteredProducts = searchProducts(query, allProducts);
+            } else {
+                filteredProducts = [...allProducts];
+            }
+            
+            // Update UI
+            updateSearchInfo(query);
+            renderCategories();
+            renderProducts();
+            setupEventListeners();
+            
+        } catch (error) {
+            console.error('❌ Error initializing search:', error);
+            showErrorState('Failed to load products. Please try again.');
+        } finally {
+            hideLoadingState();
+        }
+    }
+    
+    // Fetch all products from API
+    async function fetchAllProducts() {
+        try {
+            console.log('🔄 Fetching all products from API...');
+            
+            const response = await fetch(`${API_BASE_URL}/get/products/`);
+            
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            
+            const productsData = await response.json();
+            console.log('📦 Raw API response:', productsData);
+            
+            // Handle different response structures
+            let productsArray = [];
+            if (Array.isArray(productsData)) {
+                productsArray = productsData;
+            } else if (productsData && typeof productsData === 'object') {
+                if (Array.isArray(productsData.products)) {
+                    productsArray = productsData.products;
+                } else if (Array.isArray(productsData.data)) {
+                    productsArray = productsData.data;
+                } else {
+                    productsArray = [productsData];
+                }
+            }
+            
+            // Transform API data to match our frontend structure
+            allProducts = transformProductsData(productsArray);
+            console.log('✅ Transformed products:', allProducts.length);
+            
+        } catch (error) {
+            console.error('❌ Error fetching products:', error);
+            throw error;
+        }
+    }
+    
+    // Transform API product data to frontend format
+    function transformProductsData(products) {
+        return products.map(product => {
+            if (!product) return null;
+            
+            // Handle both array and single object responses
+            const productData = Array.isArray(product) ? product[0] : product;
+            
+            if (!productData) return null;
+            
+            // Get the first variant for pricing and images
+            const firstVariant = productData.variants && productData.variants.length > 0 
+                ? productData.variants[0] 
+                : null;
+            
+            // Get product image
+            let productImage = 'assets/default-product.jpg';
+            if (firstVariant && firstVariant.images && firstVariant.images.length > 0) {
+                productImage = firstVariant.images[0].image;
+            } else if (productData.images && productData.images.length > 0) {
+                productImage = productData.images[0];
+            }
+            
+            // Get category information
+            let categoryName = 'Uncategorized';
+            let displayCategory = 'Uncategorized';
+            
+            if (productData.category_path && productData.category_path.length > 0) {
+                // Use the display category logic (middle category)
+                if (productData.category_path.length === 1) {
+                    displayCategory = productData.category_path[0];
+                } else if (productData.category_path.length >= 2) {
+                    displayCategory = productData.category_path[1];
+                }
+                categoryName = displayCategory;
+            } else if (productData.category && productData.category.length > 0) {
+                const categoryObj = productData.category[0];
+                if (typeof categoryObj === 'object' && categoryObj.name) {
+                    categoryName = categoryObj.name;
+                    displayCategory = categoryObj.name;
+                }
+            }
+            
+            // Get price
+            const price = firstVariant ? 
+                parseFloat(firstVariant.adjusted_price) : 
+                parseFloat(productData.base_price || 0);
+            
+            return {
+                id: productData.id.toString(),
+                title: productData.title,
+                description: productData.description,
+                price: price,
+                rating: productData.rating || 4.5, // Default rating
+                img: productImage,
+                category: displayCategory, // Use display category for filtering
+                displayCategory: displayCategory,
+                rootCategory: productData.category_path ? productData.category_path[0] : categoryName,
+                categoryPath: productData.category_path ? productData.category_path.join(' › ') : categoryName,
+                category_id: productData.category_id,
+                variants: productData.variants || [],
+                specifications: productData.specifications || {}
+            };
+        }).filter(product => product !== null); // Remove null products
+    }
+    
+    // Search products by name, category, or description
+    function searchProducts(query, products) {
+        if (!query.trim()) return products;
         
-        // Update UI
-        updateSearchInfo(query);
-        renderCategories();
-        renderProducts();
-        setupEventListeners();
+        const searchTerm = query.toLowerCase().trim();
+        console.log(`🔍 Searching for: "${searchTerm}" in ${products.length} products`);
+        
+        return products.filter(product => {
+            if (!product) return false;
+            
+            // Search in title
+            const titleMatch = product.title && 
+                product.title.toLowerCase().includes(searchTerm);
+            
+            // Search in category
+            const categoryMatch = product.category && 
+                product.category.toLowerCase().includes(searchTerm);
+            
+            // Search in display category
+            const displayCategoryMatch = product.displayCategory && 
+                product.displayCategory.toLowerCase().includes(searchTerm);
+            
+            // Search in root category
+            const rootCategoryMatch = product.rootCategory && 
+                product.rootCategory.toLowerCase().includes(searchTerm);
+            
+            // Search in description
+            const descriptionMatch = product.description && 
+                product.description.toLowerCase().includes(searchTerm);
+            
+            // Search in category path
+            const categoryPathMatch = product.categoryPath && 
+                product.categoryPath.toLowerCase().includes(searchTerm);
+            
+            const isMatch = titleMatch || categoryMatch || displayCategoryMatch || 
+                          rootCategoryMatch || descriptionMatch || categoryPathMatch;
+            
+            if (isMatch) {
+                console.log(`✅ Match found: ${product.title} (Category: ${product.category})`);
+            }
+            
+            return isMatch;
+        });
     }
     
     // Update search information
@@ -30,10 +197,8 @@
         const resultsCount = document.getElementById('resultsCount');
         
         if (query) {
-            resultsInfo.textContent = `Results for "${query}"`;
             resultsInfo.innerHTML = `Showing results for <strong>"${query}"</strong>`;
         } else {
-            resultsInfo.textContent = 'Showing all products';
             resultsInfo.innerHTML = '<strong>All Products</strong>';
         }
         
@@ -42,8 +207,16 @@
     
     // Render category filters
     function renderCategories() {
-        const categories = [...new Set(allProducts.map(p => p.category))];
+        // Get unique categories from ALL products (not just filtered)
+        const categories = [...new Set(allProducts.map(p => p.category).filter(Boolean))];
         const container = document.getElementById('categoryFilters');
+        
+        console.log('📊 Available categories:', categories);
+        
+        if (categories.length === 0) {
+            container.innerHTML = '<p class="no-categories">No categories available</p>';
+            return;
+        }
         
         container.innerHTML = categories.map(category => `
             <label class="filter-option">
@@ -57,6 +230,8 @@
         const container = document.getElementById('resultsGrid');
         const noResults = document.getElementById('noResults');
         
+        console.log(`🎨 Rendering ${filteredProducts.length} products`);
+        
         if (filteredProducts.length === 0) {
             container.style.display = 'none';
             noResults.style.display = 'block';
@@ -66,11 +241,15 @@
         container.style.display = 'grid';
         noResults.style.display = 'none';
         
-        container.innerHTML = filteredProducts.map(product => `
+        container.innerHTML = filteredProducts.map(product => {
+            // Generate random review count for demo
+            const reviewCount = Math.floor(Math.random() * 1000) + 100;
+            
+            return `
             <div class="search-product-card">
                 <a href="product.html?id=${product.id}" style="text-decoration:none;color:inherit">
                     <img src="${product.img}" alt="${product.title}" class="search-product-image" 
-                        onerror="this.src='https://via.placeholder.com/280x200?text=Product+Image'">
+                        onerror="this.src='assets/default-product.jpg'">
                     
                     <div class="search-product-info">
                         <h3 class="search-product-title">${product.title}</h3>
@@ -79,7 +258,7 @@
                         <div class="search-product-rating">
                             <span class="rating-stars">${generateStarRating(product.rating)}</span>
                             <span class="rating-value">${product.rating}</span>
-                            <span class="rating-count">(${Math.floor(Math.random() * 1000) + 100})</span>
+                            <span class="rating-count">(${reviewCount})</span>
                         </div>
                         
                         <div class="search-product-price">₹${product.price.toLocaleString('en-IN')}</div>
@@ -96,7 +275,8 @@
                     </a>
                 </div>
             </div>
-        `).join('');
+            `;
+        }).join('');
     }
     
     // Generate star rating HTML
@@ -134,14 +314,32 @@
         // Search form
         document.getElementById('searchForm').addEventListener('submit', function(e) {
             e.preventDefault();
-            const query = document.getElementById('searchInput').value;
-            window.location.href = `search.html?q=${encodeURIComponent(query)}`;
+            const query = document.getElementById('searchInput').value.trim();
+            if (query) {
+                window.location.href = `search.html?q=${encodeURIComponent(query)}`;
+            } else {
+                window.location.href = `search.html`;
+            }
+        });
+        
+        // Enter key in search input
+        document.getElementById('searchInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                document.getElementById('searchForm').dispatchEvent(new Event('submit'));
+            }
         });
     }
     
     // Apply all filters
     function applyFilters() {
-        filteredProducts = [...allProducts];
+        // Start with all products when applying filters (not just current filtered)
+        let workingProducts = [...allProducts];
+        
+        const query = document.getElementById('searchInput').value;
+        if (query) {
+            workingProducts = searchProducts(query, workingProducts);
+        }
         
         // Category filter
         const selectedCategories = Array.from(
@@ -149,7 +347,7 @@
         ).map(cb => cb.value);
         
         if (selectedCategories.length > 0) {
-            filteredProducts = filteredProducts.filter(product => 
+            workingProducts = workingProducts.filter(product => 
                 selectedCategories.includes(product.category)
             );
         }
@@ -158,9 +356,11 @@
         const minPrice = parseFloat(document.getElementById('minPrice').value) || 0;
         const maxPrice = parseFloat(document.getElementById('maxPrice').value) || Infinity;
         
-        filteredProducts = filteredProducts.filter(product => 
-            product.price >= minPrice && product.price <= maxPrice
-        );
+        if (minPrice > 0 || maxPrice < Infinity) {
+            workingProducts = workingProducts.filter(product => 
+                product.price >= minPrice && product.price <= maxPrice
+            );
+        }
         
         // Rating filter
         const selectedRatings = Array.from(
@@ -169,16 +369,18 @@
         
         if (selectedRatings.length > 0) {
             const minRating = Math.min(...selectedRatings);
-            filteredProducts = filteredProducts.filter(product => 
+            workingProducts = workingProducts.filter(product => 
                 product.rating >= minRating
             );
         }
+        
+        filteredProducts = workingProducts;
         
         // Apply current sorting
         applySorting();
         
         // Update UI
-        updateSearchInfo(document.getElementById('searchInput').value);
+        updateSearchInfo(query);
         renderProducts();
     }
     
@@ -197,15 +399,44 @@
                 filteredProducts.sort((a, b) => b.rating - a.rating);
                 break;
             case 'newest':
-                // Since we don't have dates, randomize for demo
-                filteredProducts.sort(() => Math.random() - 0.5);
+                // Since we don't have dates, sort by ID (newer products have higher IDs)
+                filteredProducts.sort((a, b) => b.id - a.id);
                 break;
             default: // relevance
-                // Keep original order for relevance
+                // For relevance, keep search score order (already sorted by relevance)
                 break;
         }
         
         renderProducts();
+    }
+    
+    // Loading state functions
+    function showLoadingState() {
+        const container = document.getElementById('resultsGrid');
+        container.innerHTML = `
+            <div class="loading-state" style="grid-column: 1/-1; text-align: center; padding: 40px;">
+                <div class="loading-spinner"></div>
+                <p>Loading products...</p>
+            </div>
+        `;
+    }
+    
+    function hideLoadingState() {
+        // Loading state is cleared when products are rendered
+    }
+    
+    function showErrorState(message) {
+        const container = document.getElementById('resultsGrid');
+        const noResults = document.getElementById('noResults');
+        
+        container.style.display = 'none';
+        noResults.style.display = 'block';
+        noResults.innerHTML = `
+            <div class="error-icon">⚠️</div>
+            <h3>Unable to Load Products</h3>
+            <p>${message}</p>
+            <button class="btn btn-primary" onclick="window.location.reload()">Try Again</button>
+        `;
     }
     
     // Show feedback when adding to cart
@@ -213,13 +444,15 @@
         const originalText = button.textContent;
         button.textContent = 'Added ✓';
         button.style.background = '#10b981';
+        button.disabled = true;
         
         setTimeout(() => {
             button.textContent = originalText;
             button.style.background = '';
+            button.disabled = false;
         }, 2000);
     };
     
     // Initialize the search page
-    initSearch();
+    document.addEventListener('DOMContentLoaded', initSearch);
 })();

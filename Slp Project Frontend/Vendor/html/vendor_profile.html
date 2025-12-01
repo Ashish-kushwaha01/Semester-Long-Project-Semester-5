@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vendor Profile - ShopwaveX</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/vendor-dashboard.css">
+    <link rel="stylesheet" href="../css/vendor_profile.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="vendor-header">
+        <div class="header-container">
+            <div class="logo-section">
+                <div class="logo">
+                    <span class="logo-text">ShopwaveX</span>
+                    <span class="vendor-badge">Vendor</span>
+                </div>
+            </div>
+            
+            <div class="search-section">
+                <div class="search-box">
+                    <input type="text" id="global-search" placeholder="Search products, orders, customers...">
+                    <button class="search-btn">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="user-section">
+                <div class="user-info">
+                    <div class="user-avatar">
+                        <i class="fas fa-user-tie"></i>
+                    </div>
+                    <div class="user-details">
+                        <span class="user-name" id="vendor-name">Vendor Account</span>
+                        <span class="user-role">Seller</span>
+                    </div>
+                    <div class="dropdown-arrow">
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                </div>
+                <div class="notification-bell">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification-count">0</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Layout -->
+    <div class="dashboard-layout">
+        <!-- Sidebar -->
+        <!-- <nav class="sidebar">
+            <div class="sidebar-menu">
+                <a href="../html/vendor-dashboard.html" class="menu-item" data-page="dashboard">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="products.html" class="menu-item" data-page="products">
+                    <i class="fas fa-box"></i>
+                    <span>Products</span>
+                </a>
+                <a href="orders.html" class="menu-item" data-page="orders">
+                    <i class="fas fa-shopping-bag"></i>
+                    <span>Orders</span>
+                </a>
+                <a href="profile.html" class="menu-item active" data-page="profile">
+                    <i class="fas fa-user"></i>
+                    <span>Profile</span>
+                </a>
+                <a href="settings.html" class="menu-item" data-page="settings">
+                    <i class="fas fa-cog"></i>
+                    <span>Settings</span>
+                </a>
+            </div>
+            
+            <div class="sidebar-footer">
+                <a href="#" class="menu-item" id="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Logout</span>
+                </a>
+            </div>
+        </nav> -->
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="profile-container">
+                <!-- Profile Header -->
+                <div class="profile-header">
+                    <div class="profile-hero">
+                        <div class="profile-avatar-section">
+                            <div class="avatar-container">
+                                <div class="profile-avatar" id="profile-avatar">
+                                    <i class="fas fa-store"></i>
+                                </div>
+                                <button class="avatar-upload-btn" id="avatar-upload-btn">
+                                    <i class="fas fa-camera"></i>
+                                </button>
+                            </div>
+                            <div class="profile-basic-info">
+                                <h1 id="vendor-display-name">Vendor Store</h1>
+                                <p class="profile-email" id="vendor-email">vendor@example.com</p>
+                                <p class="profile-join-date">Member since <span id="join-date">2024</span></p>
+                                <div class="profile-status">
+                                    <span class="status-badge active" id="account-status">Active</span>
+                                    <span class="verification-badge" id="verification-status">
+                                        <i class="fas fa-check-circle"></i> Verified
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="profile-stats">
+                            <div class="stat-item">
+                                <div class="stat-number" id="total-products">0</div>
+                                <div class="stat-label">Products</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-number" id="total-orders">0</div>
+                                <div class="stat-label">Orders</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-number" id="total-revenue">₹0</div>
+                                <div class="stat-label">Revenue</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-number" id="rating">4.5</div>
+                                <div class="stat-label">Rating</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Profile Content -->
+                <div class="profile-content">
+                    <!-- Personal Information -->
+                    <div class="profile-section">
+                        <div class="section-header">
+                            <h2><i class="fas fa-user-circle"></i> Personal Information</h2>
+                            <button class="btn btn-secondary" id="edit-personal-info">
+                                <i class="fas fa-edit"></i> Edit
+                            </button>
+                        </div>
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <label>Full Name</label>
+                                <div class="info-value" id="full-name">Loading...</div>
+                            </div>
+                            <div class="info-item">
+                                <label>Business Name</label>
+                                <div class="info-value" id="business-name">Loading...</div>
+                            </div>
+                            <div class="info-item">
+                                <label>Email Address</label>
+                                <div class="info-value" id="business-email">Loading...</div>
+                            </div>
+                            <div class="info-item">
+                                <label>Phone Number</label>
+                                <div class="info-value" id="phone-number">Loading...</div>
+                            </div>
+                            <div class="info-item">
+                                <label>GSTIN</label>
+                                <div class="info-value" id="gstin">Loading...</div>
+                            </div>
+                            <div class="info-item">
+                                <label>Account Type</label>
+                                <div class="info-value" id="account-type">Individual</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Store Information  -->
+                    <div class="profile-section">
+                        <div class="section-header">
+                            <h2><i class="fas fa-store"></i> Store Information</h2>
+                            <button class="btn btn-secondary" id="edit-store-info">
+                                <i class="fas fa-edit"></i> Edit
+                            </button>
+                        </div>
+                        <div class="info-grid">
+                            <div class="info-item full-width">
+                                <label>Store Description</label>
+                                <div class="info-value" id="store-description">
+                                    No description provided yet.
+                                </div>
+                            </div>
+                            <div class="info-item">
+                                <label>Category</label>
+                                <div class="info-value" id="store-category">Loading...</div>
+                            </div>
+                            <div class="info-item">
+                                <label>Store Status</label>
+                                <div class="info-value">
+                                    <span class="status-badge active" id="store-status">Active</span>
+                                </div>
+                            </div>
+                            <div class="info-item">
+                                <label>Products Listed</label>
+                                <div class="info-value" id="products-listed">0</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Address Information  -->
+                    <div class="profile-section">
+                        <div class="section-header">
+                            <h2><i class="fas fa-map-marker-alt"></i> Pickup Address</h2>
+                            <button class="btn btn-secondary" id="edit-address">
+                                <i class="fas fa-edit"></i> Edit
+                            </button>
+                        </div>
+                        <div class="address-card">
+                            <div class="address-header">
+                                <h3>Primary Pickup Location</h3>
+                                <span class="default-badge">Default</span>
+                            </div>
+                            <div class="address-details">
+                                <div class="address-line" id="address-line-1">Loading...</div>
+                                <div class="address-line" id="address-line-2"></div>
+                                <div class="address-city" id="address-city">Loading...</div>
+                                <div class="address-state" id="address-state">Loading...</div>
+                                <div class="address-pincode" id="address-pincode">Loading...</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Documents -->
+                    <div class="profile-section">
+                        <div class="section-header">
+                            <h2><i class="fas fa-file-contract"></i> Documents & Verification</h2>
+                            <button class="btn btn-secondary" id="upload-documents">
+                                <i class="fas fa-upload"></i> Upload
+                            </button>
+                        </div>
+                        <div class="documents-grid">
+                            <div class="document-item">
+                                <div class="document-icon">
+                                    <i class="fas fa-file-invoice"></i>
+                                </div>
+                                <div class="document-info">
+                                    <h4>GST Certificate</h4>
+                                    <p>Business registration document</p>
+                                    <div class="document-status verified" id="gst-status">
+                                        <i class="fas fa-check-circle"></i> Verified
+                                    </div>
+                                </div>
+                                <button class="btn btn-outline view-document" data-document="gst">
+                                    <i class="fas fa-eye"></i> View
+                                </button>
+                            </div>
+                            <div class="document-item">
+                                <div class="document-icon">
+                                    <i class="fas fa-signature"></i>
+                                </div>
+                                <div class="document-info">
+                                    <h4>Signature</h4>
+                                    <p>Authorized signature</p>
+                                    <div class="document-status verified" id="signature-status">
+                                        <i class="fas fa-check-circle"></i> Verified
+                                    </div>
+                                </div>
+                                <button class="btn btn-outline view-document" data-document="signature">
+                                    <i class="fas fa-eye"></i> View
+                                </button>
+                            </div>
+                            <div class="document-item">
+                                <div class="document-icon">
+                                    <i class="fas fa-id-card"></i>
+                                </div>
+                                <div class="document-info">
+                                    <h4>ID Proof</h4>
+                                    <p>Government issued ID</p>
+                                    <div class="document-status pending" id="id-status">
+                                        <i class="fas fa-clock"></i> Pending
+                                    </div>
+                                </div>
+                                <button class="btn btn-outline view-document" data-document="id">
+                                    <i class="fas fa-upload"></i> Upload
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Bank Details -->
+                    <div class="profile-section">
+                        <div class="section-header">
+                            <h2><i class="fas fa-university"></i> Bank Details</h2>
+                            <button class="btn btn-secondary" id="edit-bank-details">
+                                <i class="fas fa-edit"></i> Edit
+                            </button>
+                        </div>
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <label>Account Holder</label>
+                                <div class="info-value" id="account-holder">Not provided</div>
+                            </div>
+                            <div class="info-item">
+                                <label>Account Number</label>
+                                <div class="info-value" id="account-number">•••• •••• •••• 1234</div>
+                            </div>
+                            <div class="info-item">
+                                <label>IFSC Code</label>
+                                <div class="info-value" id="ifsc-code">SBIN0000123</div>
+                            </div>
+                            <div class="info-item">
+                                <label>Bank Name</label>
+                                <div class="info-value" id="bank-name">State Bank of India</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Edit Profile Modal -->
+    <div id="edit-profile-modal" class="modal">
+        <div class="modal-content large">
+            <div class="modal-header">
+                <h2>Edit Profile Information</h2>
+                <span class="close">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="edit-profile-form" class="modern-form">
+                    <div class="form-tabs">
+                        <button type="button" class="tab-btn active" data-tab="personal">Personal Info</button>
+                        <button type="button" class="tab-btn" data-tab="store">Store Info</button>
+                        <button type="button" class="tab-btn" data-tab="address">Address</button>
+                        <button type="button" class="tab-btn" data-tab="bank">Bank Details</button>
+                    </div>
+
+                    <div class="tab-content active" id="personal-tab">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="edit-full-name" class="form-label">Full Name *</label>
+                                <input type="text" id="edit-full-name" name="full_name" class="form-input" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="edit-business-name" class="form-label">Business Name *</label>
+                                <input type="text" id="edit-business-name" name="business_name" class="form-input" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="edit-phone" class="form-label">Phone Number *</label>
+                                <input type="tel" id="edit-phone" name="phone" class="form-input" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="edit-gstin" class="form-label">GSTIN</label>
+                                <input type="text" id="edit-gstin" name="gstin" class="form-input">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tab-content" id="store-tab">
+                        <div class="form-grid">
+                            <div class="form-group full-width">
+                                <label for="edit-store-description" class="form-label">Store Description</label>
+                                <textarea id="edit-store-description" name="store_description" class="form-textarea" rows="4"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="edit-category" class="form-label">Business Category</label>
+                                <select id="edit-category" name="category" class="form-select">
+                                    <option value="">Select Category</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tab-content" id="address-tab">
+                        <div class="form-grid">
+                            <div class="form-group full-width">
+                                <label for="edit-address-line1" class="form-label">Address Line 1 *</label>
+                                <input type="text" id="edit-address-line1" name="address_line1" class="form-input" required>
+                            </div>
+                            <div class="form-group full-width">
+                                <label for="edit-address-line2" class="form-label">Address Line 2</label>
+                                <input type="text" id="edit-address-line2" name="address_line2" class="form-input">
+                            </div>
+                            <div class="form-group">
+                                <label for="edit-city" class="form-label">City *</label>
+                                <input type="text" id="edit-city" name="city" class="form-input" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="edit-state" class="form-label">State *</label>
+                                <select id="edit-state" name="state" class="form-select" required>
+                                    <option value="">Select State</option> -->
+                                    <!-- States will be populated dynamically -->
+                                <!-- </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="edit-pincode" class="form-label">Pincode *</label>
+                                <input type="text" id="edit-pincode" name="pincode" class="form-input" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tab-content" id="bank-tab">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="edit-account-holder" class="form-label">Account Holder Name *</label>
+                                <input type="text" id="edit-account-holder" name="account_holder" class="form-input" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="edit-account-number" class="form-label">Account Number *</label>
+                                <input type="text" id="edit-account-number" name="account_number" class="form-input" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="edit-ifsc" class="form-label">IFSC Code *</label>
+                                <input type="text" id="edit-ifsc" name="ifsc_code" class="form-input" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="edit-bank-name" class="form-label">Bank Name *</label>
+                                <input type="text" id="edit-bank-name" name="bank_name" class="form-input" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i> Save Changes
+                        </button>
+                        <button type="button" class="btn btn-secondary close-edit-modal">
+                            Cancel
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="loading-overlay">
+        <div class="loading-spinner">
+            <div class="spinner"></div>
+            <p>Loading...</p>
+        </div>
+    </div>
+
+    <!-- Notification Container -->
+    <div id="notification-container" class="notification-container"></div>
+
+    <script src="../js/vendor_profile.js"></script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

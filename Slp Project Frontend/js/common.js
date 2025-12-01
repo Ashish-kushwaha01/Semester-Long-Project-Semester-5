@@ -36,16 +36,26 @@ function saveCart(cart) {
     updateCartCount();
 }
 
+// function addToCart(productId, qty = 1) {
+//     const cart = getCart();
+//     cart[productId] = (cart[productId] || 0) + Number(qty);
+//     saveCart(cart);
+    
+//     // Show confirmation
+//     const product = findProductById(productId);
+//     if (product) {
+//         showToast(`${product.title} added to cart!`);
+//     }
+// }
+
+
 function addToCart(productId, qty = 1) {
     const cart = getCart();
     cart[productId] = (cart[productId] || 0) + Number(qty);
     saveCart(cart);
     
-    // Show confirmation
-    const product = findProductById(productId);
-    if (product) {
-        showToast(`${product.title} added to cart!`);
-    }
+    // Show confirmation without needing findProductById
+    showToast(`Product added to cart!`);
 }
 
 function removeFromCart(productId) {
@@ -81,9 +91,9 @@ function updateCartCount() {
     updateElements();
 }
 
-function findProductById(id) {
-    return SAMPLE_PRODUCTS.find(p => p.id === id);
-}
+// function findProductById(id) {
+//     return SAMPLE_PRODUCTS.find(p => p.id === id);
+// }
 
 function searchProducts(query) {
     if (!query) return SAMPLE_PRODUCTS;

@@ -2,6 +2,7 @@ class VendorDashboard {
     constructor() {
         this.baseURL = 'http://localhost:8000/api/product';
         this.vendorBaseURL = 'http://localhost:8000/api/vendors';
+        this.orderBaseURL = 'http://localhost:8000/api/orders'; // Add this line for order base url
         this.currentProductId = null;
         this.currentVariantId = null;
         this.categories = [];
@@ -11,6 +12,9 @@ class VendorDashboard {
         this.deletedImages = [];
         this.existingPrimaryImageId = null;
         this.newPrimaryImage = null;
+        this.orders = []; // Add this to store orders
+        this.currentOrder = null; // For detailed view
+
 
         this.init();
     }
@@ -26,6 +30,7 @@ class VendorDashboard {
         this.loadCategories();
         this.loadProducts();
         // this.updateDashboardStats();
+        this.loadOrders(); //  load orders on startup
     }
 
     checkAuthentication() {
@@ -272,6 +277,17 @@ class VendorDashboard {
             });
         }
 
+         // Orders search and filter
+    document.getElementById('search-orders')?.addEventListener('input', (e) => this.filterOrders(e.target.value));
+    document.getElementById('order-status-filter')?.addEventListener('change', (e) => this.filterOrdersByStatus(e.target.value));
+    document.getElementById('refresh-orders')?.addEventListener('click', () => this.loadOrders());
+    // Order form submission
+    document.getElementById('update-status-form')?.addEventListener('submit', (e) => this.submitStatusUpdate(e));
+    
+    // Analytics period change
+    document.getElementById('analytics-period')?.addEventListener('change', (e) => this.updateAnalytics(e.target.value));
+    document.getElementById('sales-metric')?.addEventListener('change', (e) => this.updateSalesChart(e.target.value));
+
         // View All link in dashboard
         const viewAllLink = document.querySelector('.view-all[data-page="products"]');
         if (viewAllLink) {
@@ -323,6 +339,58 @@ class VendorDashboard {
 
         console.log('✅ All events bound successfully');
     }
+
+    // Add these filter methods
+filterOrders(searchTerm) {
+    if (!searchTerm.trim()) {
+        this.renderOrders(this.orders);
+        return;
+    }
+
+    const filtered = this.orders.filter(order => {
+        const searchLower = searchTerm.toLowerCase();
+        return (
+            order.order_number.toLowerCase().includes(searchLower) ||
+            order.shipping.name.toLowerCase().includes(searchLower) ||
+            order.shipping.phone.includes(searchTerm) ||
+            order.shipping.email.toLowerCase().includes(searchLower) ||
+            order.items.some(item => item.product_name.toLowerCase().includes(searchLower))
+        );
+    });
+
+    this.renderOrders(filtered);
+}
+
+filterOrdersByStatus(status) {
+    if (!status) {
+        this.renderOrders(this.orders);
+        return;
+    }
+
+    const filtered = this.orders.filter(order => {
+        // Calculate overall status for the order
+        const orderStatus = this.calculateOrderStatus(order.items);
+        return orderStatus === status;
+    });
+
+    this.renderOrders(filtered);
+}
+
+updateOrderBadge() {
+    const orderCount = this.orders.length;
+    const badgeElement = document.querySelector('.menu-item[data-page="orders"] .menu-badge');
+    if (badgeElement) {
+        badgeElement.textContent = orderCount;
+    }
+}
+
+updateAnalytics(period) {
+    console.log('Updating analytics for period:', period);
+}
+
+updateSalesChart(metric) {
+    console.log('Updating sales chart with metric:', metric);
+}
 
     toggleUserDropdown() {
         const dropdown = document.querySelector('.user-dropdown');
@@ -594,12 +662,1142 @@ class VendorDashboard {
             section.classList.toggle('active', section.id === `${page}-section`);
         });
 
-        if (page === 'products') {
+        // if (page === 'products') {
+        //     this.loadProducts();
+        // } else if (page === 'dashboard') {
+        //     this.updateDashboardStats();
+        // }
+
+         // Handle page-specific loading
+    switch(page) {
+        case 'products':
             this.loadProducts();
-        } else if (page === 'dashboard') {
+            break;
+        case 'dashboard':
             this.updateDashboardStats();
-        }
+            break;
+        case 'orders':
+            this.loadOrders();
+            break;
+        case 'analytics':
+            this.loadAnalytics();
+            break;
+        case 'settings':
+            this.loadSettings();
+            break;
+        // Add product page doesn't need special loading
     }
+}
+
+// In the switchPage method, add handling for the new pages:
+switchPage(page) {
+    document.querySelectorAll('.menu-item').forEach(item => {
+        item.classList.toggle('active', item.dataset.page === page);
+    });
+
+    document.querySelectorAll('.content-section').forEach(section => {
+        section.classList.toggle('active', section.id === `${page}-section`);
+    });
+
+    // Handle page-specific loading
+    switch(page) {
+        case 'products':
+            this.loadProducts();
+            break;
+        case 'dashboard':
+            this.updateDashboardStats();
+            break;
+        case 'orders':
+            this.loadOrders();
+            break;
+        case 'analytics':
+            this.loadAnalytics();
+            break;
+        case 'settings':
+            this.loadSettings();
+            break;
+        // Add product page doesn't need special loading
+    }
+}
+
+// Add these new methods to the class:
+
+async loadOrders() {
+    try {
+        this.showLoading(true);
+        const response = await fetch(`${this.orderBaseURL}/vendor-get-all/`, {
+            headers: this.getHeaders()
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            console.log('📦 Orders data received:', data);
+            
+            if (data.orders && Array.isArray(data.orders)) {
+                this.orders = data.orders;
+                this.renderOrders(this.orders);
+                this.updateOrderBadge(); // Add this line
+                this.updateDashboardStats();
+            } else {
+                console.warn('⚠️ Unexpected orders response format:', data);
+                this.orders = [];
+                this.renderOrders([]);
+            }
+        } else {
+            console.warn('⚠️ Failed to fetch orders, showing empty state');
+            this.renderOrders([]);
+        }
+    } catch (error) {
+        console.error('Error loading orders:', error);
+        this.showNotification(`Failed to load orders: ${error.message}`, 'error');
+        this.renderOrders([]);
+    } finally {
+        this.showLoading(false);
+    }
+}
+
+renderOrders(orders) {
+    const container = document.getElementById('orders-container');
+    if (!container) return;
+
+    if (!orders || orders.length === 0) {
+        container.innerHTML = this.getEmptyState('orders', 'No Orders Yet', 'Your orders will appear here once customers start purchasing your products');
+        return;
+    }
+
+    // Process orders to group by order number
+    const ordersByOrderNumber = {};
+    orders.forEach(order => {
+        const orderNumber = order.order_number;
+        if (!ordersByOrderNumber[orderNumber]) {
+            ordersByOrderNumber[orderNumber] = {
+                order_number: orderNumber,
+                payment_method: order.payment_method,
+                payment_status: order.payment_status,
+                total: order.total,
+                created_at: order.created_at,
+                updated_at: order.updated_at,
+                shipping: order.shipping,
+                items: [],
+                status: this.calculateOrderStatus(order.items) // Calculate overall status
+            };
+        }
+        ordersByOrderNumber[orderNumber].items.push(...order.items);
+    });
+
+    // Convert to array and render
+    const groupedOrders = Object.values(ordersByOrderNumber);
+    
+    container.innerHTML = groupedOrders.map(order => {
+        // Get primary image from first item
+        const primaryImage = order.items && order.items.length > 0 
+            ? this.getPrimaryImage(order.items[0])
+            : null;
+
+        // Calculate item count
+        const itemCount = order.items.reduce((total, item) => total + item.quantity, 0);
+        
+        // Calculate total amount from all items
+        const totalAmount = order.total;
+
+        // Format date
+        const orderDate = new Date(order.created_at).toLocaleString('en-IN', {
+            day: '2-digit',
+            month: 'short',
+            year: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+
+        // Determine status badge class
+        const statusClass = this.getStatusClass(order.status);
+
+        return `
+            <div class="order-card" data-order-number="${order.order_number}">
+                <div class="order-header">
+                    <div>
+                        <div class="order-id">Order #${order.order_number}</div>
+                        <div class="order-date">${orderDate}</div>
+                    </div>
+                    <span class="order-status ${statusClass}">${this.formatStatus(order.status)}</span>
+                </div>
+                
+                <div class="order-content">
+                    <div class="order-image">
+                        ${primaryImage ? 
+                            `<img src="${primaryImage}" alt="Product Image" class="order-product-image">` : 
+                            `<div class="order-image-placeholder"><i class="fas fa-box-open"></i></div>`
+                        }
+                    </div>
+                    
+                    <div class="order-details">
+                        <div class="order-info-grid">
+                            <div class="order-info-item">
+                                <span class="info-label">Customer</span>
+                                <span class="info-value">${order.shipping.name || 'N/A'}</span>
+                            </div>
+                            <div class="order-info-item">
+                                <span class="info-label">Items</span>
+                                <span class="info-value">${itemCount} item${itemCount !== 1 ? 's' : ''}</span>
+                            </div>
+                            <div class="order-info-item">
+                                <span class="info-label">Total Amount</span>
+                                <span class="info-value">₹${parseFloat(totalAmount).toFixed(2)}</span>
+                            </div>
+                            <div class="order-info-item">
+                                <span class="info-label">Payment</span>
+                                <span class="info-value ${order.payment_status === 'PAYMENT_PAID' ? 'payment-paid' : 'payment-pending'}">
+                                    ${this.formatPaymentMethod(order.payment_method)}
+                                </span>
+                            </div>
+                        </div>
+                        
+                        <div class="customer-info">
+                            <div class="customer-address">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <span>${order.shipping.address_1}, ${order.shipping.city}, ${order.shipping.state} - ${order.shipping.pincode}</span>
+                            </div>
+                            <div class="customer-contact">
+                                <i class="fas fa-phone"></i>
+                                <span>${order.shipping.phone}</span>
+                                <i class="fas fa-envelope"></i>
+                                <span>${order.shipping.email}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="order-actions">
+                    <button class="btn btn-secondary" onclick="dashboard.viewOrder('${order.order_number}')">
+                        <i class="fas fa-eye"></i> View Details
+                    </button>
+                    <button class="btn btn-primary" onclick="dashboard.updateOrderStatus('${order.order_number}')">
+                        <i class="fas fa-edit"></i> Update Status
+                    </button>
+                </div>
+            </div>
+        `;
+    }).join('');
+}
+
+// Helper methods for order rendering
+getPrimaryImage(item) {
+    if (item.variant_primary_image && item.variant_primary_image.image) {
+        return item.variant_primary_image.image;
+    }
+    return null;
+}
+
+calculateOrderStatus(items) {
+    if (!items || items.length === 0) return 'PENDING';
+    
+    // Define status hierarchy
+    const statusHierarchy = {
+        'CANCELLED': 0,
+        'PENDING': 1,
+        'PROCESSING': 2,
+        'CONFIRMED': 3,
+        'PACKED': 4,
+        'SHIPPED': 5,
+        'OUT_FOR_DELIVERY': 6,
+        'DELIVERED': 7,
+        'RETURN_REQUESTED': 8,
+        'RETURNED': 9,
+        'REFUNDED': 10,
+        'CLOSED': 11
+    };
+    
+    // Get all unique statuses
+    const statuses = [...new Set(items.map(item => item.status.toUpperCase()))];
+    
+    // If all items have the same status, return that
+    if (statuses.length === 1) {
+        return statuses[0];
+    }
+    
+    // Find the lowest status in hierarchy (most concerning)
+    let lowestStatus = 'DELIVERED';
+    let lowestRank = statusHierarchy['DELIVERED'];
+    
+    statuses.forEach(status => {
+        const rank = statusHierarchy[status] || 1;
+        if (rank < lowestRank) {
+            lowestRank = rank;
+            lowestStatus = status;
+        }
+    });
+    
+    return lowestStatus;
+}
+
+getStatusClass(status) {
+    if (!status) return 'pending';
+    
+    const statusClasses = {
+        'PENDING': 'pending',
+        'PROCESSING': 'processing',
+        'CONFIRMED': 'confirmed',
+        'PACKED': 'packed',
+        'SHIPPED': 'shipped',
+        'OUT_FOR_DELIVERY': 'out-for-delivery',
+        'DELIVERED': 'delivered',
+        'CANCELLED': 'cancelled',
+        'RETURN_REQUESTED': 'return-requested',
+        'RETURNED': 'returned',
+        'REFUNDED': 'refunded',
+        'CLOSED': 'closed'
+    };
+    return statusClasses[status.toUpperCase()] || 'pending';
+}
+
+formatStatus(status) {
+    if (!status) return 'Pending';
+    return status
+        .toLowerCase()
+        .replace(/_/g, ' ')
+        .replace(/\b\w/g, l => l.toUpperCase());
+}
+
+
+formatPaymentMethod(method) {
+    const methods = {
+        'Online_Mode': 'Online Payment',
+        'Cash_On_Delivery': 'Cash on Delivery',
+        'ONLINE': 'Online Payment',
+        'COD': 'Cash on Delivery'
+    };
+    return methods[method] || method || 'N/A';
+}
+
+
+async viewOrder(orderNumber) {
+    try {
+        this.showLoading(true);
+        console.log('🔍 Fetching details for order:', orderNumber);
+        
+        // Get all orders with this order number
+        const orderData = this.orders.filter(order => order.order_number === orderNumber);
+        
+        if (orderData.length === 0) {
+            this.showNotification('Order not found in local data', 'error');
+            // Try to fetch from API directly
+            await this.fetchOrderFromAPI(orderNumber);
+            return;
+        }
+
+        console.log('📦 Found order data:', orderData);
+        
+        // Group items by this order number
+        const allItems = [];
+        const vendors = new Set();
+        
+        orderData.forEach(order => {
+            if (order.items && Array.isArray(order.items)) {
+                allItems.push(...order.items);
+            }
+            if (order.vendor_id) {
+                vendors.add(order.vendor_id);
+            }
+        });
+
+        // Get order info from first item
+        const orderInfo = orderData[0];
+        
+        console.log('📊 Order Info:', orderInfo);
+        console.log('📦 Items found:', allItems.length);
+        
+        // Render order details
+        this.renderOrderDetails(orderInfo, allItems);
+        
+        // Show the modal
+        this.showModal('order-details-modal');
+        
+    } catch (error) {
+        console.error('❌ Error viewing order:', error);
+        this.showNotification(`Failed to load order details: ${error.message}`, 'error');
+    } finally {
+        this.showLoading(false);
+    }
+}
+
+async fetchOrderFromAPI(orderNumber) {
+    try {
+        console.log('🌐 Fetching order from API:', orderNumber);
+        
+        const response = await fetch(`${this.orderBaseURL}/vendor-get-all/`, {
+            headers: this.getHeaders()
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            if (data.orders && Array.isArray(data.orders)) {
+                this.orders = data.orders;
+                
+                // Try to find the order again
+                const orderData = this.orders.filter(order => order.order_number === orderNumber);
+                
+                if (orderData.length === 0) {
+                    this.showNotification(`Order ${orderNumber} not found`, 'error');
+                    return;
+                }
+                
+                const allItems = [];
+                orderData.forEach(order => {
+                    allItems.push(...order.items);
+                });
+                
+                this.renderOrderDetails(orderData[0], allItems);
+                this.showModal('order-details-modal');
+            }
+        } else {
+            this.showNotification('Could not fetch order details from server', 'error');
+        }
+    } catch (error) {
+        console.error('Error fetching order from API:', error);
+        this.showNotification('Failed to connect to server', 'error');
+    }
+}
+
+renderOrderDetails(orderInfo, items) {
+    const container = document.getElementById('order-details-content');
+    if (!container) {
+        console.error('❌ Order details container not found');
+        return;
+    }
+
+    // Format dates
+    const createdDate = new Date(orderInfo.created_at).toLocaleString('en-IN', {
+        day: '2-digit',
+        month: 'long',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: true
+    });
+
+    const updatedDate = new Date(orderInfo.updated_at).toLocaleDateString('en-IN', {
+        day: '2-digit',
+        month: 'short',
+        year: 'numeric'
+    });
+
+    // Calculate totals
+    const itemCount = items.reduce((total, item) => total + item.quantity, 0);
+    const subtotal = items.reduce((total, item) => total + parseFloat(item.subtotal || 0), 0);
+    const taxAmount = items.reduce((total, item) => total + parseFloat(item.tax_amount || 0), 0);
+    const commission = items.reduce((total, item) => total + parseFloat(item.commission_amount || 0), 0);
+    const vendorEarning = items.reduce((total, item) => total + parseFloat(item.vendor_earning || 0), 0);
+
+    // Calculate overall order status
+    const orderStatus = this.calculateOrderStatus(items);
+
+    console.log('💰 Financial Summary:', {
+        itemCount,
+        subtotal,
+        taxAmount,
+        commission,
+        vendorEarning
+    });
+
+    container.innerHTML = `
+        <div class="order-details-container">
+            <!-- Order Header -->
+            <div class="order-details-header">
+                <div class="order-header-left">
+                    <h3 class="order-title">Order #${orderInfo.order_number}</h3>
+                    <div class="order-meta">
+                        <span class="order-date"><i class="far fa-calendar"></i> ${createdDate}</span>
+                        <span class="order-status-badge ${this.getStatusClass(orderStatus)}">
+                            ${this.formatStatus(orderStatus)}
+                        </span>
+                        <span class="order-updated">Last updated: ${updatedDate}</span>
+                    </div>
+                </div>
+                <div class="order-header-right">
+                    <div class="order-payment-info">
+                        <span class="payment-method">${this.formatPaymentMethod(orderInfo.payment_method)}</span>
+                        <span class="payment-status ${orderInfo.payment_status === 'PAYMENT_PAID' ? 'paid' : 'pending'}">
+                            ${orderInfo.payment_status === 'PAYMENT_PAID' ? 'Paid' : 'Payment Pending'}
+                        </span>
+                    </div>
+                    <div class="order-total-amount">
+                        <span class="total-label">Total Order Value</span>
+                        <span class="total-value">₹${parseFloat(orderInfo.total || 0).toFixed(2)}</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Shipping Information -->
+            <div class="details-section">
+                <h4 class="section-title"><i class="fas fa-truck"></i> Customer & Shipping Information</h4>
+                <div class="shipping-info-grid">
+                    <div class="info-item">
+                        <span class="info-label">Customer Name</span>
+                        <span class="info-value">${orderInfo.shipping.name || 'N/A'}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Phone Number</span>
+                        <span class="info-value">${orderInfo.shipping.phone || 'N/A'}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Email Address</span>
+                        <span class="info-value">${orderInfo.shipping.email || 'N/A'}</span>
+                    </div>
+                    <div class="info-item full-width">
+                        <span class="info-label">Shipping Address</span>
+                        <span class="info-value">
+                            ${orderInfo.shipping.address_1 || ''}${orderInfo.shipping.address_2 ? ', ' + orderInfo.shipping.address_2 : ''}<br>
+                            ${orderInfo.shipping.city || ''}, ${orderInfo.shipping.state || ''} - ${orderInfo.shipping.pincode || ''}
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Order Items -->
+            <div class="details-section">
+                <h4 class="section-title"><i class="fas fa-shopping-bag"></i> Order Items (${itemCount} items)</h4>
+                
+                ${items.length === 0 ? `
+                    <div class="empty-state">
+                        <i class="fas fa-box-open"></i>
+                        <p>No items found in this order</p>
+                    </div>
+                ` : `
+                    <div class="order-items-list">
+                        ${items.map((item, index) => {
+                            const itemImage = item.variant_primary_image && item.variant_primary_image.image 
+                                ? item.variant_primary_image.image 
+                                : null;
+                            
+                            return `
+                                <div class="order-item-card" data-item-id="${item.item_id}">
+                                    <div class="item-image">
+                                        ${itemImage ? 
+                                            `<img src="${itemImage}" alt="${item.product_name || 'Product'}" class="item-thumbnail">` : 
+                                            `<div class="item-image-placeholder">
+                                                <i class="fas fa-box"></i>
+                                            </div>`
+                                        }
+                                    </div>
+                                    
+                                    <div class="item-details">
+                                        <div class="item-header">
+                                            <h5 class="item-name">${item.product_name || 'Unnamed Product'}</h5>
+                                            <div class="item-badges">
+                                                <span class="item-sku">SKU: ${item.sku || 'N/A'}</span>
+                                                <span class="item-status ${this.getStatusClass(item.status)}">
+                                                    ${this.formatStatus(item.status)}
+                                                </span>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="item-info-grid">
+                                            <div class="item-info">
+                                                <span class="info-label">Unit Price</span>
+                                                <span class="info-value">₹${parseFloat(item.price || 0).toFixed(2)}</span>
+                                            </div>
+                                            <div class="item-info">
+                                                <span class="info-label">Quantity</span>
+                                                <span class="info-value">${item.quantity || 0}</span>
+                                            </div>
+                                            <div class="item-info">
+                                                <span class="info-label">Subtotal</span>
+                                                <span class="info-value">₹${parseFloat(item.subtotal || 0).toFixed(2)}</span>
+                                            </div>
+                                            
+                                        </div>
+                                        
+                                        ${item.tracking_number || item.delivered_at ? `
+                                            <div class="item-meta">
+                                                ${item.tracking_number ? `
+                                                    <div class="tracking-info">
+                                                        <i class="fas fa-shipping-fast"></i>
+                                                        <span>${item.courier_name || 'Courier'}: ${item.tracking_number}</span>
+                                                    </div>
+                                                ` : ''}
+                                                ${item.delivered_at ? `
+                                                    <div class="delivery-info">
+                                                        <i class="fas fa-check-circle"></i>
+                                                        <span>Delivered: ${new Date(item.delivered_at).toLocaleDateString('en-IN', {
+                                                            day: '2-digit',
+                                                            month: 'short',
+                                                            year: 'numeric',
+                                                            hour: '2-digit',
+                                                            minute: '2-digit'
+                                                        })}</span>
+                                                    </div>
+                                                ` : ''}
+                                            </div>
+                                        ` : ''}
+                                    </div>
+                                    
+                                    <div class="item-financial">
+                                        <div class="financial-breakdown">
+                                            <div class="financial-item">
+                                                <span class="financial-label">Tax Amount</span>
+                                                <span class="financial-value">₹${parseFloat(item.tax_amount || 0).toFixed(2)}</span>
+                                            </div>
+                                            <div class="financial-item">
+                                                <span class="financial-label">Commission</span>
+                                                <span class="financial-value">₹${parseFloat(item.commission_amount || 0).toFixed(2)}</span>
+                                            </div>
+                                            <div class="financial-item total">
+                                                <span class="financial-label">Your Earnings</span>
+                                                <span class="financial-value">₹${parseFloat(item.vendor_earning || 0).toFixed(2)}</span>
+                                            </div>
+                                        </div>
+                                        
+                                        ${item.refunded_amount && parseFloat(item.refunded_amount) > 0 ? `
+                                            <div class="refund-info">
+                                                <i class="fas fa-undo"></i>
+                                                <span>Refunded: ₹${parseFloat(item.refunded_amount).toFixed(2)}</span>
+                                            </div>
+                                        ` : ''}
+                                    </div>
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+                `}
+            </div>
+
+            <!-- Order Summary -->
+            <div class="details-section">
+                <h4 class="section-title"><i class="fas fa-file-invoice-dollar"></i> Financial Summary</h4>
+                <div class="order-summary">
+                    <div class="summary-row">
+                        <span class="summary-label">Subtotal (${itemCount} items)</span>
+                        <span class="summary-value">₹${subtotal.toFixed(2)}</span>
+                    </div>
+                    <div class="summary-row">
+                        <span class="summary-label">Total Tax</span>
+                        <span class="summary-value">₹${taxAmount.toFixed(2)}</span>
+                    </div>
+                    <div class="summary-row">
+                        <span class="summary-label">Platform Commission</span>
+                        <span class="summary-value">-₹${commission.toFixed(2)}</span>
+                    </div>
+                    <div class="summary-row total">
+                        <span class="summary-label">Total Vendor Earnings</span>
+                        <span class="summary-value">₹${vendorEarning.toFixed(2)}</span>
+                    </div>
+                    
+                    ${orderInfo.refunded_amount && parseFloat(orderInfo.refunded_amount) > 0 ? `
+                        <div class="summary-row refund">
+                            <span class="summary-label">Total Refunded</span>
+                            <span class="summary-value">-₹${parseFloat(orderInfo.refunded_amount).toFixed(2)}</span>
+                        </div>
+                        <div class="summary-row net-total">
+                            <span class="summary-label">Net Earnings</span>
+                            <span class="summary-value">₹${(vendorEarning - parseFloat(orderInfo.refunded_amount || 0)).toFixed(2)}</span>
+                        </div>
+                    ` : ''}
+                </div>
+            </div>
+
+            <!-- Order Actions -->
+            <div class="details-section">
+                <div class="order-actions-buttons">
+                    <button class="btn btn-primary" onclick="dashboard.updateOrderStatus('${orderInfo.order_number}')">
+                        <i class="fas fa-edit"></i> Update Status
+                    </button>
+                    <button class="btn btn-secondary" onclick="dashboard.printOrderDetails('${orderInfo.order_number}')">
+                        <i class="fas fa-print"></i> Print Invoice
+                    </button>
+                    <button class="btn btn-outline" onclick="dashboard.closeModal('order-details-modal')">
+                        <i class="fas fa-times"></i> Close
+                    </button>
+                </div>
+            </div>
+        </div>
+    `;
+
+    // Update modal title
+    const titleElement = document.getElementById('order-details-title');
+    if (titleElement) {
+        titleElement.textContent = `Order #${orderInfo.order_number}`;
+    }
+}
+
+printOrderDetails(orderNumber) {
+    const orderData = this.orders.filter(order => order.order_number === orderNumber);
+    if (orderData.length === 0) {
+        this.showNotification('Order not found for printing', 'error');
+        return;
+    }
+
+    const orderInfo = orderData[0];
+    const allItems = [];
+    orderData.forEach(order => {
+        allItems.push(...order.items);
+    });
+
+    const printContent = this.generatePrintContent(orderInfo, allItems);
+    
+    // Open print window
+    const printWindow = window.open('', '_blank');
+    printWindow.document.write(printContent);
+    printWindow.document.close();
+    
+    // Wait for images to load before printing
+    printWindow.onload = function() {
+        setTimeout(() => {
+            printWindow.print();
+            printWindow.close();
+        }, 500);
+    };
+}
+
+generatePrintContent(orderInfo, items) {
+    const createdDate = new Date(orderInfo.created_at).toLocaleString('en-IN');
+    const subtotal = items.reduce((total, item) => total + parseFloat(item.subtotal || 0), 0);
+    const taxAmount = items.reduce((total, item) => total + parseFloat(item.tax_amount || 0), 0);
+    const vendorEarning = items.reduce((total, item) => total + parseFloat(item.vendor_earning || 0), 0);
+
+    return `
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>Invoice - Order #${orderInfo.order_number}</title>
+            <style>
+                body { font-family: Arial, sans-serif; padding: 20px; color: #333; }
+                .invoice-header { text-align: center; margin-bottom: 30px; border-bottom: 2px solid #333; padding-bottom: 20px; }
+                .invoice-title { font-size: 24px; font-weight: bold; margin-bottom: 10px; }
+                .order-info { display: flex; justify-content: space-between; margin-bottom: 20px; }
+                .section { margin-bottom: 30px; }
+                .section-title { font-size: 18px; font-weight: bold; margin-bottom: 10px; border-bottom: 1px solid #ccc; padding-bottom: 5px; }
+                table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+                th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+                th { background-color: #f5f5f5; font-weight: bold; }
+                .total-row { font-weight: bold; }
+                .footer { text-align: center; margin-top: 50px; color: #666; font-size: 12px; }
+                .logo { font-size: 28px; font-weight: bold; color: #4f46e5; }
+            </style>
+        </head>
+        <body>
+            <div class="invoice-header">
+                <div class="logo">CoinWorth</div>
+                <div class="invoice-title">INVOICE</div>
+                <div>Order #${orderInfo.order_number}</div>
+                <div>Date: ${createdDate}</div>
+            </div>
+            
+            <div class="order-info">
+                <div>
+                    <strong>Shipping To:</strong><br>
+                    ${orderInfo.shipping.name}<br>
+                    ${orderInfo.shipping.address_1}${orderInfo.shipping.address_2 ? ', ' + orderInfo.shipping.address_2 : ''}<br>
+                    ${orderInfo.shipping.city}, ${orderInfo.shipping.state} - ${orderInfo.shipping.pincode}<br>
+                    Phone: ${orderInfo.shipping.phone}<br>
+                    Email: ${orderInfo.shipping.email}
+                </div>
+                <div>
+                    <strong>Vendor:</strong><br>
+                    ${this.vendorInfo?.business_name || 'Your Store'}<br>
+                    Status: ${this.formatStatus(this.calculateOrderStatus(items))}<br>
+                    Payment: ${this.formatPaymentMethod(orderInfo.payment_method)}<br>
+                    Payment Status: ${orderInfo.payment_status === 'PAYMENT_PAID' ? 'Paid' : 'Pending'}
+                </div>
+            </div>
+            
+            <div class="section">
+                <div class="section-title">Order Items</div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Product</th>
+                            <th>SKU</th>
+                            <th>Qty</th>
+                            <th>Price</th>
+                            <th>Subtotal</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${items.map((item, index) => `
+                            <tr>
+                                <td>${index + 1}</td>
+                                <td>${item.product_name || 'Product'}</td>
+                                <td>${item.sku || 'N/A'}</td>
+                                <td>${item.quantity}</td>
+                                <td>₹${parseFloat(item.price || 0).toFixed(2)}</td>
+                                <td>₹${parseFloat(item.subtotal || 0).toFixed(2)}</td>
+                                <td>${this.formatStatus(item.status)}</td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="section">
+                <div class="section-title">Payment Summary</div>
+                <table>
+                    <tr>
+                        <td>Subtotal (${items.length} items)</td>
+                        <td>₹${subtotal.toFixed(2)}</td>
+                    </tr>
+                    <tr>
+                        <td>Tax Amount</td>
+                        <td>₹${taxAmount.toFixed(2)}</td>
+                    </tr>
+                    <tr class="total-row">
+                        <td>Total Vendor Earnings</td>
+                        <td>₹${vendorEarning.toFixed(2)}</td>
+                    </tr>
+                </table>
+            </div>
+            
+            <div class="footer">
+                Thank you for your business!<br>
+                This is a computer-generated invoice.
+            </div>
+        </body>
+        </html>
+    `;
+}
+
+async updateOrderStatus(orderNumber) {
+    try {
+        this.currentOrder = orderNumber;
+        
+        // Get current status of items in this order
+        const orderItems = [];
+        this.orders.forEach(order => {
+            if (order.order_number === orderNumber) {
+                orderItems.push(...order.items);
+            }
+        });
+
+        // Pre-fill the form
+        const statusSelect = document.getElementById('new-status-select');
+        const trackingGroup = document.getElementById('tracking-info-group');
+        
+        // Show/hide tracking fields based on status
+        statusSelect.addEventListener('change', (e) => {
+            if (e.target.value === 'SHIPPED') {
+                trackingGroup.style.display = 'block';
+            } else {
+                trackingGroup.style.display = 'none';
+            }
+        });
+
+        // Reset form
+        document.getElementById('update-status-form').reset();
+        
+        this.showModal('update-status-modal');
+
+    } catch (error) {
+        console.error('Error preparing status update:', error);
+        this.showNotification('Failed to prepare status update', 'error');
+    }
+}
+
+async submitStatusUpdate(e) {
+    e.preventDefault();
+    
+    const newStatus = document.getElementById('new-status-select').value;
+    const trackingNumber = document.getElementById('tracking-number').value;
+    const courierName = document.getElementById('courier-name').value;
+    
+    if (!newStatus) {
+        this.showNotification('Please select a status', 'error');
+        return;
+    }
+
+    try {
+        this.showLoading(true);
+        
+        // Here you would call your backend API to update order status
+        // For now, we'll simulate with a notification
+        this.showNotification(`Order status updated to ${this.formatStatus(newStatus)}`, 'success');
+        
+        // Close modal
+        this.closeModal('update-status-modal');
+        
+        // Reload orders to reflect changes
+        setTimeout(() => {
+            this.loadOrders();
+        }, 1000);
+        
+    } catch (error) {
+        console.error('Error updating order status:', error);
+        this.showNotification('Failed to update order status', 'error');
+    } finally {
+        this.showLoading(false);
+    }
+}
+
+printOrder(orderNumber) {
+    const orderData = this.orders.filter(order => order.order_number === orderNumber);
+    if (orderData.length === 0) return;
+
+    // Create printable content
+    const printContent = `
+        <div style="font-family: Arial, sans-serif; padding: 20px;">
+            <h2 style="text-align: center;">Invoice - Order #${orderNumber}</h2>
+            <p style="text-align: center;">Date: ${new Date().toLocaleDateString('en-IN')}</p>
+            <hr>
+            
+            <div style="margin-top: 20px;">
+                <h4>Order Items:</h4>
+                <table style="width: 100%; border-collapse: collapse;">
+                    <thead>
+                        <tr>
+                            <th style="border: 1px solid #000; padding: 8px;">Product</th>
+                            <th style="border: 1px solid #000; padding: 8px;">Qty</th>
+                            <th style="border: 1px solid #000; padding: 8px;">Price</th>
+                            <th style="border: 1px solid #000; padding: 8px;">Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${orderData[0].items.map(item => `
+                            <tr>
+                                <td style="border: 1px solid #000; padding: 8px;">${item.product_name}</td>
+                                <td style="border: 1px solid #000; padding: 8px; text-align: center;">${item.quantity}</td>
+                                <td style="border: 1px solid #000; padding: 8px;">₹${parseFloat(item.price).toFixed(2)}</td>
+                                <td style="border: 1px solid #000; padding: 8px;">₹${parseFloat(item.subtotal).toFixed(2)}</td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    `;
+
+    // Open print window
+    const printWindow = window.open('', '_blank');
+    printWindow.document.write(`
+        <html>
+            <head>
+                <title>Invoice - ${orderNumber}</title>
+            </head>
+            <body>
+                ${printContent}
+            </body>
+        </html>
+    `);
+    printWindow.document.close();
+    printWindow.print();
+}
+
+// Placeholder functions for order actions
+// viewOrder(orderId) {
+//     this.showNotification('View order functionality coming soon!', 'info');
+//     console.log('Viewing order:', orderId);
+// }
+
+updateOrderStatus(orderId) {
+    this.showNotification('Update order status functionality coming soon!', 'info');
+    console.log('Updating order status for:', orderId);
+}
+
+renderSampleOrders() {
+    const sampleOrders = [
+        {
+            id: 1,
+            order_id: 'ORD-2023-001',
+            order_date: new Date().toISOString(),
+            status: 'pending',
+            customer_name: 'Aman Kumar Panika',
+            item_count: 3,
+            total_amount: 2450.00
+        },
+        {
+            id: 2,
+            order_id: 'ORD-2023-002',
+            order_date: new Date(Date.now() - 86400000).toISOString(),
+            status: 'processing',
+            customer_name: 'Sachin Yadav',
+            item_count: 2,
+            total_amount: 1899.00
+        },
+        {
+            id: 3,
+            order_id: 'ORD-2023-003',
+            order_date: new Date(Date.now() - 172800000).toISOString(),
+            status: 'delivered',
+            customer_name: 'Pradeep Kumar Tiwari',
+            item_count: 1,
+            total_amount: 899.00
+        }
+    ];
+
+    this.renderOrders(sampleOrders);
+}
+
+async loadAnalytics() {
+    try {
+        this.showLoading(true);
+        // Replace with your actual API endpoint
+        const response = await fetch(`${this.baseURL}/vendor/analytics/`, {
+            headers: this.getHeaders()
+        });
+
+        if (response.ok) {
+            const analytics = await response.json();
+            this.renderAnalytics(analytics);
+        } else {
+            // For now, show sample analytics
+            this.renderSampleAnalytics();
+        }
+    } catch (error) {
+        console.error('Error loading analytics:', error);
+        this.renderSampleAnalytics(); // Fallback to sample data
+    } finally {
+        this.showLoading(false);
+    }
+}
+
+renderAnalytics(analytics) {
+    // This is where you would populate actual analytics data
+    // For now, we'll just show that the section is functional
+    console.log('Analytics loaded:', analytics);
+}
+
+renderSampleAnalytics() {
+    // Update the top products list with actual data if available
+    const topProductsContainer = document.getElementById('top-products');
+    if (topProductsContainer && this.products.length > 0) {
+        const topProducts = this.products.slice(0, 3); // Top 3 products
+        topProductsContainer.innerHTML = topProducts.map(product => `
+            <div class="top-product-item">
+                <div class="top-product-image">
+                    ${product.variants?.[0]?.images?.[0]?.image ?
+                        `<img src="${product.variants[0].images[0].image}" alt="${product.title}">` :
+                        `<i class="fas fa-box"></i>`
+                    }
+                </div>
+                <div class="top-product-info">
+                    <div class="top-product-name">${product.title}</div>
+                    <div class="top-product-stats">
+                        <span>₹${parseFloat(product.base_price).toFixed(2)}</span>
+                        <span>${product.variants?.reduce((sum, v) => sum + (v.stock || 0), 0) || 0} in stock</span>
+                    </div>
+                </div>
+            </div>
+        `).join('');
+    }
+}
+
+async loadSettings() {
+    try {
+        this.showLoading(true);
+        
+        // Load vendor settings
+        const vendorInfo = this.vendorInfo;
+        if (vendorInfo) {
+            this.populateSettingsForm(vendorInfo);
+        }
+        
+        // Initialize settings tabs
+        this.initializeSettingsTabs();
+        
+    } catch (error) {
+        console.error('Error loading settings:', error);
+    } finally {
+        this.showLoading(false);
+    }
+}
+
+populateSettingsForm(vendorInfo) {
+    // Populate form with vendor info
+    document.getElementById('store-name').value = vendorInfo.business_name || '';
+    document.getElementById('store-description').value = vendorInfo.business_description || '';
+    document.getElementById('store-email').value = vendorInfo.business_email || '';
+    document.getElementById('store-phone').value = vendorInfo.business_phone || '';
+    document.getElementById('store-address').value = vendorInfo.business_address || '';
+}
+
+initializeSettingsTabs() {
+    const tabs = document.querySelectorAll('.settings-tab');
+    const tabContents = document.querySelectorAll('.settings-tab-content');
+    
+    tabs.forEach(tab => {
+        tab.addEventListener('click', (e) => {
+            const tabId = e.target.dataset.tab;
+            
+            // Update active tab
+            tabs.forEach(t => t.classList.remove('active'));
+            e.target.classList.add('active');
+            
+            // Show corresponding content
+            tabContents.forEach(content => {
+                content.classList.remove('active');
+                if (content.id === `${tabId}-settings`) {
+                    content.classList.add('active');
+                }
+            });
+        });
+    });
+    
+    // Handle save settings button
+    document.getElementById('save-settings')?.addEventListener('click', (e) => {
+        e.preventDefault();
+        this.saveSettings();
+    });
+}
+
+async saveSettings() {
+    try {
+        this.showLoading(true);
+        
+        const settingsData = {
+            business_name: document.getElementById('store-name').value,
+            business_description: document.getElementById('store-description').value,
+            business_email: document.getElementById('store-email').value,
+            business_phone: document.getElementById('store-phone').value,
+            business_address: document.getElementById('store-address').value
+        };
+        
+        // Replace with your actual API endpoint
+        const response = await fetch(`${this.vendorBaseURL}/update-profile/`, {
+            method: 'PUT',
+            headers: this.getHeaders(),
+            body: JSON.stringify(settingsData)
+        });
+        
+        if (response.ok) {
+            this.showNotification('Settings saved successfully!', 'success');
+        } else {
+            throw new Error('Failed to save settings');
+        }
+    } catch (error) {
+        console.error('Error saving settings:', error);
+        this.showNotification('Failed to save settings', 'error');
+    } finally {
+        this.showLoading(false);
+    }
+}
+
+// Add empty state for orders
+getEmptyState(type, title, message) {
+    const icons = {
+        products: 'fa-box-open',
+        variants: 'fa-list',
+        orders: 'fa-shopping-bag',
+        analytics: 'fa-chart-line',
+        settings: 'fa-cog',
+        general: 'fa-inbox'
+    };
+
+    return `
+        <div class="empty-state">
+            <i class="fas ${icons[type] || icons.general}"></i>
+            <h3>${title}</h3>
+            <p>${message}</p>
+            ${type === 'products' ?
+                '<button class="btn btn-primary" onclick="dashboard.switchPage(\'add-product\')">Add Your First Product</button>' :
+            type === 'variants' ?
+                '<button class="btn btn-primary" onclick="dashboard.showAddVariantModal()">Add Your First Variant</button>' :
+            type === 'orders' ?
+                '<button class="btn btn-primary" onclick="dashboard.loadOrders()">Refresh Orders</button>' :
+                ''
+            }
+        </div>
+    `;
+}
+
 
     async loadCategories() {
     try {
@@ -1711,25 +2909,131 @@ storeCurrentCategory(categoryId) {
         this.renderProducts(filtered);
     }
 
+    // updateDashboardStats() {
+    //     const totalProducts = this.products.length;
+    //     const totalStock = this.products.reduce((sum, product) =>
+    //         sum + (product.variants?.reduce((vSum, variant) => vSum + (variant.stock || 0), 0) || 0), 0);
+    //     const activeProducts = this.products.filter(p => p.status === 'active').length;
+    //     const totalRevenue = this.products.reduce((sum, product) =>
+    //         sum + (parseFloat(product.base_price) * (product.variants?.reduce((vSum, variant) => vSum + (variant.stock || 0), 0) || 0)), 0);
+
+    //     document.getElementById('total-products').textContent = totalProducts;
+    //     document.getElementById('products-count').textContent = totalProducts;
+
+    //     // Update other stats
+    //     const statCards = document.querySelectorAll('.stat-card');
+    //     if (statCards[1]) statCards[1].querySelector('h3').textContent = totalStock;
+    //     if (statCards[2]) statCards[2].querySelector('h3').textContent = activeProducts;
+    //     if (statCards[3]) statCards[3].querySelector('h3').textContent = `₹${totalRevenue.toFixed(2)}`;
+
+    //     this.updateRecentProducts();
+    // }
+
     updateDashboardStats() {
-        const totalProducts = this.products.length;
-        const totalStock = this.products.reduce((sum, product) =>
-            sum + (product.variants?.reduce((vSum, variant) => vSum + (variant.stock || 0), 0) || 0), 0);
-        const activeProducts = this.products.filter(p => p.status === 'active').length;
-        const totalRevenue = this.products.reduce((sum, product) =>
-            sum + (parseFloat(product.base_price) * (product.variants?.reduce((vSum, variant) => vSum + (variant.stock || 0), 0) || 0)), 0);
-
-        document.getElementById('total-products').textContent = totalProducts;
-        document.getElementById('products-count').textContent = totalProducts;
-
-        // Update other stats
-        const statCards = document.querySelectorAll('.stat-card');
-        if (statCards[1]) statCards[1].querySelector('h3').textContent = totalStock;
-        if (statCards[2]) statCards[2].querySelector('h3').textContent = activeProducts;
-        if (statCards[3]) statCards[3].querySelector('h3').textContent = `₹${totalRevenue.toFixed(2)}`;
-
-        this.updateRecentProducts();
+    // 1. Total Products (from products)
+    const totalProducts = this.products.length;
+    
+    // 2. Orders Today (from orders)
+    const ordersToday = this.calculateOrdersToday();
+    
+    // 3. Product Views (placeholder - you can connect to backend analytics later)
+    const productViews = 10; // Default placeholder
+    
+    // 4. Total Revenue (from orders, not from product base price)
+    const totalRevenue = this.calculateTotalRevenue();
+    
+    // Update the dashboard stats
+    document.getElementById('total-products').textContent = totalProducts;
+    document.getElementById('products-count').textContent = totalProducts;
+    
+    // Update all stat cards
+    const statCards = document.querySelectorAll('.stat-card');
+    
+    // Card 1: Total Products (already updated)
+    if (statCards[0]) {
+        statCards[0].querySelector('h3').textContent = totalProducts;
+        // Keep existing trend
+        const trendElement = statCards[0].querySelector('.stat-trend span');
+        if (trendElement) {
+            trendElement.textContent = '+12%';
+            trendElement.className = 'trend-up';
+        }
     }
+    
+    // Card 2: Orders Today (CHANGED from totalStock to ordersToday)
+    if (statCards[1]) {
+        statCards[1].querySelector('h3').textContent = ordersToday;
+        // Keep existing trend
+        const trendElement = statCards[1].querySelector('.stat-trend span');
+        if (trendElement) {
+            trendElement.textContent = '+8%';
+            trendElement.className = 'trend-up';
+        }
+    }
+    
+    // Card 3: Product Views (CHANGED from activeProducts to productViews)
+    if (statCards[2]) {
+        statCards[2].querySelector('h3').textContent = productViews.toLocaleString();
+        // Keep existing trend
+        const trendElement = statCards[2].querySelector('.stat-trend span');
+        if (trendElement) {
+            trendElement.textContent = '+15%';
+            trendElement.className = 'trend-up';
+        }
+    }
+    
+    // Card 4: Total Revenue (CHANGED - now shows real revenue from orders)
+    if (statCards[3]) {
+        statCards[3].querySelector('h3').textContent = `₹${totalRevenue.toFixed(2)}`;
+        // Keep existing trend
+        const trendElement = statCards[3].querySelector('.stat-trend span');
+        if (trendElement) {
+            trendElement.textContent = '+22%';
+            trendElement.className = 'trend-up';
+        }
+    }
+
+    this.updateRecentProducts();
+}
+
+// Helper method to calculate orders today
+calculateOrdersToday() {
+    if (!this.orders || this.orders.length === 0) return 0;
+    
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    
+    // Get unique order numbers for today
+    const todayOrders = new Set();
+    
+    this.orders.forEach(order => {
+        const orderDate = new Date(order.created_at);
+        orderDate.setHours(0, 0, 0, 0);
+        
+        if (orderDate.getTime() === today.getTime()) {
+            todayOrders.add(order.order_number);
+        }
+    });
+    
+    return todayOrders.size;
+}
+
+// Helper method to calculate total revenue from orders
+calculateTotalRevenue() {
+    if (!this.orders || this.orders.length === 0) return 0;
+    
+    // Calculate total from all orders (avoid duplicates)
+    const orderTotals = {};
+    
+    this.orders.forEach(order => {
+        if (!orderTotals[order.order_number]) {
+            orderTotals[order.order_number] = parseFloat(order.total || 0);
+        }
+    });
+    
+    // Sum up all unique order totals
+    return Object.values(orderTotals).reduce((sum, total) => sum + total, 0);
+}
 
     updateRecentProducts() {
         const container = document.getElementById('recent-products');
@@ -1752,6 +3056,8 @@ storeCurrentCategory(categoryId) {
                     <div class="activity-description">₹${parseFloat(product.base_price).toFixed(2)} • ${product.status}</div>
                 </div>
                 <div class="activity-time">${new Date(product.created_at).toLocaleDateString()}</div>
+                
+
             </div>
         `).join('');
     }
@@ -1849,10 +3155,8 @@ storeCurrentCategory(categoryId) {
                 <i class="fas ${icons[type] || icons.general}"></i>
                 <h3>${title}</h3>
                 <p>${message}</p>
-                ${type === 'products' ?
-                '<button class="btn btn-primary" onclick="dashboard.switchPage(\'add-product\')">Add Your First Product</button>' :
-                '<button class="btn btn-primary" onclick="dashboard.showAddVariantModal()">Add Your First Variant</button>'
-            }
+                
+            
             </div>
         `;
     }

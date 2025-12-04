@@ -53,7 +53,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         <div class="detail-item">
                             <span class="detail-label">Member Since</span>
                             <span class="detail-value">Just now</span>
-                        </div>
+                        </div>  
                     </div>
                 </div>
             </div>

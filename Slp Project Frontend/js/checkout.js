@@ -139,7 +139,6 @@ async function renderCheckoutItems() {
                             <div class="checkout-item-price">₹${product.price.toLocaleString('en-IN')}</div>
                             <div class="checkout-item-quantity">Qty: ${quantity}</div>
                             ${directPurchase ? '<div class="direct-purchase-badge">Direct Purchase</div>' : ''}
-                            <div class="variant-info">Variant ID: ${variantId}</div>
                         </div>
                         <div class="price">₹${itemTotal.toLocaleString('en-IN')}</div>
                     </div>
@@ -285,19 +284,40 @@ function transformProductForCheckout(backendProduct) {
     };
 }
 
+// Update the setupPaymentToggle function in checkout.js
 function setupPaymentToggle() {
     const onlineRadio = document.getElementById('online');
     const codRadio = document.getElementById('cod');
     const onlineForm = document.getElementById('onlineForm');
     const codForm = document.getElementById('codForm');
     const codOption = document.getElementById('codOption');
+    const codLabel = codOption.querySelector('.payment-label');
+    const codDesc = codOption.querySelector('.payment-desc');
     
-    // Check if user is authenticated and show/hide COD option accordingly
+    // Check if user is authenticated
     const isAuthenticated = authManager.isAuthenticated();
+    
     if (!isAuthenticated) {
+        // Disable COD for guest users
         codOption.classList.add('disabled');
-        codOption.querySelector('.payment-desc').textContent = 'Login required for Cash on Delivery';
+        codOption.style.opacity = '0.6';
+        codOption.style.cursor = 'not-allowed';
+        
+        // Update COD description
+        codDesc.textContent = 'Login required for Cash on Delivery';
+        
+        // Disable the radio button
+        codRadio.disabled = true;
         onlineRadio.checked = true;
+        
+        // Show tooltip on hover
+        codOption.title = 'Please login to use Cash on Delivery';
+    } else {
+        codOption.classList.remove('disabled');
+        codOption.style.opacity = '1';
+        codOption.style.cursor = 'pointer';
+        codRadio.disabled = false;
+        codDesc.textContent = 'Pay when your order arrives';
     }
     
     function togglePaymentForms() {
@@ -321,6 +341,7 @@ function setupPaymentToggle() {
     togglePaymentForms();
 }
 
+// Update the setupPlaceOrder function
 function setupPlaceOrder() {
     const placeOrderBtn = document.getElementById('placeOrderBtn');
     const shippingForm = document.getElementById('shippingForm');
@@ -331,12 +352,22 @@ function setupPlaceOrder() {
             return;
         }
         
-        // Check if user is trying to use COD without login
+        // Get payment method
         const paymentMethod = document.querySelector('input[name="payment"]:checked').value;
         const isAuthenticated = authManager.isAuthenticated();
         
-        if (paymentMethod === 'Cash_On_Delivery' && !isAuthenticated) {
+        // ENFORCE ONLINE PAYMENT FOR GUEST USERS
+        if (!isAuthenticated && paymentMethod === 'Cash_On_Delivery') {
             showNotification('Please login to use Cash on Delivery', 'error');
+            
+            // Switch to online payment automatically
+            document.getElementById('online').checked = true;
+            setupPaymentToggle(); // Re-run to update UI
+            
+            // Scroll to payment section
+            document.querySelector('.payment-methods').scrollIntoView({ 
+                behavior: 'smooth' 
+            });
             return;
         }
         
@@ -355,6 +386,7 @@ function setupPlaceOrder() {
             if (paymentMethod === 'Online_Mode') {
                 await processOnlinePayment();
             } else if (paymentMethod === 'Cash_On_Delivery') {
+                // Only authenticated users can reach here
                 await processCashOnDelivery();
             }
             
@@ -369,21 +401,141 @@ function setupPlaceOrder() {
     });
 }
 
+// Add guest user flow in processOnlinePayment
 async function processOnlinePayment() {
     try {
+        const isAuthenticated = authManager.isAuthenticated();
+        
+        if (!isAuthenticated) {
+            // Show warning for guest users
+            const proceed = await showGuestUserWarning();
+            if (!proceed) {
+                throw new Error('Payment cancelled by user');
+            }
+        }
+        
         // Step 1: Validate checkout and get session ID
         const checkoutSessionId = await validateCheckout();
         
         // Step 2: Initiate payment with Razorpay
         const paymentData = await initiatePayment(checkoutSessionId);
         
-        // Step 3: Open Razorpay payment gateway automatically
+        // Step 3: Open Razorpay payment gateway
         await openRazorpayPayment(paymentData, checkoutSessionId);
         
     } catch (error) {
         console.error('❌ Online payment processing failed:', error);
         throw error;
     }
+}
+
+// Add this new function to show warning for guest users
+async function showGuestUserWarning() {
+    return new Promise((resolve) => {
+        const modal = document.createElement('div');
+        modal.className = 'guest-warning-modal';
+        modal.innerHTML = `
+            <div class="modal-content">
+                <div class="warning-icon">⚠️</div>
+                <h3>Guest Checkout</h3>
+                <p>You're checking out as a guest. Please note:</p>
+                <ul class="warning-list">
+                    <li>✅ Checkout session ID will be sent to your email</li>
+                    <li>✅ Order confirmation will be emailed to you</li>
+                    <li>❌ If you did not get checkout id then you can proceed on your own risk</li>
+                    
+                </ul>
+                <p class="warning-note">We recommend creating an account for better experience.</p>
+                <div class="modal-actions">
+                    <button class="btn btn-outline" id="cancelPayment">Cancel</button>
+                    <button class="btn btn-primary" id="proceedPayment">Proceed to Payment</button>
+                </div>
+            </div>
+        `;
+        
+        // Style the modal
+        modal.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            backdrop-filter: blur(4px);
+        `;
+        
+        const modalContent = modal.querySelector('.modal-content');
+        modalContent.style.cssText = `
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        `;
+        
+        document.body.appendChild(modal);
+        
+        // Add styles for warning list
+        const style = document.createElement('style');
+        style.textContent = `
+            .warning-list {
+                text-align: left;
+                margin: 20px 0;
+                padding-left: 20px;
+            }
+            .warning-list li {
+                margin: 8px 0;
+                font-size: 14px;
+            }
+            .warning-note {
+                margin-top: 20px;
+                padding: 10px;
+                background: #fff3cd;
+                border-radius: 6px;
+                font-size: 14px;
+                border: 1px solid #ffc107;
+            }
+            .warning-icon {
+                font-size: 48px;
+                color: #ffc107;
+                margin-bottom: 15px;
+            }
+            .modal-actions {
+                display: flex;
+                gap: 15px;
+                margin-top: 25px;
+            }
+            .modal-actions button {
+                flex: 1;
+            }
+        `;
+        document.head.appendChild(style);
+        
+        // Event listeners
+        modal.querySelector('#cancelPayment').addEventListener('click', () => {
+            modal.remove();
+            resolve(false);
+        });
+        
+        modal.querySelector('#proceedPayment').addEventListener('click', () => {
+            modal.remove();
+            resolve(true);
+        });
+        
+        // Close on outside click
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.remove();
+                resolve(false);
+            }
+        });
+    });
 }
 
 async function processCashOnDelivery() {
@@ -419,18 +571,26 @@ async function validateCheckout() {
     const paymentMethod = document.querySelector('input[name="payment"]:checked').value;
     const isAuthenticated = authManager.isAuthenticated();
     
-    // Validate COD for guest users
-    if (!isAuthenticated && paymentMethod === 'Cash_On_Delivery') {
-        throw new Error('Please login to use Cash on Delivery');
+    // ENFORCE EMAIL FOR GUEST USERS
+    if (!isAuthenticated) {
+        // Validate email is provided
+        if (!shippingData.email || !isValidEmail(shippingData.email)) {
+            throw new Error('Valid email is required for guest checkout');
+        }
+        
+        // Force online payment for guest users
+        if (paymentMethod !== 'Online_Mode') {
+            throw new Error('Guest users can only use online payment');
+        }
     }
 
-    // Prepare items for validation - use variant IDs
+    // Prepare items for validation
     const itemsWithQty = Object.keys(cart).map(variantId => ({
-        item_id: parseInt(variantId), // This should now be the variant ID
+        item_id: parseInt(variantId),
         qty: parseInt(cart[variantId])
     }));
 
-    console.log('🛒 Items with Qty for API (using variant IDs):', itemsWithQty);
+    console.log('🛒 Items with Qty for API:', itemsWithQty);
     
     const payload = {
         items_with_qty: itemsWithQty,
@@ -486,6 +646,12 @@ async function validateCheckout() {
         }
         
         console.log('✅ Checkout validated. Session ID:', data.checkout_session_id);
+        
+        // Show email notification for guest users
+        if (!isAuthenticated && data.message) {
+            showNotification(data.message, 'info');
+        }
+        
         return data.checkout_session_id;
         
     } catch (error) {

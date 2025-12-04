@@ -1,0 +1,98 @@
+.track-order-container {
+            max-width: 600px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+        
+        .track-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .track-header h1 {
+            font-size: 32px;
+            margin-bottom: 16px;
+            color: #111827;
+        }
+        
+        .track-header p {
+            color: #6b7280;
+            font-size: 18px;
+        }
+        
+        .track-card {
+            background: white;
+            border-radius: 16px;
+            padding: 40px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+        
+        .form-group {
+            margin-bottom: 24px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #374151;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        
+        .form-group input:focus {
+            outline: none;
+            border-color: #3b82f6;
+        }
+        
+        .btn-block {
+            width: 100%;
+            padding: 14px;
+            font-size: 16px;
+            font-weight: 500;
+        }
+        
+        .info-box {
+            background: #eff6ff;
+            border: 1px solid #dbeafe;
+            border-radius: 8px;
+            padding: 16px;
+            margin: 24px 0;
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+        }
+        
+        .info-box p {
+            margin: 0;
+            color: #1e40af;
+            font-size: 14px;
+        }
+        
+        .error-message {
+            color: #ef4444;
+            font-size: 14px;
+            margin-top: 8px;
+            display: none;
+        }
+        
+        .user-type-note {
+            background: #f0f9ff;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 20px 0;
+            border-left: 4px solid #3b82f6;
+        }
+        
+        .user-type-note p {
+            margin: 0;
+            color: #1e40af;
+            font-size: 14px;
+        }

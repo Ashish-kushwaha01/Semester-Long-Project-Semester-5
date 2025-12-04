@@ -24,6 +24,9 @@ class VendorOnboarding {
         };
         this.completedSteps = new Set();
         this.isReturningUser = false;
+
+        this.emailVerified = false;
+    this.mobileVerified = false;
         
         this.init();
     }
@@ -333,35 +336,75 @@ class VendorOnboarding {
         console.log('✅ Clean initial state ready');
     }
 
-    resetAllStepsUI() {
-        const steps = ['mobile-email', 'password-setup', 'id-signature', 'store-pickup', 'listing-stock'];
+    // resetAllStepsUI() {
+    //     const steps = ['mobile-email', 'password-setup', 'id-signature', 'store-pickup', 'listing-stock'];
         
-        steps.forEach(step => {
-            const statusElement = document.getElementById(`${step}-status`);
-            if (statusElement) {
-                statusElement.innerHTML = '<i class="fas fa-clock"></i>';
-                statusElement.className = 'status-indicator pending';
-            }
+    //     steps.forEach(step => {
+    //         const statusElement = document.getElementById(`${step}-status`);
+    //         if (statusElement) {
+    //             statusElement.innerHTML = '<i class="fas fa-clock"></i>';
+    //             statusElement.className = 'status-indicator pending';
+    //         }
 
-            document.querySelectorAll('.menu-item').forEach(item => {
-                if (item.dataset.target === step) {
-                    item.classList.remove('completed', 'active');
+    //         document.querySelectorAll('.menu-item').forEach(item => {
+    //             if (item.dataset.target === step) {
+    //                 item.classList.remove('completed', 'active');
                     
-                    const menuStatus = item.querySelector('.status-indicator');
-                    if (menuStatus) {
-                        menuStatus.innerHTML = '<i class="fas fa-clock"></i>';
-                        menuStatus.className = 'status-indicator pending';
-                    }
-                }
-            });
-        });
+    //                 const menuStatus = item.querySelector('.status-indicator');
+    //                 if (menuStatus) {
+    //                     menuStatus.innerHTML = '<i class="fas fa-clock"></i>';
+    //                     menuStatus.className = 'status-indicator pending';
+    //                 }
+    //             }
+    //         });
+    //     });
 
-        // Reset progress bar
-        const progressFill = document.querySelector('.progress-fill');
-        const progressPercent = document.querySelector('.progress-percent');
-        if (progressFill) progressFill.style.width = '0%';
-        if (progressPercent) progressPercent.textContent = '0%';
-    }
+    //     // Reset progress bar
+    //     const progressFill = document.querySelector('.progress-fill');
+    //     const progressPercent = document.querySelector('.progress-percent');
+    //     if (progressFill) progressFill.style.width = '0%';
+    //     if (progressPercent) progressPercent.textContent = '0%';
+    // }
+
+    resetAllStepsUI() {
+    const steps = ['mobile-email', 'password-setup', 'id-signature', 'store-pickup', 'listing-stock'];
+    
+    steps.forEach(step => {
+        const statusElement = document.getElementById(`${step}-status`);
+        if (statusElement) {
+            statusElement.innerHTML = '<i class="fas fa-clock"></i>';
+            statusElement.className = 'status-indicator pending';
+        }
+
+        const menuItem = document.querySelector(`.menu-item[data-target="${step}"]`);
+        if (menuItem) {
+            menuItem.classList.remove('completed', 'active');
+            
+            // Reset styles
+            const menuIcon = menuItem.querySelector('.menu-icon');
+            if (menuIcon) {
+                menuIcon.style.background = '';
+                menuIcon.style.color = '';
+            }
+            
+            const statusIndicator = menuItem.querySelector('.status-indicator');
+            if (statusIndicator) {
+                statusIndicator.innerHTML = '<i class="fas fa-clock"></i>';
+                statusIndicator.className = 'status-indicator pending';
+            }
+        }
+    });
+
+    // Reset progress bar
+    const progressFill = document.querySelector('.progress-fill');
+    const progressPercent = document.querySelector('.progress-percent');
+    if (progressFill) progressFill.style.width = '0%';
+    if (progressPercent) progressPercent.textContent = '0%';
+    
+    // Reset verification flags
+    this.emailVerified = false;
+    this.mobileVerified = false;
+}
 
     clearAllFormFields() {
         const fieldsToClear = [
@@ -838,9 +881,14 @@ class VendorOnboarding {
                     this.saveToken(data.acess_token);
                 }
 
-                this.showVerificationStep('email', 3);
-                this.markStepCompleted('email');
-                this.showNotification('Email verified successfully!', 'success');
+                // this.showVerificationStep('email', 3);
+                // this.markStepCompleted('email');
+                // this.showNotification('Email verified successfully!', 'success');
+
+                this.emailVerified = true; // Mark email as verified
+        this.showVerificationStep('email', 3);
+        this.checkAndMarkEmailMobileStep(); // Check if both are verified
+        this.showNotification('Email verified successfully!', 'success');
 
                 // Show mobile verification after email is verified
                 setTimeout(() => {
@@ -963,9 +1011,14 @@ class VendorOnboarding {
 
             if (response.ok) {
                 this.currentToken = data.access_token;
-                this.showVerificationStep('mobile', 3);
-                this.markStepCompleted('mobile');
-                this.showNotification('Mobile number verified successfully!', 'success');
+                // this.showVerificationStep('mobile', 3);
+                // this.markStepCompleted('mobile');
+                // this.showNotification('Mobile number verified successfully!', 'success');
+
+                        this.mobileVerified = true; // Mark mobile as verified
+        this.showVerificationStep('mobile', 3);
+        this.checkAndMarkEmailMobileStep(); // Check if both are verified
+        this.showNotification('Mobile number verified successfully!', 'success');
 
                 // Auto-navigate to password setup after 1 second
                 setTimeout(() => {
@@ -981,6 +1034,35 @@ class VendorOnboarding {
             this.setButtonLoading('verify-mobile-otp', false, '<i class="fas fa-check-circle"></i> Verify Code');
         }
     }
+
+
+    // NEW METHOD: Check if both email and mobile are verified
+checkAndMarkEmailMobileStep() {
+    console.log('🔍 Checking email & mobile verification status:');
+    console.log('   Email verified:', this.emailVerified);
+    console.log('   Mobile verified:', this.mobileVerified);
+    
+    if (this.emailVerified && this.mobileVerified) {
+        console.log('✅ Both email and mobile verified! Marking step as complete.');
+        this.markStepCompleted('mobile-email');
+        
+        // Also update the verification status in the main content
+        const emailStatus = document.getElementById('email-status');
+        const mobileStatus = document.getElementById('mobile-status');
+        
+        if (emailStatus) {
+            emailStatus.innerHTML = '<i class="fas fa-check-circle"></i><span>Verified</span>';
+            emailStatus.className = 'verification-status verified';
+        }
+        
+        if (mobileStatus) {
+            mobileStatus.innerHTML = '<i class="fas fa-check-circle"></i><span>Verified</span>';
+            mobileStatus.className = 'verification-status verified';
+        }
+    } else {
+        console.log('⏳ Waiting for both verifications...');
+    }
+}
 
     // VENDOR-DASHBOARD STYLE PASSWORD SAVE WITH TOKEN STORAGE
     async savePassword() {
@@ -1032,8 +1114,18 @@ class VendorOnboarding {
 
                 // Auto-navigate to ID & Signature after 1 second
                 setTimeout(() => {
-                    this.switchSection('id-signature');
-                }, 1000);
+                //     this.switchSection('id-signature');
+                // }, 1000);
+
+                // Check if email & mobile step is actually marked complete
+            if (this.emailVerified && this.mobileVerified) {
+                this.switchSection('id-signature');
+            } else {
+                // If not both verified, stay on current step or show error
+                this.showNotification('Please complete both email and mobile verification first', 'warning');
+                this.switchSection('mobile-email');
+            }
+        }, 1000);
             } else {
                 throw new Error(data.message || 'Failed to save password');
             }

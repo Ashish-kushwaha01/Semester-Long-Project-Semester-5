@@ -379,6 +379,41 @@ async function handleLogin() {
     }
 }
 
+// function initializeForgotPassword() {
+//     const forgotPasswordLink = document.querySelector('.forgot-password');
+//     const modal = document.getElementById('forgotPasswordModal');
+//     const closeModal = document.querySelector('.close-modal');
+//     const forgotPasswordForm = document.getElementById('forgotPasswordForm');
+
+//     if (forgotPasswordLink && modal) {
+//         forgotPasswordLink.addEventListener('click', function(e) {
+//             e.preventDefault();
+//             modal.style.display = 'block';
+//         });
+//     }
+
+//     if (closeModal && modal) {
+//         closeModal.addEventListener('click', function() {
+//             modal.style.display = 'none';
+//             resetForgotPasswordForm();
+//         });
+//     }
+
+//     window.addEventListener('click', function(e) {
+//         if (e.target === modal) {
+//             modal.style.display = 'none';
+//             resetForgotPasswordForm();
+//         }
+//     });
+
+//     if (forgotPasswordForm) {
+//         forgotPasswordForm.addEventListener('submit', function(e) {
+//             e.preventDefault();
+//             handleForgotPassword();
+//         });
+//     }
+// }
+
 function initializeForgotPassword() {
     const forgotPasswordLink = document.querySelector('.forgot-password');
     const modal = document.getElementById('forgotPasswordModal');
@@ -414,10 +449,28 @@ function initializeForgotPassword() {
     }
 }
 
+// function resetForgotPasswordForm() {
+//     const form = document.getElementById('forgotPasswordForm');
+//     if (form) {
+//         form.reset();
+//     }
+    
+//     // Remove any success/error messages
+//     const messages = document.querySelectorAll('.forgot-password-message');
+//     messages.forEach(msg => msg.remove());
+// }
+
 function resetForgotPasswordForm() {
     const form = document.getElementById('forgotPasswordForm');
     if (form) {
         form.reset();
+    }
+    
+    // Reset submit button to original state
+    const submitBtn = form.querySelector('button[type="submit"]');
+    if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Send Reset Link';
     }
     
     // Remove any success/error messages
@@ -425,10 +478,49 @@ function resetForgotPasswordForm() {
     messages.forEach(msg => msg.remove());
 }
 
+// async function handleForgotPassword() {
+//     const email = document.getElementById('resetEmail').value;
+//     const modal = document.getElementById('forgotPasswordModal');
+//     const form = document.getElementById('forgotPasswordForm');
+    
+//     if (!validateEmail(email, '')) {
+//         showForgotPasswordMessage('Please enter a valid email address', 'error');
+//         return;
+//     }
+    
+//     try {
+//         const response = await fetch("http://127.0.0.1:8000/api/account/request-otp/", {
+//             method: "POST",
+//             headers: { "Content-Type": "application/json" },
+//             body: JSON.stringify({ email: email })
+//         });
+
+//         const result = await response.json();
+
+//         if (response.ok) {
+//             localStorage.setItem('passwordResetEmail', email);
+//             showForgotPasswordMessage('OTP has been sent to your email! Please check your email and use the OTP to reset your password.', 'success');
+            
+//             // Close modal after 3 seconds and redirect to password reset page
+//             setTimeout(() => {
+//                 modal.style.display = 'none';
+//                 resetForgotPasswordForm();
+//                 window.location.href = 'passwordReset.html';
+//             }, 3000);
+//         } else {
+//             throw new Error(result.detail || result.error || 'Failed to send OTP');
+//         }
+//     } catch (error) {
+//         showForgotPasswordMessage('Error: ' + error.message, 'error');
+//     }
+// }
+
+
 async function handleForgotPassword() {
     const email = document.getElementById('resetEmail').value;
     const modal = document.getElementById('forgotPasswordModal');
     const form = document.getElementById('forgotPasswordForm');
+    const submitBtn = form.querySelector('button[type="submit"]');
     
     if (!validateEmail(email, '')) {
         showForgotPasswordMessage('Please enter a valid email address', 'error');
@@ -436,6 +528,10 @@ async function handleForgotPassword() {
     }
     
     try {
+        // Disable submit button and show processing state
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Processing...';
+        
         const response = await fetch("http://127.0.0.1:8000/api/account/request-otp/", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -448,6 +544,9 @@ async function handleForgotPassword() {
             localStorage.setItem('passwordResetEmail', email);
             showForgotPasswordMessage('OTP has been sent to your email! Please check your email and use the OTP to reset your password.', 'success');
             
+            // Change button text to indicate success before redirect
+            submitBtn.textContent = 'Redirecting...';
+            
             // Close modal after 3 seconds and redirect to password reset page
             setTimeout(() => {
                 modal.style.display = 'none';
@@ -459,8 +558,12 @@ async function handleForgotPassword() {
         }
     } catch (error) {
         showForgotPasswordMessage('Error: ' + error.message, 'error');
+        // Re-enable submit button on error
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Send Reset Link';
     }
 }
+
 
 function showForgotPasswordMessage(message, type) {
     // Remove any existing messages

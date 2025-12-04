@@ -29,26 +29,68 @@ class AuthManager {
         return this.currentUser;
     }
 
-    updateUIBasedOnAuth() {
-        const navActions = document.querySelector('.nav-actions');
+    // updateUIBasedOnAuth() {
+    //     const navActions = document.querySelector('.nav-actions');
         
-        if (!navActions) return;
+    //     if (!navActions) return;
 
-        if (this.isAuthenticated()) {
-            const user = this.getCurrentUser();
-            navActions.innerHTML = this.getLoggedInUI(user);
-            this.initDropdown();
-        } else {
-            navActions.innerHTML = this.getLoggedOutUI();
-        }
+    //     if (this.isAuthenticated()) {
+    //         const user = this.getCurrentUser();
+    //         navActions.innerHTML = this.getLoggedInUI(user);
+    //         this.initDropdown();
+    //     } else {
+    //         navActions.innerHTML = this.getLoggedOutUI();
+    //     }
+    // }
+
+
+    // UPDATE the updateUIBasedOnAuth method - add this line:
+updateUIBasedOnAuth() {
+    const navActions = document.querySelector('.nav-actions');
+    
+    if (!navActions) return;
+
+    if (this.isAuthenticated()) {
+        const user = this.getCurrentUser();
+        navActions.innerHTML = this.getLoggedInUI(user);
+        this.initDropdown();
+    } else {
+        navActions.innerHTML = this.getLoggedOutUI();
+        this.initGuestDropdown(); // ✅ ADD THIS LINE
     }
+}
 
     getLoggedOutUI() {
         return `
             <a href="cart.html" class="nav-item">Cart <span id="cartCount" class="cart-count">0</span></a>
-            <a href="login/signIn.html" class="nav-item">Sign in</a>
+            <div class="guest-dropdown" id="guestDropdown">
+            <div class="guest-avatar">👤</div>
+            <span class="guest-text">Guest</span>
+            <div class="dropdown-menu" id="guestDropdownMenu">
+                <a href="track_order.html" class="dropdown-item">📦 Track My Order</a>
+                <div class="dropdown-divider"></div>
+                <a href="login/signIn.html" class="dropdown-item">🔑 Sign in</a>
+            </div>
+        </div>
         `;
     }
+
+    // ADD this method after getLoggedOutUI:
+initGuestDropdown() {
+    const dropdown = document.getElementById('guestDropdown');
+    const menu = document.getElementById('guestDropdownMenu');
+    
+    if (dropdown && menu) {
+        dropdown.addEventListener('click', (e) => {
+            e.stopPropagation();
+            menu.classList.toggle('show');
+        });
+        
+        document.addEventListener('click', () => {
+            menu.classList.remove('show');
+        });
+    }
+}
 
     getLoggedInUI(user) {
         const userInitial = user.first_name ? user.first_name.charAt(0).toUpperCase() : 'U';
@@ -60,7 +102,7 @@ class AuthManager {
                 <span class="user-name">Hi, ${user.first_name}</span>
                 <div class="dropdown-menu" id="dropdownMenu">
                     <a href="profile.html" class="dropdown-item">My Profile</a>
-                    <a href="#" class="dropdown-item">My Orders</a>
+                    <a href="my_order.html" class="dropdown-item">My Orders</a>
                     <a href="#" class="dropdown-item">Settings</a>
                     <div class="dropdown-divider"></div>
                     <a href="#" class="dropdown-item" id="logoutBtn">Logout</a>
